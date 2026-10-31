@@ -21,6 +21,7 @@ public class ProductDto {
     @Builder
     public static class PublicProductResponse {
         private UUID id;
+        private String shortId;
         private String sku;
         private String name;
         private String shortDescription;
@@ -57,6 +58,7 @@ public class ProductDto {
     @Builder
     public static class AdminProductResponse {
         private UUID id;
+        private String shortId;
         private String sku;
         private String name;
         private String shortDescription;
@@ -92,6 +94,7 @@ public class ProductDto {
     public static class AdminSizeStockResponse {
         private UUID sizeId;
         private String ukSize;
+        private BigDecimal price;
         private boolean isAvailable;
         private UUID inventoryId;
         private int totalStock;
@@ -99,6 +102,18 @@ public class ProductDto {
         private int availableStock;
         private int lowStockThreshold;
         private boolean isLowStock;
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class SizeInputDto {
+        private UUID sizeId;
+        private String ukSize;
+        private BigDecimal price;
+        private Integer count;
     }
 
     // Admin Create / Update Form Request
@@ -118,7 +133,7 @@ public class ProductDto {
         private String shortDescription;
 
         @NotBlank(message = "Category is required")
-        private String category; // BOYS_FORMAL, GIRLS_FORMAL, SPORTS_PT, JUNIOR_VELCRO
+        private String category;
 
         @NotNull(message = "Base price is required")
         @DecimalMin(value = "0.01", message = "Base price must be greater than 0")
@@ -126,6 +141,7 @@ public class ProductDto {
 
         private Boolean isActive;
         private List<String> initialSizes; // Optional initial size list e.g. ["UK 1", "UK 2"]
+        private List<SizeInputDto> sizes;  // Full size details list with size, price, and count
     }
 
     // Admin Stock Adjustment Request

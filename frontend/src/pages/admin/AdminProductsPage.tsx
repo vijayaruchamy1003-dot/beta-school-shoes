@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { adminApi } from '../../api/client';
 import { AdminProduct } from '../../types';
 import { ShoeVector } from '../../components/ShoeVector';
+import { ProductEditModal, getShortId, cleanSize } from '../../components/admin/ProductEditModal';
 import { Search, Plus, Edit, ToggleLeft, ToggleRight, AlertCircle } from 'lucide-react';
 
 export const AdminProductsPage: React.FC = () => {
@@ -10,6 +10,9 @@ export const AdminProductsPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('');
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<AdminProduct | null>(null);
 
   const loadProducts = () => {
     setLoading(true);
@@ -46,13 +49,16 @@ export const AdminProductsPage: React.FC = () => {
           <p className="text-xs text-slate-500">Configure BETA school shoe catalogue items, prices, and status.</p>
         </div>
 
-        <Link
-          to="/admin/products/new"
-          className="px-4 py-2 rounded-lg bg-navy-950 text-white text-xs font-bold hover:bg-navy-850 transition flex items-center gap-1.5 self-start sm:self-auto"
+        <button
+          onClick={() => {
+            setSelectedProduct(null);
+            setModalOpen(true);
+          }}
+          className="px-4 py-2 rounded-lg bg-navy-950 text-white text-xs font-bold hover:bg-navy-850 transition flex items-center gap-1.5 self-start sm:self-auto shadow-sm"
         >
           <Plus className="w-4 h-4" />
-          <span>Add New Shoe Model</span>
-        </Link>
+          <span>+ Add New Shoe Model</span>
+        </button>
       </div>
 
       {/* Filter / Search Bar */}
@@ -61,24 +67,20 @@ export const AdminProductsPage: React.FC = () => {
           <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
-            placeholder="Search by product name or SKU..."
+            placeholder="Search by product name, SKU, or ID..."
             value={search}
             onChange={e => setSearch(e.target.value)}
             className="w-full pl-9 pr-3 py-2 rounded-lg border border-slate-300 text-xs focus:outline-none focus:border-navy-950"
           />
         </div>
 
-        <select
+        <input
+          type="text"
+          placeholder="Filter by Category (e.g. Boys Formal)..."
           value={category}
           onChange={e => setCategory(e.target.value)}
-          className="px-3 py-2 rounded-lg border border-slate-300 text-xs text-slate-700 focus:outline-none focus:border-navy-950"
-        >
-          <option value="">All Categories</option>
-          <option value="BOYS_FORMAL">Boys Formal</option>
-          <option value="GIRLS_FORMAL">Girls Formal</option>
-          <option value="SPORTS_PT">Sports & PT Canvas</option>
-          <option value="JUNIOR_VELCRO">Junior Velcro</option>
-        </select>
+          className="px-3 py-2 rounded-lg border border-slate-300 text-xs text-slate-800 focus:outline-none focus:border-navy-950"
+        />
 
         <button
           type="submit"
@@ -119,13 +121,18 @@ export const AdminProductsPage: React.FC = () => {
                         )}
                       </div>
                       <div>
-                        <p className="font-bold text-navy-950">{product.name}</p>
+                        <div className="flex items-center gap-1.5">
+                          <p className="font-bold text-navy-950">{product.name}</p>
+                          <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-50 text-blue-800 border border-blue-200">
+                            {product.shortId || getShortId(product.id, product.sku)}
+                          </span>
+                        </div>
                         <span className="font-mono text-[10px] text-slate-400">SKU: {product.sku}</span>
                       </div>
                     </td>
 
-                    <td className="py-3 px-4 text-slate-600">
-                      {product.category.replace('_', ' ')}
+                    <td className="py-3 px-4 font-semibold text-slate-700">
+                      {product.category}
                     </td>
 
                     <td className="py-3 px-4 font-mono font-bold text-navy-950">
@@ -150,13 +157,16 @@ export const AdminProductsPage: React.FC = () => {
                     </td>
 
                     <td className="py-3 px-4 text-right">
-                      <Link
-                        to={`/admin/products/${product.id}/edit`}
-                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-navy-950 text-xs font-semibold"
+                      <button
+                        onClick={() => {
+                          setSelectedProduct(product);
+                          setModalOpen(true);
+                        }}
+                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-900 border border-blue-200 text-xs font-bold transition shadow-xs"
                       >
                         <Edit className="w-3.5 h-3.5" />
                         <span>Edit</span>
-                      </Link>
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -165,6 +175,14 @@ export const AdminProductsPage: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Edit / Add Shoe Model Popup Modal */}
+      <ProductEditModal
+        product={selectedProduct}
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onSuccess={loadProducts}
+      />
     </div>
   );
 };

@@ -155,17 +155,17 @@ export const AdminProductFormPage: React.FC = () => {
           {/* 2. Category & Price */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1">
-              <label className="font-semibold text-slate-700 block">Category *</label>
-              <select
+              <label className="font-semibold text-slate-700 block">
+                Category * <span className="font-normal text-slate-400">(Written Text)</span>
+              </label>
+              <input
+                type="text"
+                required
+                placeholder="Type category (e.g. Boys Formal, Junior Velcro, Sports)..."
                 value={formData.category}
                 onChange={e => setFormData({ ...formData, category: e.target.value })}
                 className="w-full px-3 py-2 rounded-lg border border-slate-300 text-slate-800 text-xs focus:outline-none focus:border-navy-950"
-              >
-                <option value="BOYS_FORMAL">Boys Formal Uniform</option>
-                <option value="GIRLS_FORMAL">Girls Formal Uniform</option>
-                <option value="SPORTS_PT">Sports & PT Canvas</option>
-                <option value="JUNIOR_VELCRO">Junior Velcro</option>
-              </select>
+              />
             </div>
 
             <div className="space-y-1">

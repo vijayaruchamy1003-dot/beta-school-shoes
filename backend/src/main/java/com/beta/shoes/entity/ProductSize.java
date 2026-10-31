@@ -29,6 +29,9 @@ public class ProductSize {
     @Column(name = "uk_size", nullable = false, length = 32)
     private String ukSize;
 
+    @Column(name = "price", precision = 10, scale = 2)
+    private java.math.BigDecimal price;
+
     @Column(name = "is_available", nullable = false)
     @Builder.Default
     private boolean isAvailable = true;

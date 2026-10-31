@@ -26,6 +26,7 @@ export interface PublicSize {
 
 export interface PublicProduct {
   id: string;
+  shortId?: string;
   sku: string;
   name: string;
   shortDescription: string;
@@ -38,6 +39,7 @@ export interface PublicProduct {
 
 export interface AdminProduct {
   id: string;
+  shortId?: string;
   sku: string;
   name: string;
   shortDescription: string;
@@ -55,6 +57,7 @@ export interface AdminProduct {
 export interface AdminSizeStock {
   sizeId: string;
   ukSize: string;
+  price?: number;
   isAvailable: boolean;
   inventoryId?: string;
   totalStock: number;

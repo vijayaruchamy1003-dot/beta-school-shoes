@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -54,6 +55,15 @@ public class ProductService {
         return mapToPublicResponse(product);
     }
 
+    public static String formatShortId(UUID id, String sku) {
+        if (id == null) return "PRD";
+        String str = id.toString();
+        if (str.startsWith("11111111-1111-1111-1111-1111111111")) {
+            return "PRD-" + str.substring(str.length() - 3);
+        }
+        return "PRD-" + str.substring(0, 6).toUpperCase();
+    }
+
     private ProductDto.PublicProductResponse mapToPublicResponse(Product product) {
         String primaryImg = product.getImages().stream()
             .filter(ProductImage::isPrimary)
@@ -81,6 +91,7 @@ public class ProductService {
 
         return ProductDto.PublicProductResponse.builder()
             .id(product.getId())
+            .shortId(formatShortId(product.getId(), product.getSku()))
             .sku(product.getSku())
             .name(product.getName())
             .shortDescription(product.getShortDescription())
@@ -127,11 +138,19 @@ public class ProductService {
 
         product = productRepository.save(product);
 
-        // Add initial sizes if provided
-        if (request.getInitialSizes() != null && !request.getInitialSizes().isEmpty()) {
+        // Add sizes if provided (with price & count)
+        if (request.getSizes() != null && !request.getSizes().isEmpty()) {
+            for (ProductDto.SizeInputDto sDto : request.getSizes()) {
+                if (StringUtils.hasText(sDto.getUkSize())) {
+                    int count = sDto.getCount() != null ? Math.max(0, sDto.getCount()) : 20;
+                    BigDecimal sizePrice = sDto.getPrice() != null ? sDto.getPrice() : request.getBasePrice();
+                    createProductSize(product, sDto.getUkSize().trim(), count, sizePrice);
+                }
+            }
+        } else if (request.getInitialSizes() != null && !request.getInitialSizes().isEmpty()) {
             for (String sizeLabel : request.getInitialSizes()) {
                 if (StringUtils.hasText(sizeLabel)) {
-                    createProductSize(product, sizeLabel.trim(), 20); // Default seed quantity 20
+                    createProductSize(product, sizeLabel.trim(), 20, request.getBasePrice()); // Default seed quantity 20
                 }
             }
         }
@@ -154,13 +173,66 @@ public class ProductService {
 
         product.setName(request.getName().trim());
         product.setShortDescription(request.getShortDescription().trim());
-        product.setCategory(request.getCategory().trim().toUpperCase());
+        product.setCategory(request.getCategory().trim());
         product.setBasePrice(request.getBasePrice());
         if (request.getIsActive() != null) {
             product.setActive(request.getIsActive());
         }
 
         product = productRepository.save(product);
+
+        // Update sizes (with price & count) if provided
+        if (request.getSizes() != null) {
+            Map<String, ProductSize> existingSizesByNormalized = new HashMap<>();
+            for (ProductSize ps : product.getSizes()) {
+                String norm = ps.getUkSize().replaceAll("(?i)^UK\\s*", "").trim().toLowerCase();
+                existingSizesByNormalized.put(norm, ps);
+            }
+
+            Set<ProductSize> keptSizes = new HashSet<>();
+            for (ProductDto.SizeInputDto sDto : request.getSizes()) {
+                if (!StringUtils.hasText(sDto.getUkSize())) continue;
+                String sizeLabel = sDto.getUkSize().trim();
+                String norm = sizeLabel.replaceAll("(?i)^UK\\s*", "").trim().toLowerCase();
+                int count = sDto.getCount() != null ? Math.max(0, sDto.getCount()) : 0;
+                BigDecimal sizePrice = sDto.getPrice() != null ? sDto.getPrice() : request.getBasePrice();
+
+                ProductSize existing = existingSizesByNormalized.get(norm);
+                if (existing != null) {
+                    existing.setUkSize(sizeLabel);
+                    existing.setPrice(sizePrice);
+                    existing.setAvailable(true);
+                    if (existing.getInventory() != null) {
+                        existing.getInventory().setTotalStock(count);
+                    } else {
+                        Inventory inv = Inventory.builder()
+                            .productSize(existing)
+                            .totalStock(count)
+                            .reservedStock(0)
+                            .lowStockThreshold(5)
+                            .build();
+                        existing.setInventory(inv);
+                    }
+                    productSizeRepository.save(existing);
+                    keptSizes.add(existing);
+                } else {
+                    ProductSize newSize = createProductSize(product, sizeLabel, count, sizePrice);
+                    keptSizes.add(newSize);
+                }
+            }
+
+            // Mark unselected sizes as unavailable
+            for (ProductSize ps : product.getSizes()) {
+                if (!keptSizes.contains(ps)) {
+                    ps.setAvailable(false);
+                    if (ps.getInventory() != null) {
+                        ps.getInventory().setTotalStock(0);
+                    }
+                    productSizeRepository.save(ps);
+                }
+            }
+        }
+
         return mapToAdminResponse(product);
     }
 
@@ -217,14 +289,15 @@ public class ProductService {
             throw new BadRequestException("Size '" + ukSize + "' already exists for this product.");
         }
 
-        createProductSize(product, ukSize.trim(), initialStock);
+        createProductSize(product, ukSize.trim(), initialStock, product.getBasePrice());
         return mapToAdminResponse(product);
     }
 
-    private ProductSize createProductSize(Product product, String ukSize, int initialStock) {
+    private ProductSize createProductSize(Product product, String ukSize, int initialStock, BigDecimal price) {
         ProductSize productSize = ProductSize.builder()
             .product(product)
             .ukSize(ukSize)
+            .price(price)
             .isAvailable(true)
             .build();
 
@@ -237,7 +310,7 @@ public class ProductService {
             .lowStockThreshold(5)
             .build();
 
-        inventoryRepository.save(inventory);
+        inventory = inventoryRepository.save(inventory);
         productSize.setInventory(inventory);
         product.getSizes().add(productSize);
 
@@ -277,6 +350,7 @@ public class ProductService {
             sizeResponses.add(ProductDto.AdminSizeStockResponse.builder()
                 .sizeId(size.getId())
                 .ukSize(size.getUkSize())
+                .price(size.getPrice() != null ? size.getPrice() : product.getBasePrice())
                 .isAvailable(size.isAvailable())
                 .inventoryId(inv != null ? inv.getId() : null)
                 .totalStock(total)
@@ -289,6 +363,7 @@ public class ProductService {
 
         return ProductDto.AdminProductResponse.builder()
             .id(product.getId())
+            .shortId(formatShortId(product.getId(), product.getSku()))
             .sku(product.getSku())
             .name(product.getName())
             .shortDescription(product.getShortDescription())

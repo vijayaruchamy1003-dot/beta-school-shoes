@@ -33,11 +33,13 @@ export const AdminInventoryPage: React.FC = () => {
     loadData();
   }, []);
 
+  const cleanSize = (s: string) => (s ? s.replace(/^UK\s*/i, '').trim() : '');
+
   const openAdjust = (size: AdminSizeStock, prodName: string) => {
     setSelectedSize({
       sizeId: size.sizeId,
       productName: prodName,
-      ukSize: size.ukSize,
+      ukSize: cleanSize(size.ukSize),
       currentStock: size.totalStock,
     });
     setQtyChange(10);
@@ -116,25 +118,23 @@ export const AdminInventoryPage: React.FC = () => {
                       }`}
                     >
                       <div className="flex justify-between items-start">
-                        <span className="font-bold">{size.ukSize}</span>
+                        <span className="font-bold text-navy-950 text-xs">Size {cleanSize(size.ukSize)}</span>
                         {size.isLowStock && (
                           <span className="text-[9px] font-bold text-red-700 bg-red-100 px-1 rounded">LOW</span>
                         )}
                       </div>
 
-                      <div className="my-1.5 space-y-0.5 text-[11px] font-mono">
-                        <div className="flex justify-between text-slate-500">
-                          <span>Total:</span>
-                          <span>{size.totalStock}</span>
+                      <div className="my-2 space-y-1">
+                        <div className="flex justify-between items-center bg-slate-50 px-2 py-1.5 rounded border border-slate-100">
+                          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Count:</span>
+                          <span className="font-mono font-black text-navy-950 text-sm">{size.totalStock}</span>
                         </div>
-                        <div className="flex justify-between text-amber-700">
-                          <span>Rsvd:</span>
-                          <span>{size.reservedStock}</span>
-                        </div>
-                        <div className="flex justify-between font-bold text-navy-950 pt-0.5 border-t border-slate-100">
-                          <span>Avail:</span>
-                          <span>{size.availableStock}</span>
-                        </div>
+                        {size.price && (
+                          <div className="flex justify-between items-center px-1 text-[11px] text-slate-500">
+                            <span>Price:</span>
+                            <span className="font-mono font-semibold text-slate-700">₹{size.price}</span>
+                          </div>
+                        )}
                       </div>
 
                       <button
@@ -179,7 +179,7 @@ export const AdminInventoryPage: React.FC = () => {
                   <tr key={m.id} className="hover:bg-slate-50">
                     <td className="py-2.5 text-slate-500 text-[11px]">{new Date(m.createdAt).toLocaleString()}</td>
                     <td className="py-2.5 font-bold text-navy-950">{m.productName}</td>
-                    <td className="py-2.5 font-bold text-slate-700">{m.ukSize}</td>
+                    <td className="py-2.5 font-bold text-slate-700">{cleanSize(m.ukSize)}</td>
                     <td className="py-2.5">
                       <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
                         m.movementType === 'RESTOCK' ? 'bg-emerald-100 text-emerald-800' :
@@ -208,7 +208,7 @@ export const AdminInventoryPage: React.FC = () => {
           <div className="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl border border-slate-200">
             <h3 className="font-bold text-base text-navy-950">Adjust Stock Quantity</h3>
             <p className="text-xs text-slate-500">
-              {selectedSize.productName} • Size: <strong className="text-navy-950">{selectedSize.ukSize}</strong> (Current Total: {selectedSize.currentStock})
+              {selectedSize.productName} • Size: <strong className="text-navy-950">{cleanSize(selectedSize.ukSize)}</strong> (Current Count: {selectedSize.currentStock})
             </p>
 
             {errorMsg && <p className="text-xs text-red-600 bg-red-50 p-2 rounded">{errorMsg}</p>}
