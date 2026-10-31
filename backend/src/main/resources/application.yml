@@ -1,0 +1,70 @@
+server:
+  port: ${SERVER_PORT:8081}
+  error:
+    include-message: always
+    include-binding-errors: always
+
+spring:
+  application:
+    name: beta-shoes-backend
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:beta_school_shoes}}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:1234}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 15
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+
+jwt:
+  secret: ${JWT_SECRET:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}
+  expiration-ms: ${JWT_EXPIRATION_MS:86400000} # 24 hours
+
+cashfree:
+  app-id: ${CASHFREE_APP_ID:TEST_APP_ID}
+  secret-key: ${CASHFREE_SECRET_KEY:TEST_SECRET_KEY}
+  api-version: ${CASHFREE_API_VERSION:2023-08-01}
+  base-url: ${CASHFREE_BASE_URL:https://sandbox.cashfree.com/pg}
+  return-url: ${CASHFREE_RETURN_URL:http://localhost:5173/orders/{order_id}/status}
+  notify-url: ${CASHFREE_NOTIFY_URL:http://localhost:8080/api/payments/cashfree/webhook}
+
+razorpay:
+  key-id: ${RAZORPAY_KEY_ID:rzp_test_TtHF4jwCRWFsGV}
+  key-secret: ${RAZORPAY_KEY_SECRET:FiPceWCYrA5G2lUc8lA0FTtN}
+
+payment:
+  direct-link: ${DIRECT_PAYMENT_URL:https://razorpay.me/@vijayaruchamy}
+
+storage:
+  type: ${STORAGE_TYPE:local}
+  local:
+    upload-dir: ${STORAGE_UPLOAD_DIR:./uploads}
+  s3:
+    bucket-name: ${S3_BUCKET_NAME:beta-shoes-product-images}
+    region: ${AWS_REGION:ap-south-1}
+    endpoint: ${S3_ENDPOINT:}
+
+app:
+  bootstrap:
+    admin-email: ${ADMIN_BOOTSTRAP_EMAIL:admin@betashoes.example.com}
+    admin-password: ${ADMIN_BOOTSTRAP_PASSWORD:Admin@Beta2026}
+  order:
+    reservation-minutes: ${ORDER_RESERVATION_MINUTES:15}
+    default-shipping-fee: 0.00
+    tax-percentage: 0.05

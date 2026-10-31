@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: beta-shoes-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_NAME:-beta_school_shoes}
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres} -d ${DB_NAME:-beta_school_shoes}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: beta-shoes-backend
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${DB_NAME:-beta_school_shoes}
+      DB_USER: ${DB_USER:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-postgres}
+      JWT_SECRET: ${JWT_SECRET:-404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}
+      CASHFREE_APP_ID: ${CASHFREE_APP_ID:-TEST_APP_ID}
+      CASHFREE_SECRET_KEY: ${CASHFREE_SECRET_KEY:-TEST_SECRET_KEY}
+      CASHFREE_BASE_URL: ${CASHFREE_BASE_URL:-https://sandbox.cashfree.com/pg}
+      DIRECT_PAYMENT_URL: ${DIRECT_PAYMENT_URL:-https://razorpay.me/@vijayaruchamy}
+      ADMIN_BOOTSTRAP_EMAIL: ${ADMIN_BOOTSTRAP_EMAIL:-admin@betashoes.example.com}
+      ADMIN_BOOTSTRAP_PASSWORD: ${ADMIN_BOOTSTRAP_PASSWORD:-Admin@Beta2026}
+      STORAGE_TYPE: local
+      STORAGE_UPLOAD_DIR: /app/uploads
+      ORDER_RESERVATION_MINUTES: 15
+    ports:
+      - "8080:8080"
+    volumes:
+      - app_uploads:/app/uploads
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: beta-shoes-frontend
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+
+volumes:
+  pgdata:
+  app_uploads:

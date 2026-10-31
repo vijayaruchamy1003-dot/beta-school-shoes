@@ -1,0 +1,40 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+  flyway:
+    enabled: false
+
+jwt:
+  secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+  expiration-ms: 3600000
+
+cashfree:
+  app-id: TEST_APP_ID
+  secret-key: TEST_SECRET_KEY
+  api-version: 2023-08-01
+  base-url: https://sandbox.cashfree.com/pg
+
+razorpay:
+  key-id: rzp_test_TtHF4jwCRWFsGV
+  key-secret: FiPceWCYrA5G2lUc8lA0FTtN
+
+storage:
+  type: local
+  local:
+    upload-dir: ./target/test-uploads
+
+app:
+  bootstrap:
+    admin-email: admin@betashoes.example.com
+    admin-password: Admin@Beta2026
+  order:
+    reservation-minutes: 15
+    default-shipping-fee: 0.00
+    tax-percentage: 0.05
