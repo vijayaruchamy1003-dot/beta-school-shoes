@@ -79,7 +79,7 @@ export const AdminSchoolVisitOrderFormPage: React.FC = () => {
     {
       id: 'default-1',
       category: 'SHOES',
-      productName: 'BETA Classic Oxford Lace-Up',
+      productName: 'Walkaroo Classic Oxford Lace-Up',
       sizeLabel: 'UK 3',
       quantity: 1,
       unitPrice: 749,
@@ -255,7 +255,7 @@ export const AdminSchoolVisitOrderFormPage: React.FC = () => {
           {
             id: 'default-' + Date.now(),
             category: 'SHOES',
-            productName: 'BETA Classic Oxford Lace-Up',
+            productName: 'Walkaroo Classic Oxford Lace-Up',
             sizeLabel: 'UK 3',
             quantity: 1,
             unitPrice: 749,

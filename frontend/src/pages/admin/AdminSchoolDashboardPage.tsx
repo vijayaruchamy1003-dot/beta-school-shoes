@@ -359,7 +359,7 @@ export const AdminSchoolDashboardPage: React.FC = () => {
       {/* Printable Header (Visible only when printing) */}
       <div className="hidden print:block border-b border-black pb-4 mb-6">
         <h1 className="text-2xl font-black uppercase">{school.name} ({school.code})</h1>
-        <p className="text-xs text-gray-600">Institutional School Orders & Product Demand Report · Official BETA Footwear Distributor</p>
+        <p className="text-xs text-gray-600">Institutional School Orders & Product Demand Report · SM Enterprises (Walkaroo Partner)</p>
         <p className="text-xs mt-1">Contact: {school.contactPerson} | Phone: {school.phone} | Address: {school.address}</p>
       </div>
 

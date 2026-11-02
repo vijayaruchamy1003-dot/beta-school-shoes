@@ -26,12 +26,12 @@ export interface CatalogPreset {
 
 export const CATALOG_PRESETS: CatalogPreset[] = [
   // Shoes
-  { id: 'sh-1', category: 'SHOES', name: 'BETA Classic Oxford Lace-Up', defaultPrice: 749, availableSizes: ['UK 10C', 'UK 11C', 'UK 12C', 'UK 13C', 'UK 1', 'UK 2', 'UK 3', 'UK 4', 'UK 5', 'UK 6', 'UK 7', 'UK 8'] },
-  { id: 'sh-2', category: 'SHOES', name: 'BETA Mary Jane Single-Strap', defaultPrice: 749, availableSizes: ['UK 10C', 'UK 11C', 'UK 12C', 'UK 13C', 'UK 1', 'UK 2', 'UK 3', 'UK 4', 'UK 5'] },
-  { id: 'sh-3', category: 'SHOES', name: 'BETA PT-Pro White Canvas Trainer', defaultPrice: 599, availableSizes: ['UK 1', 'UK 2', 'UK 3', 'UK 4', 'UK 5', 'UK 6', 'UK 7', 'UK 8'] },
-  { id: 'sh-4', category: 'SHOES', name: 'BETA Dual-Strap Junior Velcro', defaultPrice: 699, availableSizes: ['UK 8C', 'UK 9C', 'UK 10C', 'UK 11C', 'UK 12C', 'UK 13C'] },
-  { id: 'sh-5', category: 'SHOES', name: 'BETA Executive Derby Lace-Up', defaultPrice: 899, availableSizes: ['UK 3', 'UK 4', 'UK 5', 'UK 6', 'UK 7', 'UK 8', 'UK 9'] },
-  { id: 'sh-6', category: 'SHOES', name: 'BETA Elegance Ballerina Slip-On', defaultPrice: 729, availableSizes: ['UK 1', 'UK 2', 'UK 3', 'UK 4', 'UK 5', 'UK 6'] },
+  { id: 'sh-1', category: 'SHOES', name: 'Walkaroo Classic Oxford Lace-Up', defaultPrice: 749, availableSizes: ['UK 10C', 'UK 11C', 'UK 12C', 'UK 13C', 'UK 1', 'UK 2', 'UK 3', 'UK 4', 'UK 5', 'UK 6', 'UK 7', 'UK 8'] },
+  { id: 'sh-2', category: 'SHOES', name: 'Walkaroo Mary Jane Single-Strap', defaultPrice: 749, availableSizes: ['UK 10C', 'UK 11C', 'UK 12C', 'UK 13C', 'UK 1', 'UK 2', 'UK 3', 'UK 4', 'UK 5'] },
+  { id: 'sh-3', category: 'SHOES', name: 'Walkaroo PT-Pro White Canvas Trainer', defaultPrice: 599, availableSizes: ['UK 1', 'UK 2', 'UK 3', 'UK 4', 'UK 5', 'UK 6', 'UK 7', 'UK 8'] },
+  { id: 'sh-4', category: 'SHOES', name: 'Walkaroo Dual-Strap Junior Velcro', defaultPrice: 699, availableSizes: ['UK 8C', 'UK 9C', 'UK 10C', 'UK 11C', 'UK 12C', 'UK 13C'] },
+  { id: 'sh-5', category: 'SHOES', name: 'Walkaroo Executive Derby Lace-Up', defaultPrice: 899, availableSizes: ['UK 3', 'UK 4', 'UK 5', 'UK 6', 'UK 7', 'UK 8', 'UK 9'] },
+  { id: 'sh-6', category: 'SHOES', name: 'Walkaroo Elegance Ballerina Slip-On', defaultPrice: 729, availableSizes: ['UK 1', 'UK 2', 'UK 3', 'UK 4', 'UK 5', 'UK 6'] },
 
   // Shirts
   { id: 'srt-1', category: 'SHIRTS', name: 'White Half Sleeve Uniform Shirt', defaultPrice: 450, availableSizes: ['Size 26', 'Size 28', 'Size 30', 'Size 32', 'Size 34', 'Size 36', 'Size 38', 'Size 40'] },
@@ -109,7 +109,7 @@ export const SchoolOrderModal: React.FC<SchoolOrderModalProps> = ({
     {
       id: 'default-1',
       category: 'SHOES',
-      productName: 'BETA Classic Oxford Lace-Up',
+      productName: 'Walkaroo Classic Oxford Lace-Up',
       sizeLabel: 'UK 3',
       quantity: 1,
       unitPrice: 749,

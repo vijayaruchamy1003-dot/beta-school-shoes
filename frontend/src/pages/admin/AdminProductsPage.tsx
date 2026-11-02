@@ -46,7 +46,7 @@ export const AdminProductsPage: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black text-navy-950">Manage Products</h1>
-          <p className="text-xs text-slate-500">Configure BETA school shoe catalogue items, prices, and status.</p>
+          <p className="text-xs text-slate-500">Configure Walkaroo school shoe catalogue items, prices, and status.</p>
         </div>
 
         <button

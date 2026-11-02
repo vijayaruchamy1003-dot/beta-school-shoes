@@ -63,7 +63,7 @@ export const CheckoutPage: React.FC = () => {
         key: checkoutData.razorpayKeyId || 'rzp_test_TtHF4jwCRWFsGV',
         amount: checkoutData.razorpayAmountInPaise || Math.round(checkoutData.totalAmount * 100),
         currency: checkoutData.currency || 'INR',
-        name: 'BETA School Footwear',
+        name: 'SM Enterprises - Walkaroo Footwear',
         description: `Order #${checkoutData.orderNumber}`,
         order_id: checkoutData.razorpayOrderId,
         handler: async function (response: any) {

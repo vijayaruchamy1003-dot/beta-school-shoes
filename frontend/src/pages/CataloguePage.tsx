@@ -446,7 +446,7 @@ export const CataloguePage: React.FC = () => {
               <div className="flex flex-col items-center justify-center py-24 text-center">
                 <div className="h-10 w-10 animate-spin rounded-full border-3 border-blue-700 border-t-transparent"></div>
                 <p className="mt-4 text-xs font-bold uppercase tracking-wider text-slate-500">
-                  Loading Official BETA Footwear...
+                  Loading Official Walkaroo Footwear...
                 </p>
               </div>
             ) : filteredAndSortedProducts.length === 0 ? (

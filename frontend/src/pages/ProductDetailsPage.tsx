@@ -274,7 +274,7 @@ export const ProductDetailsPage: React.FC = () => {
             <div className="mt-10 border-t border-foreground/15 pt-6 space-y-3 text-xs text-muted-foreground font-sans">
               <div className="flex items-center gap-3">
                 <ShieldCheck className="h-4 w-4 text-foreground shrink-0" />
-                <span>100% genuine BETA institutional manufacture warranty</span>
+                <span>100% genuine Walkaroo manufacture warranty by SM Enterprises</span>
               </div>
               <div className="flex items-center gap-3">
                 <Truck className="h-4 w-4 text-foreground shrink-0" />

@@ -56,7 +56,7 @@ export const ContactPage: React.FC = () => {
                   Message Dispatched
                 </h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  Thank you for contacting the BETA institutional sales desk. A dedicated school footwear coordinator will reach out to you shortly.
+                  Thank you for contacting the SM Enterprises institutional sales desk. A dedicated Walkaroo footwear coordinator will reach out to you shortly.
                 </p>
                 <button
                   type="button"
@@ -150,7 +150,7 @@ export const ContactPage: React.FC = () => {
               <div className="aspect-[3/2] w-full overflow-hidden bg-secondary relative flex items-center justify-center">
                 <img
                   src="https://images.hostinger.com/deecd9e7-3dd1-45af-a949-d7facb171fbd.png"
-                  alt="Crafting and inspecting BETA school footwear"
+                  alt="Crafting and inspecting Walkaroo school footwear"
                   loading="lazy"
                   className="h-full w-full object-cover mix-blend-multiply"
                 />

@@ -132,7 +132,7 @@ export const AdminProductFormPage: React.FC = () => {
             <input
               type="text"
               required
-              placeholder="e.g. BETA Classic Oxford Lace-Up"
+              placeholder="e.g. Walkaroo Classic Oxford Lace-Up"
               value={formData.name}
               onChange={e => setFormData({ ...formData, name: e.target.value })}
               className="w-full px-3 py-2 rounded-lg border border-slate-300 text-slate-800 text-xs focus:outline-none focus:border-navy-950"
@@ -145,7 +145,7 @@ export const AdminProductFormPage: React.FC = () => {
             <input
               type="text"
               required
-              placeholder="e.g. BETA-SCH-OX01"
+              placeholder="e.g. WLK-SCH-OX01"
               value={formData.sku}
               onChange={e => setFormData({ ...formData, sku: e.target.value })}
               className="w-full px-3 py-2 rounded-lg border border-slate-300 text-slate-800 text-xs uppercase font-mono focus:outline-none focus:border-navy-950"

@@ -36,15 +36,15 @@ export const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children 
           {/* Admin Header */}
           <div className="p-6 border-b border-primary-foreground/15">
             <div className="flex items-center gap-3">
-              <svg viewBox="0 0 24 24" className="h-6 w-6 text-primary-foreground shrink-0" fill="currentColor" aria-hidden="true">
-                <path d="M8.7 1.5h6.6l7.2 7.2v6.6l-7.2 7.2H8.7l-7.2-7.2V8.7l7.2-7.2z"></path>
-              </svg>
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-blue-700 font-black text-sm shadow-sm">
+                SM
+              </div>
               <div>
                 <h2 className="font-display font-black text-lg uppercase tracking-tight text-primary-foreground">
-                  BETA Admin
+                  SM Admin
                 </h2>
-                <span className="text-[10px] text-primary-foreground/70 flex items-center gap-1 font-semibold uppercase tracking-wider">
-                  <ShieldCheck className="w-3 h-3" /> Partner Portal
+                <span className="text-[10px] text-amber-300 flex items-center gap-1 font-bold uppercase tracking-wider">
+                  <ShieldCheck className="w-3 h-3" /> Walkaroo Partner
                 </span>
               </div>
             </div>

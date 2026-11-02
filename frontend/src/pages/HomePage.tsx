@@ -82,7 +82,7 @@ export const HomePage: React.FC = () => {
         </div>
 
         <p className="absolute bottom-0 left-0 bg-background border-t border-r border-foreground/15 px-5 py-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-foreground">
-          Batch No. 2026 — Official BETA School Footwear
+          Batch No. 2026 — Official Walkaroo School Footwear
         </p>
       </section>
 
@@ -171,7 +171,7 @@ export const HomePage: React.FC = () => {
               Three crafts. One purpose.
             </h2>
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-              Engineered by BETA specifically to outlast playground friction, morning assembly drills, and unpredictable weather throughout the academic year.
+              Engineered by Walkaroo specifically to outlast playground friction, morning assembly drills, and unpredictable weather throughout the academic year.
             </p>
           </div>
 
@@ -221,7 +221,7 @@ export const HomePage: React.FC = () => {
           <div className="paper-shadow-bone border border-primary-foreground/20">
             <img
               src="https://images.hostinger.com/deecd9e7-3dd1-45af-a949-d7facb171fbd.png"
-              alt="Quality assurance in BETA footwear production"
+              alt="Quality assurance in Walkaroo footwear production"
               loading="lazy"
               className="h-full w-full object-cover"
             />
@@ -279,10 +279,10 @@ export const HomePage: React.FC = () => {
       {/* Section 6: Large Watermark Bulk Callout */}
       <section className="relative overflow-hidden border-t border-foreground/15 bg-secondary py-20 md:py-28">
         <div
-          className="font-display pointer-events-none absolute -right-6 top-1/2 -translate-y-1/2 select-none text-[11rem] font-black uppercase leading-none text-foreground/5 md:text-[16rem]"
+          className="font-display pointer-events-none absolute -right-6 top-1/2 -translate-y-1/2 select-none text-[10rem] font-black uppercase leading-none text-foreground/5 md:text-[14rem]"
           aria-hidden="true"
         >
-          BETA
+          WALKAROO
         </div>
         <div className="relative mx-auto max-w-7xl px-6">
           <h2 className="font-display max-w-xl text-4xl font-black uppercase leading-none tracking-tight md:text-5xl">

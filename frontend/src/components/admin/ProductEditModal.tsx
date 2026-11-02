@@ -244,7 +244,7 @@ export const ProductEditModal: React.FC<ProductEditModalProps> = ({
               <input
                 type="text"
                 required
-                placeholder="e.g. BETA Dual-Strap Junior Action"
+                placeholder="e.g. Walkaroo Dual-Strap Junior Action"
                 value={name}
                 onChange={e => setName(e.target.value)}
                 className="w-full px-3 py-2 rounded-lg border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-navy-950"
@@ -255,7 +255,7 @@ export const ProductEditModal: React.FC<ProductEditModalProps> = ({
               <input
                 type="text"
                 required
-                placeholder="e.g. BETA-SCH-VC03"
+                placeholder="e.g. WLK-SCH-VC03"
                 value={sku}
                 onChange={e => setSku(e.target.value)}
                 className="w-full px-3 py-2 rounded-lg border border-slate-300 text-slate-900 font-mono text-xs uppercase focus:outline-none focus:border-navy-950"

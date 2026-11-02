@@ -48,7 +48,7 @@ export const OrderTrackingPage: React.FC = () => {
             Track Order
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Enter your unique order number (e.g. BETA-20261028-XXXX) to check fulfillment & dispatch status.
+            Enter your unique order number to check fulfillment & dispatch status.
           </p>
         </div>
       </section>
@@ -61,7 +61,7 @@ export const OrderTrackingPage: React.FC = () => {
             <input
               type="text"
               required
-              placeholder="e.g. BETA-20261028-1001"
+              placeholder="e.g. WLK-20261028-1001"
               value={orderNumberInput}
               onChange={e => setOrderNumberInput(e.target.value)}
               className="flex-1 border border-foreground/25 bg-transparent px-4 py-3.5 text-sm font-mono uppercase outline-none focus:border-foreground placeholder:text-muted-foreground"
