@@ -49,15 +49,17 @@ export const ProductDetailsPage: React.FC = () => {
       return;
     }
 
-    if (!isAuthenticated) {
-      navigate(`/login?redirect=/products/${id}`);
-      return;
-    }
-
     try {
       setIsAdding(true);
       setErrorMsg('');
-      await addToCart(selectedSize.id, quantity);
+      await addToCart(selectedSize.id, quantity, {
+        productId: product?.id,
+        productName: product?.name,
+        sku: product?.sku,
+        ukSize: selectedSize.ukSize,
+        unitPrice: product?.basePrice,
+        imageUrl: product?.primaryImageUrl,
+      });
       setAddedSuccess(true);
       setTimeout(() => setAddedSuccess(false), 2500);
     } catch (err: any) {

@@ -218,10 +218,10 @@ export const HomePage: React.FC = () => {
       {/* Section 4: Made by hand / Institutional Guarantee */}
       <section className="bg-primary py-20 text-primary-foreground md:py-28">
         <div className="mx-auto grid max-w-7xl items-center gap-12 px-6 md:grid-cols-2 md:gap-16">
-          <div className="paper-shadow-bone border border-primary-foreground/20">
+          <div className="paper-shadow-bone border border-primary-foreground/20 overflow-hidden rounded-2xl">
             <img
-              src="https://images.hostinger.com/deecd9e7-3dd1-45af-a949-d7facb171fbd.png"
-              alt="Quality assurance in Walkaroo footwear production"
+              src="https://images.unsplash.com/photo-1549298916-b41d501d3772?q=80&w=1200&auto=format&fit=crop"
+              alt="Quality assurance in Walkaroo shoe manufacturing and stitching"
               loading="lazy"
               className="h-full w-full object-cover"
             />

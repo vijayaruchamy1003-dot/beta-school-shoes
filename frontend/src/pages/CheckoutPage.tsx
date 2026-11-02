@@ -2,16 +2,17 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
-import { orderApi } from '../api/client';
-import { ShieldCheck, Lock, AlertCircle, ArrowRight, Check } from 'lucide-react';
+import { orderApi, authApi, cartApi } from '../api/client';
+import { ShieldCheck, Lock, AlertCircle, ArrowRight, Check, Zap } from 'lucide-react';
 
 export const CheckoutPage: React.FC = () => {
-  const { cart, refreshCart } = useCart();
-  const { user } = useAuth();
+  const { cart, refreshCart, getGuestCartItems } = useCart();
+  const { user, login } = useAuth();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     recipientName: user ? `${user.firstName} ${user.lastName}` : '',
+    email: user?.email || '',
     phone: user?.phone || '',
     addressLine1: '',
     addressLine2: '',
@@ -30,7 +31,7 @@ export const CheckoutPage: React.FC = () => {
       <main className="flex-1 bg-background text-foreground py-20 px-6">
         <div className="max-w-md mx-auto paper-shadow border border-foreground/15 bg-card p-10 text-center space-y-4">
           <h2 className="font-display text-2xl font-black uppercase tracking-tight">Your cart is empty</h2>
-          <p className="text-sm text-muted-foreground">Add official uniform footwear before checking out.</p>
+          <p className="text-sm text-muted-foreground">Add official Walkaroo footwear before checking out.</p>
           <div className="pt-2">
             <Link
               to="/catalogue"
@@ -50,8 +51,72 @@ export const CheckoutPage: React.FC = () => {
       setSubmitting(true);
       setErrorMessage('');
 
+      // If user is not authenticated, perform frictionless guest auto-session
+      if (!user) {
+        const cleanEmail = formData.email.trim().toLowerCase();
+        const cleanPhone = formData.phone.trim();
+        const nameParts = formData.recipientName.trim().split(' ');
+        const firstName = nameParts[0] || 'Customer';
+        const lastName = nameParts.slice(1).join(' ') || 'Order';
+        const guestPassword = `Guest#${cleanPhone.slice(-4) || '2026'}`;
+
+        try {
+          // Attempt registration
+          const regRes = await authApi.register({
+            email: cleanEmail,
+            password: guestPassword,
+            firstName,
+            lastName,
+            phone: cleanPhone,
+          });
+          login(regRes.data.token, {
+            id: regRes.data.userId,
+            email: regRes.data.email,
+            firstName: regRes.data.firstName,
+            lastName: regRes.data.lastName,
+            roles: regRes.data.roles,
+          });
+        } catch {
+          // If already registered, attempt login with default guest credentials
+          try {
+            const loginRes = await authApi.login({
+              email: cleanEmail,
+              password: guestPassword,
+            });
+            login(loginRes.data.token, {
+              id: loginRes.data.userId,
+              email: loginRes.data.email,
+              firstName: loginRes.data.firstName,
+              lastName: loginRes.data.lastName,
+              roles: loginRes.data.roles,
+            });
+          } catch {
+            // Proceed to checkout if session is active
+          }
+        }
+
+        // Sync local guest items into the backend cart
+        const guestItems = getGuestCartItems();
+        for (const it of guestItems) {
+          try {
+            await cartApi.addToCart(it.productSizeId, it.quantity);
+          } catch {
+            // Stock may be validated during order creation
+          }
+        }
+      }
+
       // 1. Create order and reserve stock in PostgreSQL backend
-      const res = await orderApi.checkout(formData);
+      const res = await orderApi.checkout({
+        recipientName: formData.recipientName,
+        phone: formData.phone,
+        addressLine1: formData.addressLine1,
+        addressLine2: formData.addressLine2,
+        city: formData.city,
+        state: formData.state,
+        postalCode: formData.postalCode,
+        customerNotes: formData.customerNotes,
+      });
       const checkoutData = res.data;
 
       // 2. Open Razorpay Standard Checkout Popup
@@ -94,7 +159,7 @@ export const CheckoutPage: React.FC = () => {
         },
         prefill: {
           name: formData.recipientName,
-          email: user?.email,
+          email: formData.email || user?.email,
           contact: formData.phone,
         },
         notes: {
@@ -102,7 +167,7 @@ export const CheckoutPage: React.FC = () => {
           address: `${formData.addressLine1}, ${formData.city}, ${formData.state} - ${formData.postalCode}`,
         },
         theme: {
-          color: '#1e1915', // Octo Primary Dark Charcoal
+          color: '#1d4ed8',
         },
         modal: {
           ondismiss: function () {
@@ -130,22 +195,23 @@ export const CheckoutPage: React.FC = () => {
   return (
     <main className="flex-1 bg-background text-foreground">
       {/* Top Banner Header */}
-      <section className="border-b border-foreground/15 py-14 md:py-20">
+      <section className="border-b border-foreground/15 py-10 md:py-14 bg-slate-50">
         <div className="mx-auto max-w-7xl px-6">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-            Checkout & Reservation
-          </p>
-          <h1 className="font-display mt-3 text-5xl font-black uppercase leading-none tracking-tight md:text-7xl">
+          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-blue-700">
+            <Zap className="h-3.5 w-3.5 text-amber-500 fill-amber-500" />
+            <span>Fast Direct Checkout · No Login Required</span>
+          </div>
+          <h1 className="font-display mt-2 text-3xl sm:text-4xl md:text-5xl font-black uppercase leading-none tracking-tight">
             Delivery & Payment
           </h1>
-          <p className="mt-2 text-sm text-muted-foreground">
+          <p className="mt-2 text-xs sm:text-sm text-muted-foreground">
             Stock is reserved in PostgreSQL during checkout · Verified with Razorpay modal
           </p>
         </div>
       </section>
 
       {/* Main Grid */}
-      <section className="py-14 md:py-20">
+      <section className="py-10 md:py-16">
         <div className="mx-auto max-w-7xl px-6 space-y-6">
           
           {verifying && (
@@ -166,8 +232,8 @@ export const CheckoutPage: React.FC = () => {
             
             {/* Left: Shipping Form (7 cols) */}
             <div className="lg:col-span-7 space-y-6">
-              <h2 className="font-display text-2xl font-bold uppercase tracking-tight border-b border-foreground/15 pb-4">
-                1. Delivery Address & Contact
+              <h2 className="font-display text-xl sm:text-2xl font-bold uppercase tracking-tight border-b border-foreground/15 pb-4">
+                1. Delivery Address & Contact Details
               </h2>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -178,6 +244,7 @@ export const CheckoutPage: React.FC = () => {
                   <input
                     type="text"
                     required
+                    placeholder="e.g. Ramesh Kumar"
                     value={formData.recipientName}
                     onChange={e => setFormData({ ...formData, recipientName: e.target.value })}
                     className="w-full border border-foreground/25 bg-transparent px-4 py-3 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-foreground"
@@ -197,6 +264,20 @@ export const CheckoutPage: React.FC = () => {
                     className="w-full border border-foreground/25 bg-transparent px-4 py-3 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-foreground"
                   />
                 </div>
+              </div>
+
+              <div>
+                <label className="mb-2 block text-xs font-bold uppercase tracking-[0.18em]">
+                  Email Address (For Order Tracking & Razorpay Receipt) *
+                </label>
+                <input
+                  type="email"
+                  required
+                  placeholder="parent@example.com"
+                  value={formData.email}
+                  onChange={e => setFormData({ ...formData, email: e.target.value })}
+                  className="w-full border border-foreground/25 bg-transparent px-4 py-3 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-foreground"
+                />
               </div>
 
               <div>
@@ -262,8 +343,8 @@ export const CheckoutPage: React.FC = () => {
                   <input
                     type="text"
                     required
-                    maxLength={6}
                     placeholder="560001"
+                    maxLength={6}
                     value={formData.postalCode}
                     onChange={e => setFormData({ ...formData, postalCode: e.target.value })}
                     className="w-full border border-foreground/25 bg-transparent px-4 py-3 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-foreground"
@@ -273,89 +354,96 @@ export const CheckoutPage: React.FC = () => {
 
               <div>
                 <label className="mb-2 block text-xs font-bold uppercase tracking-[0.18em]">
-                  Delivery Instructions / Student Grade (Optional)
+                  Special Delivery Instructions (Optional)
                 </label>
                 <textarea
-                  rows={3}
-                  placeholder="e.g. Grade 7 Section B, deliver between 10am-2pm..."
+                  rows={2}
+                  placeholder="Leave at security desk, call upon arrival, etc."
                   value={formData.customerNotes}
                   onChange={e => setFormData({ ...formData, customerNotes: e.target.value })}
-                  className="w-full border border-foreground/25 bg-transparent px-4 py-3 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-foreground resize-y"
+                  className="w-full border border-foreground/25 bg-transparent px-4 py-3 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-foreground"
                 />
               </div>
             </div>
 
-            {/* Right: Order Summary & Razorpay Trigger (5 cols) */}
+            {/* Right: Order Summary (5 cols) */}
             <div className="lg:col-span-5 space-y-6">
-              <div className="paper-shadow border border-foreground/15 bg-card p-6 md:p-8 space-y-6">
-                <h2 className="font-display text-xl font-bold uppercase tracking-tight">
-                  2. Order Review
+              <div className="border border-foreground/20 bg-card p-6 md:p-8 space-y-6">
+                
+                <h2 className="font-display text-xl font-bold uppercase tracking-tight border-b border-foreground/15 pb-4">
+                  2. Order Summary ({cart.totalItemsCount} {cart.totalItemsCount === 1 ? 'Pair' : 'Pairs'})
                 </h2>
 
-                <div className="space-y-4 max-h-72 overflow-y-auto pr-1 divide-y divide-foreground/10 text-xs">
+                {/* Items list */}
+                <div className="divide-y divide-foreground/10 max-h-72 overflow-y-auto pr-2 space-y-3">
                   {cart.items.map(item => (
-                    <div key={item.itemId} className="pt-3 flex justify-between items-start gap-3">
-                      <div>
-                        <p className="font-bold uppercase text-foreground">{item.productName}</p>
-                        <p className="text-muted-foreground">Size: {item.ukSize} · Qty: {item.quantity}</p>
+                    <div key={item.itemId} className="pt-3 first:pt-0 flex items-center justify-between gap-4">
+                      <div className="min-w-0">
+                        <p className="font-bold text-sm truncate">{item.productName}</p>
+                        <p className="text-xs text-muted-foreground">
+                          Size: <strong className="text-foreground">{item.ukSize}</strong> · Qty: {item.quantity}
+                        </p>
                       </div>
-                      <span className="font-display font-bold text-foreground">
-                        ₹{item.itemTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-                      </span>
+                      <div className="text-right shrink-0">
+                        <p className="font-display font-bold text-sm">
+                          ₹{item.itemTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                        </p>
+                      </div>
                     </div>
                   ))}
                 </div>
 
+                {/* Subtotals & Fees */}
                 <div className="border-t border-foreground/15 pt-4 space-y-2 text-xs">
                   <div className="flex justify-between text-muted-foreground">
                     <span>Subtotal</span>
-                    <span className="font-display font-bold text-foreground">
-                      ₹{cart.subtotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-                    </span>
+                    <span>₹{cart.subtotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
                   </div>
                   <div className="flex justify-between text-muted-foreground">
-                    <span>Shipping</span>
-                    <span className="font-bold text-foreground uppercase">FREE</span>
+                    <span>GST (Included)</span>
+                    <span>₹{cart.estimatedTax.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
                   </div>
-                  <div className="flex justify-between text-sm font-bold pt-2 border-t border-foreground/10">
-                    <span className="uppercase tracking-wider">Total Payable (INR)</span>
-                    <span className="font-display font-black text-xl">
+                  <div className="flex justify-between text-emerald-600 font-bold">
+                    <span>Express Delivery</span>
+                    <span>FREE</span>
+                  </div>
+                  <div className="border-t border-foreground/15 pt-3 flex justify-between text-base font-bold text-foreground">
+                    <span>Total Payable</span>
+                    <span className="font-display text-xl font-black">
                       ₹{cart.estimatedTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                     </span>
                   </div>
                 </div>
 
-                {/* Razorpay Gateway Badge */}
-                <div className="border border-foreground/15 p-4 bg-secondary/40 space-y-2 text-xs text-muted-foreground">
-                  <div className="flex items-center gap-2 text-foreground font-bold uppercase tracking-wider">
-                    <Lock className="w-3.5 h-3.5" />
-                    <span>Razorpay Standard Checkout Modal</span>
-                  </div>
-                  <p>
-                    Supports UPI (Google Pay, PhonePe, Paytm), Credit/Debit Cards, NetBanking, and Wallets. Server HMAC-SHA256 signature verification.
-                  </p>
-                </div>
-
+                {/* Submit Payment Button */}
                 <button
                   type="submit"
                   disabled={submitting || verifying}
-                  className="w-full flex items-center justify-center gap-3 bg-primary py-4 font-display text-sm font-bold uppercase tracking-[0.2em] text-primary-foreground transition-all hover:-translate-x-0.5 hover:-translate-y-0.5 hover:paper-shadow-sm active:scale-[0.98] disabled:opacity-60"
+                  className="w-full flex items-center justify-center gap-3 bg-blue-700 py-4 font-display text-xs font-bold uppercase tracking-[0.2em] text-white hover:bg-blue-800 transition-all shadow-md active:scale-[0.98] disabled:opacity-50"
                 >
                   {submitting ? (
-                    <span>Opening Razorpay Popup...</span>
+                    <span>Opening Razorpay Gateway...</span>
                   ) : verifying ? (
-                    <span>Verifying Signature...</span>
+                    <span>Confirming Payment...</span>
                   ) : (
                     <>
-                      <span>Pay ₹{cart.estimatedTotal.toLocaleString('en-IN', { minimumFractionDigits: 2 })} with Razorpay</span>
-                      <ArrowRight className="h-4 w-4" />
+                      <Lock className="w-4 h-4" />
+                      <span>Pay ₹{cart.estimatedTotal.toLocaleString('en-IN')} with Razorpay</span>
+                      <ArrowRight className="w-4 h-4" />
                     </>
                   )}
                 </button>
+
+                <div className="flex items-center justify-center gap-2 text-[11px] text-muted-foreground text-center">
+                  <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>256-Bit SSL · UPI, Cards, NetBanking, Wallets supported</span>
+                </div>
+
               </div>
             </div>
 
           </form>
+
         </div>
       </section>
     </main>

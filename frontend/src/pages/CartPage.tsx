@@ -7,32 +7,7 @@ import { ShoeVector } from '../components/ShoeVector';
 
 export const CartPage: React.FC = () => {
   const { cart, updateQuantity, removeItem, isLoading } = useCart();
-  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
-
-  if (!isAuthenticated) {
-    return (
-      <main className="flex-1 bg-background text-foreground py-20 px-6">
-        <div className="max-w-md mx-auto paper-shadow border border-foreground/15 bg-card p-8 text-center space-y-4">
-          <ShoppingBag className="w-12 h-12 text-foreground mx-auto" />
-          <h2 className="font-display text-2xl font-bold uppercase tracking-tight">
-            Sign In to Access Bag
-          </h2>
-          <p className="text-sm text-muted-foreground">
-            Sign in to your account to review saved school uniform selections and complete your order.
-          </p>
-          <div className="pt-2">
-            <Link
-              to="/login?redirect=/cart"
-              className="inline-block w-full bg-primary py-4 font-display text-xs font-bold uppercase tracking-[0.2em] text-primary-foreground hover:paper-shadow-sm transition-all"
-            >
-              Sign In Now
-            </Link>
-          </div>
-        </div>
-      </main>
-    );
-  }
 
   if (isLoading && !cart) {
     return (

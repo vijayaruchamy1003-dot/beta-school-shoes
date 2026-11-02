@@ -149,10 +149,10 @@ export const ContactPage: React.FC = () => {
             <div className="paper-shadow border border-foreground/15 bg-card p-4 md:rotate-1">
               <div className="aspect-[3/2] w-full overflow-hidden bg-secondary relative flex items-center justify-center">
                 <img
-                  src="https://images.hostinger.com/deecd9e7-3dd1-45af-a949-d7facb171fbd.png"
-                  alt="Crafting and inspecting Walkaroo school footwear"
+                  src="https://images.unsplash.com/photo-1549298916-b41d501d3772?q=80&w=1200&auto=format&fit=crop"
+                  alt="Walkaroo authorized distribution depot and shoe warehouse"
                   loading="lazy"
-                  className="h-full w-full object-cover mix-blend-multiply"
+                  className="h-full w-full object-cover"
                 />
                 <div className="absolute bottom-3 left-3 bg-primary text-primary-foreground px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em]">
                   Official Partner Depot

@@ -59,15 +59,17 @@ export const ProductCard: React.FC<Props> = ({ product, index = 0 }) => {
       return;
     }
 
-    if (!isAuthenticated) {
-      navigate('/login?redirect=/catalogue');
-      return;
-    }
-
     try {
       setIsAdding(true);
       setErrorMsg('');
-      await addToCart(selectedSize.id, 1);
+      await addToCart(selectedSize.id, 1, {
+        productId: product.id,
+        productName: product.name,
+        sku: product.sku,
+        ukSize: selectedSize.ukSize,
+        unitPrice: product.basePrice,
+        imageUrl: product.primaryImageUrl,
+      });
       setAddedSuccess(true);
       setTimeout(() => setAddedSuccess(false), 2000);
     } catch (err: any) {
