@@ -97,6 +97,10 @@ public class ProductService {
             .shortDescription(product.getShortDescription())
             .category(product.getCategory())
             .basePrice(product.getBasePrice())
+            .mrp(product.getMrp())
+            .isBestseller(product.isBestseller())
+            .isNewArrival(product.isNewArrival())
+            .badgeText(product.getBadgeText())
             .primaryImageUrl(primaryImg)
             .imageUrls(allImages)
             .sizes(sizeResponses)
@@ -133,6 +137,10 @@ public class ProductService {
             .shortDescription(request.getShortDescription().trim())
             .category(request.getCategory().trim().toUpperCase())
             .basePrice(request.getBasePrice())
+            .mrp(request.getMrp())
+            .isBestseller(request.getIsBestseller() != null ? request.getIsBestseller() : false)
+            .isNewArrival(request.getIsNewArrival() != null ? request.getIsNewArrival() : false)
+            .badgeText(StringUtils.hasText(request.getBadgeText()) ? request.getBadgeText().trim() : null)
             .isActive(request.getIsActive() != null ? request.getIsActive() : true)
             .build();
 
@@ -175,6 +183,14 @@ public class ProductService {
         product.setShortDescription(request.getShortDescription().trim());
         product.setCategory(request.getCategory().trim());
         product.setBasePrice(request.getBasePrice());
+        product.setMrp(request.getMrp());
+        if (request.getIsBestseller() != null) {
+            product.setBestseller(request.getIsBestseller());
+        }
+        if (request.getIsNewArrival() != null) {
+            product.setNewArrival(request.getIsNewArrival());
+        }
+        product.setBadgeText(StringUtils.hasText(request.getBadgeText()) ? request.getBadgeText().trim() : null);
         if (request.getIsActive() != null) {
             product.setActive(request.getIsActive());
         }
@@ -369,6 +385,10 @@ public class ProductService {
             .shortDescription(product.getShortDescription())
             .category(product.getCategory())
             .basePrice(product.getBasePrice())
+            .mrp(product.getMrp())
+            .isBestseller(product.isBestseller())
+            .isNewArrival(product.isNewArrival())
+            .badgeText(product.getBadgeText())
             .isActive(product.isActive())
             .primaryImageUrl(primaryImg)
             .images(imgResponses)

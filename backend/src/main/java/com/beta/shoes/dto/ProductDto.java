@@ -27,6 +27,10 @@ public class ProductDto {
         private String shortDescription;
         private String category;
         private BigDecimal basePrice;
+        private BigDecimal mrp;
+        private boolean isBestseller;
+        private boolean isNewArrival;
+        private String badgeText;
         private String primaryImageUrl;
         private List<String> imageUrls;
         private List<PublicSizeResponse> sizes;
@@ -64,6 +68,10 @@ public class ProductDto {
         private String shortDescription;
         private String category;
         private BigDecimal basePrice;
+        private BigDecimal mrp;
+        private boolean isBestseller;
+        private boolean isNewArrival;
+        private String badgeText;
         private boolean isActive;
         private String primaryImageUrl;
         private List<AdminImageResponse> images;
@@ -138,6 +146,11 @@ public class ProductDto {
         @NotNull(message = "Base price is required")
         @DecimalMin(value = "0.01", message = "Base price must be greater than 0")
         private BigDecimal basePrice;
+
+        private BigDecimal mrp;
+        private Boolean isBestseller;
+        private Boolean isNewArrival;
+        private String badgeText;
 
         private Boolean isActive;
         private List<String> initialSizes; // Optional initial size list e.g. ["UK 1", "UK 2"]

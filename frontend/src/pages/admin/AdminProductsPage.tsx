@@ -127,7 +127,24 @@ export const AdminProductsPage: React.FC = () => {
                             {product.shortId || getShortId(product.id, product.sku)}
                           </span>
                         </div>
-                        <span className="font-mono text-[10px] text-slate-400">SKU: {product.sku}</span>
+                        <div className="flex flex-wrap items-center gap-1 mt-0.5">
+                          <span className="font-mono text-[10px] text-slate-400">SKU: {product.sku}</span>
+                          {product.badgeText && (
+                            <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-rose-100 text-rose-800">
+                              {product.badgeText}
+                            </span>
+                          )}
+                          {product.isBestseller && (
+                            <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-amber-100 text-amber-800">
+                              ★ Bestseller
+                            </span>
+                          )}
+                          {product.isNewArrival && (
+                            <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-emerald-100 text-emerald-800">
+                              ✨ New Arrival
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </td>
 
@@ -135,8 +152,11 @@ export const AdminProductsPage: React.FC = () => {
                       {product.category}
                     </td>
 
-                    <td className="py-3 px-4 font-mono font-bold text-navy-950">
-                      ₹{product.basePrice.toFixed(2)}
+                    <td className="py-3 px-4 font-mono">
+                      <div className="font-bold text-navy-950">₹{product.basePrice.toFixed(2)}</div>
+                      {product.mrp && product.mrp > product.basePrice && (
+                        <div className="text-[10px] text-slate-400 line-through">MRP: ₹{product.mrp.toFixed(2)}</div>
+                      )}
                     </td>
 
                     <td className="py-3 px-4 font-mono">

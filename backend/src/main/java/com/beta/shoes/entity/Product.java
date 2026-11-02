@@ -39,6 +39,20 @@ public class Product {
     @Column(name = "base_price", nullable = false, precision = 10, scale = 2)
     private BigDecimal basePrice;
 
+    @Column(name = "mrp", precision = 10, scale = 2)
+    private BigDecimal mrp;
+
+    @Column(name = "is_bestseller", nullable = false)
+    @Builder.Default
+    private boolean isBestseller = false;
+
+    @Column(name = "is_new_arrival", nullable = false)
+    @Builder.Default
+    private boolean isNewArrival = false;
+
+    @Column(name = "badge_text", length = 64)
+    private String badgeText;
+
     @Column(name = "is_active", nullable = false)
     @Builder.Default
     private boolean isActive = true;

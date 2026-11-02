@@ -46,6 +46,10 @@ export const ProductEditModal: React.FC<ProductEditModalProps> = ({
   const [sku, setSku] = useState('');
   const [category, setCategory] = useState('');
   const [basePrice, setBasePrice] = useState('');
+  const [mrp, setMrp] = useState('');
+  const [isBestseller, setIsBestseller] = useState(false);
+  const [isNewArrival, setIsNewArrival] = useState(false);
+  const [badgeText, setBadgeText] = useState('');
   const [shortDescription, setShortDescription] = useState('');
   const [isActive, setIsActive] = useState(true);
   const [sizes, setSizes] = useState<SizeRow[]>([]);
@@ -62,6 +66,10 @@ export const ProductEditModal: React.FC<ProductEditModalProps> = ({
       setSku(product.sku || '');
       setCategory(product.category || '');
       setBasePrice(product.basePrice ? product.basePrice.toString() : '');
+      setMrp(product.mrp ? product.mrp.toString() : '');
+      setIsBestseller(Boolean(product.isBestseller));
+      setIsNewArrival(Boolean(product.isNewArrival));
+      setBadgeText(product.badgeText || '');
       setShortDescription(product.shortDescription || '');
       setIsActive(product.isActive !== false);
       setImagePreview(product.primaryImageUrl || null);
@@ -90,6 +98,10 @@ export const ProductEditModal: React.FC<ProductEditModalProps> = ({
       setSku('');
       setCategory('');
       setBasePrice('699.00');
+      setMrp('999.00');
+      setIsBestseller(false);
+      setIsNewArrival(true);
+      setBadgeText('');
       setShortDescription('');
       setIsActive(true);
       setImagePreview(null);
@@ -170,6 +182,10 @@ export const ProductEditModal: React.FC<ProductEditModalProps> = ({
         shortDescription: shortDescription.trim() || name.trim(),
         category: category.trim(),
         basePrice: parseFloat(basePrice) || 0,
+        mrp: mrp ? parseFloat(mrp) : undefined,
+        isBestseller,
+        isNewArrival,
+        badgeText: badgeText.trim() || undefined,
         isActive,
         sizes: cleanSizesPayload,
       };
@@ -291,6 +307,72 @@ export const ProductEditModal: React.FC<ProductEditModalProps> = ({
                 onChange={e => setBasePrice(e.target.value)}
                 className="w-full px-3 py-2 rounded-lg border border-slate-300 text-slate-900 font-mono text-xs focus:outline-none focus:border-navy-950"
               />
+            </div>
+          </div>
+
+          {/* Row 2.5: Promotional Badges & MRP */}
+          <div className="rounded-xl border border-blue-200/70 bg-blue-50/40 p-3.5 space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+                Promotional Badges & MRP Discount
+              </span>
+              <span className="text-[10px] text-slate-500 font-medium">Displayed on storefront cards</span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <label className="font-bold text-slate-700 block text-xs">
+                  Original MRP (₹) <span className="font-normal text-slate-400">(Strikethrough Price)</span>
+                </label>
+                <input
+                  type="number"
+                  step="0.01"
+                  placeholder="e.g. 999.00"
+                  value={mrp}
+                  onChange={e => setMrp(e.target.value)}
+                  className="w-full px-3 py-2 rounded-lg border border-slate-300 text-slate-900 font-mono text-xs focus:outline-none focus:border-navy-950 bg-white"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-bold text-slate-700 block text-xs">
+                  Custom Badge Text <span className="font-normal text-slate-400">(Optional override)</span>
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. 40% OFF, TOP PICK, HOT"
+                  value={badgeText}
+                  onChange={e => setBadgeText(e.target.value)}
+                  className="w-full px-3 py-2 rounded-lg border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-navy-950 bg-white"
+                />
+              </div>
+            </div>
+
+            {/* Quick Badge Checkboxes */}
+            <div className="flex flex-wrap items-center gap-3 pt-1">
+              <label className="inline-flex items-center gap-2 cursor-pointer bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-xs font-semibold text-slate-800 hover:border-amber-400 transition-colors">
+                <input
+                  type="checkbox"
+                  checked={isBestseller}
+                  onChange={e => setIsBestseller(e.target.checked)}
+                  className="h-4 w-4 rounded text-amber-500 focus:ring-amber-400"
+                />
+                <span className="flex items-center gap-1 font-bold text-amber-700">
+                  ★ Mark as Bestseller
+                </span>
+              </label>
+
+              <label className="inline-flex items-center gap-2 cursor-pointer bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-xs font-semibold text-slate-800 hover:border-emerald-400 transition-colors">
+                <input
+                  type="checkbox"
+                  checked={isNewArrival}
+                  onChange={e => setIsNewArrival(e.target.checked)}
+                  className="h-4 w-4 rounded text-emerald-600 focus:ring-emerald-500"
+                />
+                <span className="flex items-center gap-1 font-bold text-emerald-700">
+                  ✨ Mark as New Arrival
+                </span>
+              </label>
             </div>
           </div>
 

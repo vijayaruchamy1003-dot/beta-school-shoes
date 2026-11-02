@@ -34,16 +34,28 @@ export const ProductCard: React.FC<Props> = ({ product, index = 0 }) => {
   };
   const categoryLabel = categoryLabels[product.category] || 'Official Uniform Footwear';
 
-  // Realistic MRP calculation (Asian Footwears style with strikethrough MRP & % off)
-  const mrp = Math.round(product.basePrice * 1.38);
-  const discountPercent = Math.max(15, Math.round(((mrp - product.basePrice) / mrp) * 100));
+  // Realistic MRP calculation (Uses admin configured MRP or falls back)
+  const mrp = product.mrp && product.mrp > product.basePrice ? product.mrp : Math.round(product.basePrice * 1.38);
+  const discountPercent = Math.max(0, Math.round(((mrp - product.basePrice) / mrp) * 100));
 
   // Consistent rating for Asian Footwears social proof
   const rating = (4.4 + ((product.name.charCodeAt(0) % 6) * 0.1)).toFixed(1);
   const reviewCount = 45 + (product.name.charCodeAt(product.name.length - 1) * 3) % 180;
 
-  // Asian Footwears promotional badge type
-  const badgeType = index % 3 === 0 ? 'BESTSELLER' : index % 3 === 1 ? 'NEW ARRIVAL' : `${discountPercent}% OFF`;
+  // Promotional badge: custom badge text > bestseller > new arrival > discount %
+  const badgeType = product.badgeText?.trim()
+    ? product.badgeText.trim().toUpperCase()
+    : product.isBestseller
+    ? 'BESTSELLER'
+    : product.isNewArrival
+    ? 'NEW ARRIVAL'
+    : discountPercent > 0
+    ? `${discountPercent}% OFF`
+    : index % 3 === 0
+    ? 'BESTSELLER'
+    : index % 3 === 1
+    ? 'NEW ARRIVAL'
+    : `${discountPercent}% OFF`;
 
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault();

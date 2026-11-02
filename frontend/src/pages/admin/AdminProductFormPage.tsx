@@ -14,6 +14,10 @@ export const AdminProductFormPage: React.FC = () => {
     shortDescription: '',
     category: 'BOYS_FORMAL',
     basePrice: '',
+    mrp: '',
+    isBestseller: false,
+    isNewArrival: false,
+    badgeText: '',
     isActive: true,
   });
 
@@ -33,6 +37,10 @@ export const AdminProductFormPage: React.FC = () => {
             shortDescription: res.data.shortDescription,
             category: res.data.category,
             basePrice: res.data.basePrice.toString(),
+            mrp: res.data.mrp ? res.data.mrp.toString() : '',
+            isBestseller: Boolean(res.data.isBestseller),
+            isNewArrival: Boolean(res.data.isNewArrival),
+            badgeText: res.data.badgeText || '',
             isActive: res.data.isActive,
           });
           if (res.data.primaryImageUrl) {
@@ -64,6 +72,10 @@ export const AdminProductFormPage: React.FC = () => {
         shortDescription: formData.shortDescription.trim(),
         category: formData.category,
         basePrice: parseFloat(formData.basePrice),
+        mrp: formData.mrp ? parseFloat(formData.mrp) : undefined,
+        isBestseller: formData.isBestseller,
+        isNewArrival: formData.isNewArrival,
+        badgeText: formData.badgeText.trim() || undefined,
         isActive: formData.isActive,
         initialSizes: isEdit ? undefined : ['UK 1', 'UK 2', 'UK 3', 'UK 4', 'UK 5', 'UK 6']
       };
@@ -180,6 +192,60 @@ export const AdminProductFormPage: React.FC = () => {
                 onChange={e => setFormData({ ...formData, basePrice: e.target.value })}
                 className="w-full px-3 py-2 rounded-lg border border-slate-300 text-slate-800 text-xs font-mono focus:outline-none focus:border-navy-950"
               />
+            </div>
+          </div>
+
+          {/* Badges & MRP */}
+          <div className="rounded-xl border border-blue-200/70 bg-blue-50/40 p-4 space-y-3">
+            <span className="text-xs font-bold text-slate-800 uppercase tracking-wider block">
+              Promotional Badges & MRP
+            </span>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <label className="font-semibold text-slate-700 block text-xs">Original MRP (₹)</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  placeholder="e.g. 999.00"
+                  value={formData.mrp}
+                  onChange={e => setFormData({ ...formData, mrp: e.target.value })}
+                  className="w-full px-3 py-2 rounded-lg border border-slate-300 text-slate-800 text-xs font-mono focus:outline-none focus:border-navy-950 bg-white"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-semibold text-slate-700 block text-xs">Custom Badge Text</label>
+                <input
+                  type="text"
+                  placeholder="e.g. 40% OFF, TOP PICK, HOT"
+                  value={formData.badgeText}
+                  onChange={e => setFormData({ ...formData, badgeText: e.target.value })}
+                  className="w-full px-3 py-2 rounded-lg border border-slate-300 text-slate-800 text-xs focus:outline-none focus:border-navy-950 bg-white"
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3 pt-1">
+              <label className="inline-flex items-center gap-2 cursor-pointer bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-xs font-semibold text-slate-800">
+                <input
+                  type="checkbox"
+                  checked={formData.isBestseller}
+                  onChange={e => setFormData({ ...formData, isBestseller: e.target.checked })}
+                  className="h-4 w-4 rounded text-amber-500 focus:ring-amber-400"
+                />
+                <span className="font-bold text-amber-700">★ Mark as Bestseller</span>
+              </label>
+
+              <label className="inline-flex items-center gap-2 cursor-pointer bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-xs font-semibold text-slate-800">
+                <input
+                  type="checkbox"
+                  checked={formData.isNewArrival}
+                  onChange={e => setFormData({ ...formData, isNewArrival: e.target.checked })}
+                  className="h-4 w-4 rounded text-emerald-600 focus:ring-emerald-500"
+                />
+                <span className="font-bold text-emerald-700">✨ Mark as New Arrival</span>
+              </label>
             </div>
           </div>
 

@@ -32,6 +32,10 @@ export interface PublicProduct {
   shortDescription: string;
   category: string;
   basePrice: number;
+  mrp?: number;
+  isBestseller?: boolean;
+  isNewArrival?: boolean;
+  badgeText?: string;
   primaryImageUrl?: string;
   imageUrls: string[];
   sizes: PublicSize[];
@@ -45,6 +49,10 @@ export interface AdminProduct {
   shortDescription: string;
   category: string;
   basePrice: number;
+  mrp?: number;
+  isBestseller?: boolean;
+  isNewArrival?: boolean;
+  badgeText?: string;
   isActive: boolean;
   primaryImageUrl?: string;
   images: { id: string; imageUrl: string; isPrimary: boolean; displayOrder: number }[];
