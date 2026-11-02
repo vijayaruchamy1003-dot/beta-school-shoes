@@ -21,7 +21,7 @@ interface ProductEditModalProps {
 export const getShortId = (id?: string, sku?: string): string => {
   if (!id) return 'PRD-NEW';
   if (id.startsWith('11111111-1111-1111-1111-1111111111')) {
-    return 'PRD-' + id.substring(id.length() - 3);
+    return 'PRD-' + id.substring(id.length - 3);
   }
   // Check if it's standard UUID
   if (id.length >= 36) {
