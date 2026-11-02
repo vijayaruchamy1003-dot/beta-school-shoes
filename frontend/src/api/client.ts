@@ -17,8 +17,22 @@ import {
   StudentOrder
 } from '../types';
 
+const getApiBaseUrl = (): string => {
+  const envUrl = import.meta.env.VITE_API_BASE_URL;
+  if (envUrl && typeof envUrl === 'string' && envUrl.trim() !== '') {
+    const trimmed = envUrl.trim().replace(/\/+$/, '');
+    return trimmed.endsWith('/api') ? trimmed : `${trimmed}/api`;
+  }
+  // Production fallback: default to Render backend if no env var is provided
+  if (import.meta.env.PROD) {
+    return 'https://beta-backend-z3su.onrender.com/api';
+  }
+  // Local development fallback: proxied by Vite dev server
+  return '/api';
+};
+
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: getApiBaseUrl(),
   headers: {
     'Content-Type': 'application/json',
   },
