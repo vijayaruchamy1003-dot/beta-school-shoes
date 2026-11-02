@@ -182,13 +182,13 @@ export const ContactPage: React.FC = () => {
                     Write to us
                   </h3>
                   <a
-                    href="mailto:orders@apexfootwear.example.com"
+                    href="mailto:orders@smenterprises.in"
                     className="mt-1.5 block text-sm text-muted-foreground underline underline-offset-4 transition-colors hover:text-foreground"
                   >
-                    orders@apexfootwear.example.com
+                    orders@smenterprises.in
                   </a>
                   <p className="text-xs text-muted-foreground mt-0.5">
-                    Institutional school tenders: tenders@apexfootwear.example.com
+                    Institutional school tenders: tenders@smenterprises.in
                   </p>
                 </div>
               </div>
@@ -223,7 +223,7 @@ export const ContactPage: React.FC = () => {
               <span className="font-bold text-foreground uppercase tracking-wider block mb-0.5">
                 Official Partnership Registry:
               </span>
-              Code: <code className="font-mono text-foreground font-semibold">BETA-INS-DIST-2024/902</code> — Single-Vendor Authorized Channel.
+              Code: <code className="font-mono text-foreground font-semibold">SM-WLK-DIST-2024/902</code> — SM Enterprises officially partnered with Walkaroo Company.
             </div>
 
           </div>

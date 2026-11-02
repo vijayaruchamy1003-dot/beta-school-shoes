@@ -28,10 +28,10 @@ export const HomePage: React.FC = () => {
         <div className="mx-auto max-w-5xl px-6 pb-16 pt-16 text-center md:pb-24 md:pt-28">
           
           <p className="flex items-center justify-center gap-3 text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground md:text-sm">
-            <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 text-foreground" fill="currentColor" aria-hidden="true">
+            <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 text-blue-700" fill="currentColor" aria-hidden="true">
               <path d="M8.7 1.5h6.6l7.2 7.2v6.6l-7.2 7.2H8.7l-7.2-7.2V8.7l7.2-7.2z"></path>
             </svg>
-            <span>Official Institutional Partner · Genuine BETA Footwear</span>
+            <span>SM Enterprises · Official Partner of Walkaroo Company</span>
           </p>
 
           <h1 className="font-display mt-6 text-5xl font-black uppercase leading-[0.95] tracking-tight md:text-8xl">
@@ -229,18 +229,18 @@ export const HomePage: React.FC = () => {
 
           <div className="space-y-6">
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-primary-foreground/60">
-              Official BETA Partner
+              SM Enterprises · Walkaroo Official Partner
             </p>
             <h2 className="font-display text-4xl font-black uppercase leading-tight md:text-5xl">
               Engineered for endurance, on purpose
             </h2>
             <p className="text-sm leading-relaxed text-primary-foreground/80">
-              As the authorized institutional partner for BETA school shoes, our distributor network delivers verified, authentic uniform footwear directly to parents, schools, and institutional trusts.
+              As the officially authorized institutional distributor partnering with Walkaroo Company, SM Enterprises delivers verified, authentic uniform footwear directly to parents, schools, and institutional trusts.
             </p>
             <ul className="space-y-3 text-sm text-primary-foreground/90 font-sans">
               <li className="flex items-center gap-3">
                 <CheckCircle className="h-4 w-4 shrink-0 text-primary-foreground" />
-                <span>Zero counterfeit guarantee with official BETA batch certification</span>
+                <span>Zero counterfeit guarantee with genuine Walkaroo batch certification</span>
               </li>
               <li className="flex items-center gap-3">
                 <CheckCircle className="h-4 w-4 shrink-0 text-primary-foreground" />
@@ -271,7 +271,7 @@ export const HomePage: React.FC = () => {
             “A school shoe should outlive the toughest term it was bought for.”
           </p>
           <footer className="mt-6 text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-            BETA Official Institutional Footwear Partner · Single-Vendor Supply
+            SM Enterprises · Walkaroo Official Institutional Footwear Partner · Single-Vendor Supply
           </footer>
         </blockquote>
       </section>

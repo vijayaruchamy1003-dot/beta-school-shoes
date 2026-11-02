@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ShieldCheck, ArrowRight } from 'lucide-react';
+import { ShieldCheck, ArrowRight, Sparkles, CheckCircle2 } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   const [newsletterEmail, setNewsletterEmail] = useState('');
@@ -15,123 +15,130 @@ export const Footer: React.FC = () => {
   };
 
   return (
-    <footer className="bg-primary text-primary-foreground">
-      <div className="mx-auto max-w-7xl px-6 pt-16 md:pt-24">
+    <footer className="bg-slate-900 text-white border-t border-slate-800">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 pt-16 md:pt-20">
         
         {/* Main 4-Column Grid */}
-        <div className="grid gap-12 pb-16 md:grid-cols-12 md:pb-20">
+        <div className="grid gap-10 pb-14 md:grid-cols-12 md:pb-16">
           
-          {/* Brand & Mission Column */}
-          <div className="md:col-span-4">
-            <Link to="/" className="flex items-center gap-2.5" aria-label="BETA home">
-              <svg viewBox="0 0 24 24" className="h-6 w-6 text-primary-foreground shrink-0" fill="currentColor" aria-hidden="true">
-                <path d="M8.7 1.5h6.6l7.2 7.2v6.6l-7.2 7.2H8.7l-7.2-7.2V8.7l7.2-7.2z"></path>
-              </svg>
-              <span className="font-display text-2xl font-black uppercase leading-none tracking-tight">
-                BETA
-              </span>
+          {/* Brand & Partner Column */}
+          <div className="md:col-span-4 space-y-4">
+            <Link to="/" className="flex items-center gap-3" aria-label="SM Enterprises Home">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-white font-black text-lg shadow-sm">
+                SM
+              </div>
+              <div className="flex flex-col">
+                <span className="text-xl font-black uppercase tracking-tight text-white leading-none">
+                  SM Enterprises
+                </span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 mt-1">
+                  Official Walkaroo Company Partner
+                </span>
+              </div>
             </Link>
-            <p className="mt-5 max-w-xs text-sm leading-relaxed text-primary-foreground/70 font-sans">
-              Official institutional distributor of genuine BETA school footwear. Uniform-compliant, high-density soles, and scuff-resistant leather designed to withstand every term.
+
+            <p className="max-w-sm text-xs sm:text-sm leading-relaxed text-slate-400">
+              SM Enterprises is the officially authorized institutional distributor partnering with Walkaroo Company. Delivering certified durable school shoes, PT sneakers, and uniform footwear directly to institutions, students, and parents.
             </p>
-            <div className="mt-4 flex items-center gap-2 text-xs text-primary-foreground/60">
-              <ShieldCheck className="w-4 h-4 text-primary-foreground/80" />
-              <span>Partner ID: BETA-INS-DIST-2024/902</span>
+
+            <div className="flex items-center gap-2 rounded-lg bg-slate-800/80 p-2.5 text-xs text-slate-300 border border-slate-700/60 max-w-sm">
+              <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+              <span>Official Institutional Partner ID: <strong>SM-WLK-DIST-2024/902</strong></span>
             </div>
           </div>
 
-          {/* Shop Links */}
-          <nav className="md:col-span-2" aria-label="Shop links">
-            <h3 className="font-display text-xs font-bold uppercase tracking-[0.2em] text-primary-foreground/50">
-              Shop Shoes
+          {/* Shop Categories */}
+          <nav className="md:col-span-2" aria-label="Shop categories">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+              Shop Footwear
             </h3>
-            <ul className="mt-4 space-y-3 text-sm">
+            <ul className="mt-4 space-y-2.5 text-xs sm:text-sm text-slate-300">
               <li>
-                <Link to="/catalogue" className="transition-colors hover:text-primary-foreground/70">
+                <Link to="/catalogue" className="hover:text-white transition-colors">
                   All School Shoes
                 </Link>
               </li>
               <li>
-                <Link to="/catalogue?category=BOYS_FORMAL" className="transition-colors hover:text-primary-foreground/70">
-                  Boys Formal Oxford
+                <Link to="/catalogue?category=BOYS_FORMAL" className="hover:text-white transition-colors">
+                  Boys Formal Derby
                 </Link>
               </li>
               <li>
-                <Link to="/catalogue?category=GIRLS_FORMAL" className="transition-colors hover:text-primary-foreground/70">
+                <Link to="/catalogue?category=GIRLS_FORMAL" className="hover:text-white transition-colors">
                   Girls Formal Buckle
                 </Link>
               </li>
               <li>
-                <Link to="/catalogue?category=SPORTS_PT" className="transition-colors hover:text-primary-foreground/70">
+                <Link to="/catalogue?category=SPORTS_PT" className="hover:text-white transition-colors">
                   Sports & PT Canvas
                 </Link>
               </li>
               <li>
-                <Link to="/catalogue?category=JUNIOR_VELCRO" className="transition-colors hover:text-primary-foreground/70">
-                  Junior Velcro
+                <Link to="/catalogue?category=JUNIOR_VELCRO" className="hover:text-white transition-colors">
+                  Junior Velcro Strap
                 </Link>
               </li>
             </ul>
           </nav>
 
-          {/* Institutional / Company */}
-          <nav className="md:col-span-2" aria-label="Company links">
-            <h3 className="font-display text-xs font-bold uppercase tracking-[0.2em] text-primary-foreground/50">
-              Institution
+          {/* Institutional Services */}
+          <nav className="md:col-span-3" aria-label="Institutional services">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+              Institutional Solutions
             </h3>
-            <ul className="mt-4 space-y-3 text-sm">
+            <ul className="mt-4 space-y-2.5 text-xs sm:text-sm text-slate-300">
               <li>
-                <Link to="/bulk-enquiry" className="transition-colors hover:text-primary-foreground/70">
-                  Bulk School Orders
+                <Link to="/bulk-enquiry" className="hover:text-white transition-colors">
+                  Bulk School Enquiries & Tenders
                 </Link>
               </li>
               <li>
-                <Link to="/contact" className="transition-colors hover:text-primary-foreground/70">
-                  Contact Distributor
+                <Link to="/track" className="hover:text-white transition-colors">
+                  Track Student Order
                 </Link>
               </li>
               <li>
-                <Link to="/track" className="transition-colors hover:text-primary-foreground/70">
-                  Track Delivery
+                <Link to="/contact" className="hover:text-white transition-colors">
+                  Campus Fitment Camps
                 </Link>
               </li>
               <li>
-                <Link to="/admin" className="text-primary-foreground/90 font-bold hover:underline transition-colors">
-                  Admin Portal
-                </Link>
+                <span className="text-slate-500">Contact: orders@smenterprises.in</span>
+              </li>
+              <li>
+                <span className="text-slate-500">Wholesale: tenders@smenterprises.in</span>
               </li>
             </ul>
           </nav>
 
-          {/* Institutional Bulletin Newsletter */}
-          <div className="md:col-span-4">
-            <h3 className="font-display text-xs font-bold uppercase tracking-[0.2em] text-primary-foreground/50">
-              Uniform Supply Bulletin
+          {/* School Newsletter / Tenders */}
+          <div className="md:col-span-3 space-y-3">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+              School Updates & Catalogs
             </h3>
-            <p className="mt-4 mb-5 text-sm text-primary-foreground/70">
-              Receive updates on seasonal school admissions restocks, sizing camp schedules, and wholesale institutional quotes.
+            <p className="text-xs text-slate-400">
+              Receive new term sizing guides and institutional rate cards directly in your inbox.
             </p>
+
             {subscribed ? (
-              <p className="text-xs font-bold uppercase tracking-wider text-primary-foreground bg-primary-foreground/10 p-3">
-                ✓ Thank you. You are subscribed to distributor bulletins.
-              </p>
+              <div className="flex items-center gap-2 rounded-xl bg-emerald-950/60 border border-emerald-700/60 p-3 text-xs text-emerald-300">
+                <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />
+                <span>Thank you! We will dispatch the Walkaroo catalog.</span>
+              </div>
             ) : (
-              <form onSubmit={handleNewsletterSubmit} className="flex items-stretch border-b-2 border-primary-foreground/40">
-                <label htmlFor="newsletter-email" className="sr-only">Email address</label>
+              <form onSubmit={handleNewsletterSubmit} className="flex rounded-xl bg-slate-800 border border-slate-700 overflow-hidden p-1">
                 <input
-                  id="newsletter-email"
                   type="email"
                   required
                   placeholder="Principal or School Email..."
                   value={newsletterEmail}
                   onChange={(e) => setNewsletterEmail(e.target.value)}
-                  className="w-full bg-transparent py-3 text-sm outline-none placeholder:text-current placeholder:opacity-50 text-primary-foreground"
+                  className="w-full bg-transparent px-3 py-2 text-xs text-white outline-none placeholder:text-slate-500"
                 />
                 <button
                   type="submit"
-                  className="flex items-center gap-2 px-2 text-sm font-semibold uppercase tracking-[0.14em] transition-transform active:scale-95 text-primary-foreground hover:opacity-80"
+                  className="rounded-lg bg-blue-600 px-3 py-2 text-xs font-bold uppercase tracking-wider text-white hover:bg-blue-700 transition-colors"
                 >
-                  <ArrowRight className="h-4 w-4" />
                   Join
                 </button>
               </form>
@@ -140,21 +147,16 @@ export const Footer: React.FC = () => {
 
         </div>
 
-        {/* Signature Octo Giant Watermark */}
-        <div className="pointer-events-none select-none overflow-hidden" aria-hidden="true">
-          <div className="font-display -mb-[0.22em] text-center text-[27vw] font-black uppercase leading-[0.8] tracking-tight text-primary-foreground/10">
-            BETA
+        {/* Sub-footer Bar */}
+        <div className="border-t border-slate-800 py-6 text-xs text-slate-400 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p>© {new Date().getFullYear()} <strong>SM Enterprises</strong>. All rights reserved.</p>
+          <div className="flex items-center gap-2 text-slate-400">
+            <span>Officially Partnered with <strong>Walkaroo Company</strong></span>
+            <span>•</span>
+            <span>Razorpay Secure Payments</span>
           </div>
         </div>
 
-      </div>
-
-      {/* Sub-footer Bar */}
-      <div className="border-t border-primary-foreground/15">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-6 py-5 text-xs text-primary-foreground/60 sm:flex-row">
-          <p>© {new Date().getFullYear()} BETA School Shoes. Single-Vendor Institutional Footwear Store.</p>
-          <p>Official Distributor · Apex Footwear · Razorpay Verified Checkout</p>
-        </div>
       </div>
     </footer>
   );

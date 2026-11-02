@@ -140,7 +140,7 @@ export const ProductDetailsPage: React.FC = () => {
           <div className="flex flex-col">
             
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-              SKU: {product.sku} · Official BETA Partner
+              SKU: {product.sku} · SM Enterprises (Official Walkaroo Partner)
             </p>
 
             <h1 className="font-display mt-2 text-4xl font-black uppercase leading-[0.95] tracking-tight md:text-5xl">

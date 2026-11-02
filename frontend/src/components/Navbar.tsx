@@ -11,7 +11,10 @@ import {
   LogOut, 
   Package, 
   LayoutDashboard,
-  Search
+  Search,
+  Truck,
+  RotateCcw,
+  Sparkles
 } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
@@ -42,26 +45,36 @@ export const Navbar: React.FC = () => {
     return location.pathname.startsWith(path);
   };
 
-  const navLinkClass = (path: string) => `text-[13px] font-semibold uppercase tracking-[0.16em] transition-colors hover:text-primary ${
+  const navLinkClass = (path: string) => `text-xs md:text-[13px] font-bold uppercase tracking-wider transition-colors hover:text-blue-700 ${
     isActive(path) 
-      ? 'text-primary underline decoration-2 underline-offset-8' 
-      : 'text-muted-foreground'
+      ? 'text-blue-700 border-b-2 border-blue-700 pb-1' 
+      : 'text-slate-600'
   }`;
 
   return (
-    <header className="sticky top-0 z-40 border-b border-foreground/15 bg-background/95 backdrop-blur-sm">
-      {/* Top Banner Notice */}
-      <div className="bg-primary text-primary-foreground py-1.5 px-6 text-[11px] font-semibold uppercase tracking-[0.2em] flex justify-between items-center">
-        <span className="hidden sm:inline">Official Partner · Apex Footwear · Genuine BETA School Shoes</span>
-        <span className="sm:hidden">Official BETA Footwear Partner</span>
-        <div className="flex items-center gap-4 text-primary-foreground/80">
-          <Link to="/track" className="hover:text-primary-foreground transition-colors">Track Order</Link>
-          <span className="opacity-40">|</span>
-          <Link to="/bulk-enquiry" className="hover:text-primary-foreground transition-colors">Bulk School Orders</Link>
+    <header className="sticky top-0 z-40 bg-white shadow-xs">
+      
+      {/* Asian Footwears Style Top Announcement Ticker */}
+      <div className="bg-slate-900 text-white py-1.5 px-4 sm:px-6 text-[11px] font-medium flex flex-wrap justify-between items-center gap-2">
+        <div className="flex items-center gap-3">
+          <span className="inline-flex items-center gap-1 text-amber-300 font-bold">
+            <Sparkles className="h-3 w-3" />
+            <span>SM ENTERPRISES</span>
+          </span>
+          <span className="hidden sm:inline text-slate-400">•</span>
+          <span className="hidden sm:inline text-slate-200">Official Partner of <strong>Walkaroo</strong> Company</span>
+          <span className="hidden md:inline text-slate-400">•</span>
+          <span className="hidden md:inline text-emerald-300 font-semibold">🚚 Free Shipping & COD across India</span>
+        </div>
+
+        <div className="flex items-center gap-4 text-slate-300 text-[11px]">
+          <Link to="/track" className="hover:text-white transition-colors">Track Order</Link>
+          <span className="text-slate-600">|</span>
+          <Link to="/bulk-enquiry" className="hover:text-white transition-colors">Bulk School Orders</Link>
           {isAdmin && (
             <>
-              <span className="opacity-40">|</span>
-              <Link to="/admin" className="text-primary-foreground underline underline-offset-2 flex items-center gap-1 font-bold">
+              <span className="text-slate-600">|</span>
+              <Link to="/admin" className="text-amber-300 hover:text-white flex items-center gap-1 font-bold">
                 <ShieldCheck className="w-3 h-3" />
                 <span>Admin</span>
               </Link>
@@ -70,103 +83,112 @@ export const Navbar: React.FC = () => {
         </div>
       </div>
 
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-6 px-6 md:h-20">
+      {/* Main Navbar Header */}
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 md:h-20">
         
-        {/* Logo / Brand Mark */}
-        <Link to="/" className="flex items-center gap-2.5" aria-label="BETA home">
-          {/* Octagon Geometric Mark */}
-          <svg viewBox="0 0 24 24" className="h-6 w-6 text-foreground shrink-0" fill="currentColor" aria-hidden="true">
-            <path d="M8.7 1.5h6.6l7.2 7.2v6.6l-7.2 7.2H8.7l-7.2-7.2V8.7l7.2-7.2z"></path>
-          </svg>
-          <div className="flex items-baseline gap-2">
-            <span className="font-display text-2xl font-black uppercase leading-none tracking-tight text-foreground">
-              BETA
+        {/* Brand Logo: SM Enterprises + Walkaroo Partner */}
+        <Link to="/" className="flex items-center gap-3" aria-label="SM Enterprises Home">
+          <div className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-xl bg-gradient-to-tr from-blue-700 to-indigo-800 text-white font-black text-lg shadow-sm">
+            SM
+          </div>
+          <div className="flex flex-col">
+            <span className="text-base sm:text-xl font-black uppercase tracking-tight text-slate-900 leading-none">
+              SM Enterprises
             </span>
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground hidden sm:inline">
-              Partner
+            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-blue-700 flex items-center gap-1 mt-0.5">
+              <span>Official</span>
+              <span className="rounded bg-blue-100 px-1 py-0.2 text-[9px] font-extrabold text-blue-800">
+                WALKAROO
+              </span>
+              <span>Partner</span>
             </span>
           </div>
         </Link>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden items-center gap-8 lg:flex" aria-label="Main navigation">
+        {/* Desktop Navigation Links */}
+        <nav className="hidden items-center gap-6 xl:gap-8 lg:flex" aria-label="Main navigation">
           <Link to="/" className={navLinkClass('/')}>
             Home
           </Link>
           <Link to="/catalogue" className={navLinkClass('/catalogue')}>
-            Shop All
+            All Products
           </Link>
-          <Link to="/catalogue?category=BOYS_FORMAL" className="text-[13px] font-medium uppercase tracking-[0.16em] text-muted-foreground transition-colors hover:text-foreground">
+          <Link to="/catalogue?category=BOYS_FORMAL" className="text-xs md:text-[13px] font-semibold uppercase tracking-wider text-slate-600 hover:text-blue-700 transition-colors">
             Boys Formal
           </Link>
-          <Link to="/catalogue?category=GIRLS_FORMAL" className="text-[13px] font-medium uppercase tracking-[0.16em] text-muted-foreground transition-colors hover:text-foreground">
+          <Link to="/catalogue?category=GIRLS_FORMAL" className="text-xs md:text-[13px] font-semibold uppercase tracking-wider text-slate-600 hover:text-blue-700 transition-colors">
             Girls Formal
+          </Link>
+          <Link to="/catalogue?category=SPORTS_PT" className="relative text-xs md:text-[13px] font-semibold uppercase tracking-wider text-slate-600 hover:text-blue-700 transition-colors">
+            <span>Sports PT</span>
+            <span className="absolute -top-2.5 -right-3.5 rounded-full bg-rose-600 px-1.5 py-0.2 text-[8px] font-extrabold text-white">
+              NEW
+            </span>
           </Link>
           <Link to="/bulk-enquiry" className={navLinkClass('/bulk-enquiry')}>
             Bulk Enquiries
           </Link>
           <Link to="/contact" className={navLinkClass('/contact')}>
-            Contact Us
+            Contact
           </Link>
         </nav>
 
         {/* Right Header Actions */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3 sm:gap-4">
           
-          {/* Search Bar */}
-          <form onSubmit={handleSearchSubmit} className="hidden items-center gap-2 md:flex" role="search">
-            <Search className="h-4 w-4 text-muted-foreground shrink-0" />
-            <label htmlFor="header-search" className="sr-only">Search shoes</label>
+          {/* Asian Footwears Style Pill Search Bar */}
+          <form onSubmit={handleSearchSubmit} className="hidden md:flex relative items-center" role="search">
             <input
               id="header-search"
               type="search"
-              placeholder="Search shoes..."
+              placeholder="Search shoes, models..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-28 border-b border-transparent bg-transparent py-1 text-xs outline-none transition-all placeholder:text-muted-foreground focus:w-44 focus:border-foreground/40 font-sans"
+              className="w-36 lg:w-56 rounded-full border border-slate-200 bg-slate-50 py-1.5 pl-9 pr-3 text-xs font-medium text-slate-800 outline-none transition-all placeholder:text-slate-400 focus:w-64 focus:border-blue-600 focus:bg-white focus:ring-2 focus:ring-blue-100"
             />
+            <Search className="absolute left-3 h-3.5 w-3.5 text-slate-400 pointer-events-none" />
           </form>
 
-          {/* Cart Bag Icon with Counter */}
+          {/* Cart Bag with Counter */}
           <Link
             to="/cart"
-            className="relative flex h-11 w-11 items-center justify-center transition-transform active:scale-95 text-foreground hover:opacity-80"
+            className="relative flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-700 transition-all hover:bg-slate-200 active:scale-95"
             aria-label={`Open cart, ${itemCount} items`}
           >
             <ShoppingBag className="h-5 w-5" />
             {itemCount > 0 && (
-              <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center bg-primary text-[10px] font-black text-primary-foreground">
+              <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-blue-700 text-[10px] font-black text-white shadow-xs">
                 {itemCount}
               </span>
             )}
           </Link>
 
-          {/* User Account Button & Dropdown */}
+          {/* User Account / Sign In */}
           {isAuthenticated ? (
             <div className="relative">
               <button
                 type="button"
                 onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                className="flex items-center gap-1.5 border border-foreground/20 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.14em] text-foreground transition-colors hover:border-foreground"
+                className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-bold text-slate-800 transition-all hover:bg-slate-100"
               >
-                <UserIcon className="h-3.5 w-3.5" />
+                <UserIcon className="h-3.5 w-3.5 text-blue-700" />
                 <span className="hidden sm:inline">{user?.firstName}</span>
               </button>
 
               {userDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-52 border border-foreground/20 bg-card py-2 text-xs shadow-lg z-50">
-                  <div className="px-4 py-2 border-b border-foreground/15">
-                    <p className="font-bold uppercase tracking-wider text-foreground">{user?.firstName} {user?.lastName}</p>
-                    <p className="text-[11px] text-muted-foreground truncate">{user?.email}</p>
+                <div className="absolute right-0 mt-2 w-52 rounded-xl border border-slate-200 bg-white py-2 text-xs shadow-xl z-50 animate-fade-in">
+                  <div className="px-4 py-2 border-b border-slate-100">
+                    <p className="font-bold text-slate-900">{user?.firstName} {user?.lastName}</p>
+                    <p className="text-[11px] text-slate-500 truncate">{user?.email}</p>
                   </div>
 
                   {isAdmin && (
                     <Link
                       to="/admin"
                       onClick={() => setUserDropdownOpen(false)}
-                      className="flex items-center gap-2 px-4 py-2 text-foreground hover:bg-secondary font-bold uppercase tracking-wider transition-colors"
+                      className="flex items-center gap-2 px-4 py-2 font-bold text-slate-700 hover:bg-slate-50 hover:text-blue-700 transition-colors"
                     >
-                      <LayoutDashboard className="w-3.5 h-3.5" />
+                      <LayoutDashboard className="w-3.5 h-3.5 text-blue-700" />
                       <span>Admin Portal</span>
                     </Link>
                   )}
@@ -174,7 +196,7 @@ export const Navbar: React.FC = () => {
                   <Link
                     to="/orders"
                     onClick={() => setUserDropdownOpen(false)}
-                    className="flex items-center gap-2 px-4 py-2 text-foreground hover:bg-secondary font-medium uppercase tracking-wider transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 font-semibold text-slate-700 hover:bg-slate-50 hover:text-blue-700 transition-colors"
                   >
                     <Package className="w-3.5 h-3.5" />
                     <span>My Orders</span>
@@ -182,7 +204,7 @@ export const Navbar: React.FC = () => {
 
                   <button
                     onClick={handleLogout}
-                    className="w-full flex items-center gap-2 px-4 py-2 text-left text-destructive hover:bg-secondary font-medium uppercase tracking-wider transition-colors border-t border-foreground/10"
+                    className="w-full flex items-center gap-2 px-4 py-2 text-left font-semibold text-rose-600 hover:bg-rose-50 transition-colors border-t border-slate-100 mt-1"
                   >
                     <LogOut className="w-3.5 h-3.5" />
                     <span>Sign Out</span>
@@ -193,7 +215,7 @@ export const Navbar: React.FC = () => {
           ) : (
             <Link
               to="/login"
-              className="border border-foreground/25 px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-foreground transition-colors hover:border-foreground hover:bg-secondary/40"
+              className="rounded-xl bg-blue-700 px-4 py-2 text-xs font-bold uppercase tracking-wider text-white shadow-xs transition-all hover:bg-blue-800 active:scale-95"
             >
               Sign In
             </Link>
@@ -203,8 +225,8 @@ export const Navbar: React.FC = () => {
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="flex h-11 w-11 items-center justify-center lg:hidden text-foreground"
-            aria-label="Toggle menu"
+            className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 text-slate-700 lg:hidden"
+            aria-label="Toggle navigation menu"
           >
             {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -212,89 +234,74 @@ export const Navbar: React.FC = () => {
         </div>
       </div>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Navigation Drawer */}
       {mobileMenuOpen && (
-        <div className="border-t border-foreground/15 bg-background px-6 py-6 lg:hidden space-y-4">
-          <form onSubmit={handleSearchSubmit} className="flex items-center gap-2 border-b border-foreground/25 pb-2">
-            <Search className="h-4 w-4 text-muted-foreground" />
+        <div className="border-t border-slate-200 bg-white px-4 py-4 lg:hidden space-y-4 shadow-lg animate-fade-in">
+          <form onSubmit={handleSearchSubmit} className="relative">
             <input
               type="search"
               placeholder="Search school shoes..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+              className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2 pl-9 pr-3 text-xs outline-none focus:border-blue-600 focus:bg-white"
             />
+            <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
           </form>
 
-          <nav className="flex flex-col space-y-3 pt-2">
+          <nav className="flex flex-col space-y-2 pt-1">
             <Link
               to="/"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-sm font-bold uppercase tracking-[0.16em] text-foreground"
+              className="rounded-lg px-2 py-1.5 text-xs font-bold uppercase tracking-wider text-slate-800 hover:bg-slate-50"
             >
               Home
             </Link>
             <Link
               to="/catalogue"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-sm font-bold uppercase tracking-[0.16em] text-foreground"
+              className="rounded-lg px-2 py-1.5 text-xs font-bold uppercase tracking-wider text-slate-800 hover:bg-slate-50"
             >
-              Shop All Shoes
+              All Shoes Collection
             </Link>
             <Link
               to="/catalogue?category=BOYS_FORMAL"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground"
+              className="rounded-lg px-2 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50"
             >
-              Boys Formal
+              Boys Formal Uniform
             </Link>
             <Link
               to="/catalogue?category=GIRLS_FORMAL"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground"
+              className="rounded-lg px-2 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50"
             >
-              Girls Formal
+              Girls Formal Buckle
             </Link>
             <Link
               to="/catalogue?category=SPORTS_PT"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground"
+              className="rounded-lg px-2 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50"
             >
               Sports & PT Canvas
             </Link>
             <Link
               to="/bulk-enquiry"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-sm font-bold uppercase tracking-[0.16em] text-foreground"
+              className="rounded-lg px-2 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50"
             >
-              Bulk Enquiries
+              Bulk School Enquiries
             </Link>
             <Link
               to="/contact"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-sm font-bold uppercase tracking-[0.16em] text-foreground"
+              className="rounded-lg px-2 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50"
             >
               Contact Us
             </Link>
-            <Link
-              to="/track"
-              onClick={() => setMobileMenuOpen(false)}
-              className="text-sm font-bold uppercase tracking-[0.16em] text-muted-foreground"
-            >
-              Track Order
-            </Link>
-            {isAdmin && (
-              <Link
-                to="/admin"
-                onClick={() => setMobileMenuOpen(false)}
-                className="text-sm font-bold uppercase tracking-[0.16em] text-foreground underline"
-              >
-                Admin Portal
-              </Link>
-            )}
           </nav>
         </div>
       )}
+
     </header>
   );
 };
