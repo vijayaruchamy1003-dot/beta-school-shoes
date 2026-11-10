@@ -1,0 +1,30 @@
+name: Render Backend Keep-Alive
+
+on:
+  schedule:
+    # Runs every 10 minutes to prevent Render free instance from spinning down (15-min idle timeout)
+    - cron: '*/10 * * * *'
+  workflow_dispatch: # Allows manual trigger from the GitHub Actions tab
+
+jobs:
+  keep-alive:
+    name: Ping Render Spring Boot Backend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Backend Health & Catalogue
+        run: |
+          echo "Pinging Render backend at $(date -u)..."
+          
+          # Ping the catalogue endpoint to keep Spring Boot and database connections active
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 60 "https://beta-backend-z3su.onrender.com/api/products?page=0&size=1")
+          echo "API Products Response Code: $HTTP_STATUS"
+          
+          # Also ping actuator health check
+          ACTUATOR_STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 60 "https://beta-backend-z3su.onrender.com/actuator/health")
+          echo "Actuator Health Response Code: $ACTUATOR_STATUS"
+          
+          if [ "$HTTP_STATUS" -eq 200 ] || [ "$ACTUATOR_STATUS" -eq 200 ]; then
+            echo "Success: Render backend is awake and warm!"
+          else
+            echo "Warning: Received unexpected status, but request has woken up the server."
+          fi
