@@ -142,7 +142,7 @@ export const ProductDetailsPage: React.FC = () => {
           <div className="flex flex-col">
             
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-              SKU: {product.sku} · SM Enterprises (Official Walkaroo Partner)
+              SKU: {product.sku} · Shoes Net (Official Walkaroo Partner)
             </p>
 
             <h1 className="font-display mt-2 text-4xl font-black uppercase leading-[0.95] tracking-tight md:text-5xl">
@@ -276,7 +276,7 @@ export const ProductDetailsPage: React.FC = () => {
             <div className="mt-10 border-t border-foreground/15 pt-6 space-y-3 text-xs text-muted-foreground font-sans">
               <div className="flex items-center gap-3">
                 <ShieldCheck className="h-4 w-4 text-foreground shrink-0" />
-                <span>100% genuine Walkaroo manufacture warranty by SM Enterprises</span>
+                <span>100% genuine Walkaroo manufacture warranty by Shoes Net</span>
               </div>
               <div className="flex items-center gap-3">
                 <Truck className="h-4 w-4 text-foreground shrink-0" />

@@ -56,7 +56,7 @@ export const ContactPage: React.FC = () => {
                   Message Dispatched
                 </h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  Thank you for contacting the SM Enterprises institutional sales desk. A dedicated Walkaroo footwear coordinator will reach out to you shortly.
+                  Thank you for contacting the Shoes Net institutional sales desk. A dedicated Walkaroo footwear coordinator will reach out to you shortly.
                 </p>
                 <button
                   type="button"
@@ -182,13 +182,13 @@ export const ContactPage: React.FC = () => {
                     Write to us
                   </h3>
                   <a
-                    href="mailto:orders@smenterprises.in"
+                    href="mailto:orders@shoesnet.in"
                     className="mt-1.5 block text-sm text-muted-foreground underline underline-offset-4 transition-colors hover:text-foreground"
                   >
-                    orders@smenterprises.in
+                    orders@shoesnet.in
                   </a>
                   <p className="text-xs text-muted-foreground mt-0.5">
-                    Institutional school tenders: tenders@smenterprises.in
+                    Institutional school tenders: tenders@shoesnet.in
                   </p>
                 </div>
               </div>
@@ -223,7 +223,7 @@ export const ContactPage: React.FC = () => {
               <span className="font-bold text-foreground uppercase tracking-wider block mb-0.5">
                 Official Partnership Registry:
               </span>
-              Code: <code className="font-mono text-foreground font-semibold">SM-WLK-DIST-2024/902</code> — SM Enterprises officially partnered with Walkaroo Company.
+              Code: <code className="font-mono text-foreground font-semibold">SN-WLK-DIST-2024/902</code> — Shoes Net officially partnered with Walkaroo Company.
             </div>
 
           </div>

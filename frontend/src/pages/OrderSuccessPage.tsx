@@ -105,7 +105,7 @@ export const OrderSuccessPage: React.FC = () => {
 
         <div className="border-t border-foreground/15 pt-4 text-center text-xs text-muted-foreground flex items-center justify-center gap-2">
           <ShieldCheck className="w-4 h-4 text-foreground" />
-          <span>SM Enterprises & Walkaroo Official Guarantee</span>
+          <span>Shoes Net & Walkaroo Official Guarantee</span>
         </div>
 
       </div>

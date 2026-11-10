@@ -37,11 +37,11 @@ export const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children 
           <div className="p-6 border-b border-primary-foreground/15">
             <div className="flex items-center gap-3">
               <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-blue-700 font-black text-sm shadow-sm">
-                SM
+                SN
               </div>
               <div>
                 <h2 className="font-display font-black text-lg uppercase tracking-tight text-primary-foreground">
-                  SM Admin
+                  Shoes Net Admin
                 </h2>
                 <span className="text-[10px] text-amber-300 flex items-center gap-1 font-bold uppercase tracking-wider">
                   <ShieldCheck className="w-3 h-3" /> Walkaroo Partner

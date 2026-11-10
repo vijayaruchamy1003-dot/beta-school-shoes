@@ -59,7 +59,7 @@ export const Navbar: React.FC = () => {
         <div className="flex items-center gap-3">
           <span className="inline-flex items-center gap-1 text-amber-300 font-bold">
             <Sparkles className="h-3 w-3" />
-            <span>SM ENTERPRISES</span>
+            <span>SHOES NET</span>
           </span>
           <span className="hidden sm:inline text-slate-400">•</span>
           <span className="hidden sm:inline text-slate-200">Official Partner of <strong>Walkaroo</strong> Company</span>
@@ -86,14 +86,14 @@ export const Navbar: React.FC = () => {
       {/* Main Navbar Header */}
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 md:h-20">
         
-        {/* Brand Logo: SM Enterprises + Walkaroo Partner */}
-        <Link to="/" className="flex items-center gap-3" aria-label="SM Enterprises Home">
+        {/* Brand Logo: Shoes Net + Walkaroo Partner */}
+        <Link to="/" className="flex items-center gap-3" aria-label="Shoes Net Home">
           <div className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-xl bg-gradient-to-tr from-blue-700 to-indigo-800 text-white font-black text-lg shadow-sm">
-            SM
+            SN
           </div>
           <div className="flex flex-col">
             <span className="text-base sm:text-xl font-black uppercase tracking-tight text-slate-900 leading-none">
-              SM Enterprises
+              Shoes Net
             </span>
             <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-blue-700 flex items-center gap-1 mt-0.5">
               <span>Official</span>

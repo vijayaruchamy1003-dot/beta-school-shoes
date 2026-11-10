@@ -23,13 +23,13 @@ export const Footer: React.FC = () => {
           
           {/* Brand & Partner Column */}
           <div className="md:col-span-4 space-y-4">
-            <Link to="/" className="flex items-center gap-3" aria-label="SM Enterprises Home">
+            <Link to="/" className="flex items-center gap-3" aria-label="Shoes Net Home">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-white font-black text-lg shadow-sm">
-                SM
+                SN
               </div>
               <div className="flex flex-col">
                 <span className="text-xl font-black uppercase tracking-tight text-white leading-none">
-                  SM Enterprises
+                  Shoes Net
                 </span>
                 <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 mt-1">
                   Official Walkaroo Company Partner
@@ -38,12 +38,12 @@ export const Footer: React.FC = () => {
             </Link>
 
             <p className="max-w-sm text-xs sm:text-sm leading-relaxed text-slate-400">
-              SM Enterprises is the officially authorized institutional distributor partnering with Walkaroo Company. Delivering certified durable school shoes, PT sneakers, and uniform footwear directly to institutions, students, and parents.
+              Shoes Net is the officially authorized institutional distributor partnering with Walkaroo Company. Delivering certified durable school shoes, PT sneakers, and uniform footwear directly to institutions, students, and parents.
             </p>
 
             <div className="flex items-center gap-2 rounded-lg bg-slate-800/80 p-2.5 text-xs text-slate-300 border border-slate-700/60 max-w-sm">
               <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-              <span>Official Institutional Partner ID: <strong>SM-WLK-DIST-2024/902</strong></span>
+              <span>Official Institutional Partner ID: <strong>SN-WLK-DIST-2024/902</strong></span>
             </div>
           </div>
 
@@ -103,10 +103,10 @@ export const Footer: React.FC = () => {
                 </Link>
               </li>
               <li>
-                <span className="text-slate-500">Contact: orders@smenterprises.in</span>
+                <span className="text-slate-500">Contact: orders@shoesnet.in</span>
               </li>
               <li>
-                <span className="text-slate-500">Wholesale: tenders@smenterprises.in</span>
+                <span className="text-slate-500">Wholesale: tenders@shoesnet.in</span>
               </li>
             </ul>
           </nav>
@@ -149,7 +149,7 @@ export const Footer: React.FC = () => {
 
         {/* Sub-footer Bar */}
         <div className="border-t border-slate-800 py-6 text-xs text-slate-400 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p>© {new Date().getFullYear()} <strong>SM Enterprises</strong>. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} <strong>Shoes Net</strong>. All rights reserved.</p>
           <div className="flex items-center gap-2 text-slate-400">
             <span>Officially Partnered with <strong>Walkaroo Company</strong></span>
             <span>•</span>
