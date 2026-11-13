@@ -45,10 +45,10 @@ export const Navbar: React.FC = () => {
     return location.pathname.startsWith(path);
   };
 
-  const navLinkClass = (path: string) => `text-xs md:text-[13px] font-bold uppercase tracking-wider transition-colors hover:text-blue-700 ${
+  const navLinkClass = (path: string) => `whitespace-nowrap text-xs xl:text-[13px] font-bold uppercase tracking-wide transition-colors hover:text-blue-700 ${
     isActive(path) 
       ? 'text-blue-700 border-b-2 border-blue-700 pb-1' 
-      : 'text-slate-600'
+      : 'text-slate-700'
   }`;
 
   return (
@@ -84,46 +84,53 @@ export const Navbar: React.FC = () => {
       </div>
 
       {/* Main Navbar Header */}
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 md:h-20 bg-white">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 md:h-20 bg-white">
         
         {/* Brand Logo: Shoes Net */}
-        <Link to="/" className="flex items-center gap-3" aria-label="Shoes Net Home">
-          <div className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-2xl bg-gradient-to-tr from-[#ED2C23] via-rose-600 to-amber-500 text-white font-black text-lg shadow-md">
-            SN
+        <Link to="/" className="flex items-center gap-2.5 shrink-0 group" aria-label="Shoes Net Home">
+          <div className="flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#ED2C23] via-[#D91E18] to-[#991B1B] text-white shadow-md ring-2 ring-red-100 group-hover:scale-105 transition-transform">
+            <svg viewBox="0 0 32 32" className="w-6 h-6 fill-current" aria-hidden="true">
+              <path d="M4 21.5c0-1.4 1.1-2.5 2.5-2.5h2.2c1.8 0 3.5-.8 4.6-2.2l2.9-3.6c.6-.7 1.6-.9 2.4-.5l1.9 1c1.2.6 2.5 1 3.8 1.2l2.3.3c1.9.3 3.4 1.9 3.4 3.8v2.5c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2zm2.5 3.5h21c.8 0 1.5.7 1.5 1.5S28.3 28 27.5 28h-21C5.7 28 5 27.3 5 26.5S5.7 25 6.5 25z" />
+            </svg>
           </div>
-          <div className="flex flex-col">
-            <span className="text-base sm:text-xl font-black uppercase tracking-tight text-slate-900 leading-none">
-              Shoes Net
-            </span>
-            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-500 mt-0.5">
+          <div className="flex flex-col whitespace-nowrap">
+            <div className="flex items-baseline gap-0.5 leading-none">
+              <span className="text-lg sm:text-xl font-black uppercase tracking-tight text-slate-900">
+                SHOES
+              </span>
+              <span className="text-lg sm:text-xl font-black uppercase tracking-tight text-[#ED2C23]">
+                .NET
+              </span>
+            </div>
+            <span className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-[0.18em] text-slate-500 mt-1 leading-none">
               Footwear Store
             </span>
           </div>
         </Link>
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden items-center gap-5 xl:gap-7 lg:flex" aria-label="Main navigation">
+        <nav className="hidden items-center gap-3.5 xl:gap-5 lg:flex shrink-0" aria-label="Main navigation">
           <Link to="/" className={navLinkClass('/')}>
             Home
           </Link>
           <Link to="/catalogue" className={navLinkClass('/catalogue')}>
             All Products
           </Link>
-          <Link to="/catalogue?category=BOYS" className="text-xs md:text-[13px] font-semibold uppercase tracking-wider text-slate-600 hover:text-blue-700 transition-colors">
+          <Link to="/catalogue?category=BOYS" className="whitespace-nowrap text-xs xl:text-[13px] font-semibold uppercase tracking-wide text-slate-600 hover:text-blue-700 transition-colors">
             Boys
           </Link>
-          <Link to="/catalogue?category=GIRLS" className="text-xs md:text-[13px] font-semibold uppercase tracking-wider text-slate-600 hover:text-blue-700 transition-colors">
+          <Link to="/catalogue?category=GIRLS" className="whitespace-nowrap text-xs xl:text-[13px] font-semibold uppercase tracking-wide text-slate-600 hover:text-blue-700 transition-colors">
             Girls
           </Link>
-          <Link to="/catalogue?category=MEN" className="text-xs md:text-[13px] font-semibold uppercase tracking-wider text-slate-600 hover:text-blue-700 transition-colors">
+          <Link to="/catalogue?category=MEN" className="whitespace-nowrap text-xs xl:text-[13px] font-semibold uppercase tracking-wide text-slate-600 hover:text-blue-700 transition-colors">
             Men
           </Link>
-          <Link to="/catalogue?category=WOMEN" className="text-xs md:text-[13px] font-semibold uppercase tracking-wider text-slate-600 hover:text-blue-700 transition-colors">
+          <Link to="/catalogue?category=WOMEN" className="whitespace-nowrap text-xs xl:text-[13px] font-semibold uppercase tracking-wide text-slate-600 hover:text-blue-700 transition-colors">
             Women
           </Link>
-          <Link to="/catalogue?category=SCHOOL_SHOES" className="relative text-xs md:text-[13px] font-semibold uppercase tracking-wider text-slate-600 hover:text-blue-700 transition-colors">
+          <Link to="/catalogue?category=SCHOOL_SHOES" className="relative whitespace-nowrap text-xs xl:text-[13px] font-semibold uppercase tracking-wide text-slate-600 hover:text-blue-700 transition-colors pr-2">
             <span>School Shoes</span>
-            <span className="absolute -top-2.5 -right-3.5 rounded-full bg-rose-600 px-1.5 py-0.2 text-[8px] font-extrabold text-white">
+            <span className="absolute -top-2.5 -right-2 rounded-full bg-rose-600 px-1.5 py-0.2 text-[8px] font-extrabold text-white leading-tight">
               NEW
             </span>
           </Link>
@@ -136,25 +143,25 @@ export const Navbar: React.FC = () => {
         </nav>
 
         {/* Right Header Actions */}
-        <div className="flex items-center gap-3 sm:gap-4">
+        <div className="flex items-center gap-2.5 sm:gap-3 shrink-0">
           
-          {/* Asian Footwears Style Pill Search Bar */}
+          {/* Pill Search Bar */}
           <form onSubmit={handleSearchSubmit} className="hidden md:flex relative items-center" role="search">
             <input
               id="header-search"
               type="search"
-              placeholder="Search shoes, models..."
+              placeholder="Search shoes..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-36 lg:w-56 rounded-full border border-slate-200 bg-slate-50 py-1.5 pl-9 pr-3 text-xs font-medium text-slate-800 outline-none transition-all placeholder:text-slate-400 focus:w-64 focus:border-blue-600 focus:bg-white focus:ring-2 focus:ring-blue-100"
+              className="w-32 xl:w-48 rounded-full border border-slate-200 bg-slate-50 py-1.5 pl-8 pr-3 text-xs font-medium text-slate-800 outline-none transition-all placeholder:text-slate-400 focus:w-52 focus:border-blue-600 focus:bg-white focus:ring-2 focus:ring-blue-100"
             />
-            <Search className="absolute left-3 h-3.5 w-3.5 text-slate-400 pointer-events-none" />
+            <Search className="absolute left-2.5 h-3.5 w-3.5 text-slate-400 pointer-events-none" />
           </form>
 
           {/* Cart Bag with Counter */}
           <Link
             to="/cart"
-            className="relative flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-700 transition-all hover:bg-slate-200 active:scale-95"
+            className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-700 transition-all hover:bg-slate-200 active:scale-95"
             aria-label={`Open cart, ${itemCount} items`}
           >
             <ShoppingBag className="h-5 w-5" />
@@ -167,13 +174,13 @@ export const Navbar: React.FC = () => {
 
           {/* User Account / Sign In */}
           {isAuthenticated ? (
-            <div className="relative">
+            <div className="relative shrink-0">
               <button
                 type="button"
                 onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-bold text-slate-800 transition-all hover:bg-slate-100"
+                className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-bold text-slate-800 transition-all hover:bg-slate-100 whitespace-nowrap"
               >
-                <UserIcon className="h-3.5 w-3.5 text-blue-700" />
+                <UserIcon className="h-3.5 w-3.5 text-blue-700 shrink-0" />
                 <span className="hidden sm:inline">{user?.firstName}</span>
               </button>
 
@@ -217,7 +224,7 @@ export const Navbar: React.FC = () => {
           ) : (
             <Link
               to="/login"
-              className="rounded-xl bg-[#ED2C23] hover:bg-[#D41C14] px-4 py-2 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition-all active:scale-95"
+              className="shrink-0 whitespace-nowrap rounded-xl bg-[#ED2C23] hover:bg-[#D41C14] px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition-all active:scale-95"
             >
               Sign In
             </Link>

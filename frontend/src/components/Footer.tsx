@@ -23,16 +23,23 @@ export const Footer: React.FC = () => {
           
           {/* Brand Column */}
           <div className="md:col-span-4 space-y-4">
-            <Link to="/" className="flex items-center gap-3" aria-label="Shoes Net Home">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-tr from-[#ED2C23] via-rose-600 to-amber-500 text-white font-black text-lg shadow-sm">
-                SN
+            <Link to="/" className="flex items-center gap-3 shrink-0" aria-label="Shoes Net Home">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#ED2C23] via-[#D91E18] to-[#991B1B] text-white shadow-md">
+                <svg viewBox="0 0 32 32" className="w-6 h-6 fill-current" aria-hidden="true">
+                  <path d="M4 21.5c0-1.4 1.1-2.5 2.5-2.5h2.2c1.8 0 3.5-.8 4.6-2.2l2.9-3.6c.6-.7 1.6-.9 2.4-.5l1.9 1c1.2.6 2.5 1 3.8 1.2l2.3.3c1.9.3 3.4 1.9 3.4 3.8v2.5c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2zm2.5 3.5h21c.8 0 1.5.7 1.5 1.5S28.3 28 27.5 28h-21C5.7 28 5 27.3 5 26.5S5.7 25 6.5 25z" />
+                </svg>
               </div>
-              <div className="flex flex-col">
-                <span className="text-xl font-black uppercase tracking-tight text-white leading-none">
-                  Shoes Net
-                </span>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 mt-1">
-                  Premium Footwear & School Shoes
+              <div className="flex flex-col whitespace-nowrap">
+                <div className="flex items-baseline gap-0.5 leading-none">
+                  <span className="text-xl font-black uppercase tracking-tight text-white">
+                    SHOES
+                  </span>
+                  <span className="text-xl font-black uppercase tracking-tight text-[#ED2C23]">
+                    .NET
+                  </span>
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-amber-400 mt-1">
+                  Premium Footwear &amp; School Shoes
                 </span>
               </div>
             </Link>
