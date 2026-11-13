@@ -23,16 +23,16 @@ interface BannerSlide {
 const SLIDES: BannerSlide[] = [
   {
     id: 'back-to-school',
-    pill: 'WALKAROO OFFICIAL STORE • BACK TO SCHOOL FEST',
-    pillBg: 'bg-amber-400 text-slate-950',
-    title: 'BACK TO SCHOOL MEGA SALE',
-    highlight: 'UP TO 40% OFF',
-    description: 'Institutional-approved Oxford, Derby and Mary Jane buckle shoes. Shock-absorbing lightweight soles engineered for 365 days of rigorous campus life.',
-    ctaText: 'Shop All Shoes',
+    pill: 'WALKAROO OFFICIAL STORE • MEGA BACK TO SCHOOL FEST',
+    pillBg: 'bg-white text-[#ED2C23] font-black shadow-sm',
+    title: 'WALKAROO UNIFORM EXCELLENCE',
+    highlight: 'UP TO 40% OFF + FREE SHIPPING',
+    description: 'Official uniform-compliant Oxford, Derby and Mary Jane buckle shoes. Direct injection PU soles built for 365 days of active campus endurance.',
+    ctaText: 'Shop School Shoes',
     ctaLink: '/catalogue',
     secondaryText: 'Boys Formal Pairs',
     secondaryLink: '/catalogue?category=BOYS_FORMAL',
-    bgGradient: 'bg-gradient-to-r from-blue-700 via-indigo-700 to-blue-900',
+    bgGradient: 'bg-gradient-to-r from-[#ED2C23] via-[#E52D27] to-[#FA8C16]',
     badgeText: 'MIN. 30% - 40% OFF',
     tags: ['🚚 Free Express Delivery', '★ 4.9/5 Certified Rating', '100% Genuine Walkaroo'],
     imageSrc: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?q=80&w=900&auto=format&fit=crop',
@@ -41,15 +41,15 @@ const SLIDES: BannerSlide[] = [
   {
     id: 'sports-pt-special',
     pill: 'PT & DRILL PERFORMANCE • STARTING ₹399',
-    pillBg: 'bg-emerald-400 text-slate-950',
+    pillBg: 'bg-amber-300 text-slate-950 font-black shadow-sm',
     title: 'SPORTS & PT DAY ESSENTIALS',
-    highlight: 'STARTING AT ₹399',
-    description: 'High-traction non-marking white sneakers and breathable mesh runners. Built for playground sprints, morning assembly parades, and physical fitness.',
+    highlight: 'STARTING AT ₹399 ONLY',
+    description: 'Ultra-lightweight non-marking white sneakers and breathable air-mesh runners. Designed for morning assemblies, playground sprints, and physical drills.',
     ctaText: 'Explore Sports PT',
     ctaLink: '/catalogue?category=SPORTS_PT',
     secondaryText: 'Girls Buckle Shoes',
     secondaryLink: '/catalogue?category=GIRLS_FORMAL',
-    bgGradient: 'bg-gradient-to-r from-slate-900 via-teal-900 to-emerald-950',
+    bgGradient: 'bg-gradient-to-r from-[#0284C7] via-[#2563EB] to-[#4F46E5]',
     badgeText: 'SPECIAL PT PRICING',
     tags: ['⚡ Non-Marking White Soles', '🛡️ Shock-Absorbing EVA', 'Air-Mesh Breathable'],
     imageSrc: 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?q=80&w=900&auto=format&fit=crop',
@@ -58,7 +58,7 @@ const SLIDES: BannerSlide[] = [
   {
     id: 'institutional-bulk',
     pill: 'DIRECT INSTITUTIONAL SUPPLY • SHOES NET',
-    pillBg: 'bg-amber-300 text-slate-950',
+    pillBg: 'bg-white text-emerald-800 font-black shadow-sm',
     title: 'SUPPLYING 500+ SCHOOLS NATIONWIDE',
     highlight: 'DIRECT TRUST PRICING',
     description: 'Authorized single-vendor supply for school trusts, management committees & academies. Direct factory dispatch with on-campus sizing fitment camps.',
@@ -66,7 +66,7 @@ const SLIDES: BannerSlide[] = [
     ctaLink: '/bulk-enquiry',
     secondaryText: 'Contact Distribution Desk',
     secondaryLink: '/contact',
-    bgGradient: 'bg-gradient-to-r from-slate-950 via-blue-950 to-slate-900',
+    bgGradient: 'bg-gradient-to-r from-[#059669] via-[#10B981] to-[#F59E0B]',
     badgeText: 'INSTITUTIONAL TENDER',
     tags: ['🏫 On-Campus Sizing Camps', '📋 GST B2B Invoices', '📦 Buffer Stock Assurance'],
     imageSrc: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=900&auto=format&fit=crop',
@@ -122,19 +122,19 @@ export const FlipkartBannerCarousel: React.FC = () => {
 
   return (
     <div
-      className="relative w-full overflow-hidden bg-slate-950"
+      className="relative w-full overflow-hidden bg-slate-900 shadow-md"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
       aria-label="Promotional Banners Carousel"
     >
-      {/* Slide Container */}
+      {/* Slide Container with Bright Walkaroo Gradient */}
       <div className={`relative min-h-[380px] sm:min-h-[420px] md:min-h-[460px] text-white flex items-center transition-colors duration-700 ${slide.bgGradient}`}>
         
         {/* Decorative Grid Texture */}
         <div 
-          className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"
+          className="absolute inset-0 opacity-15 pointer-events-none bg-[radial-gradient(#fff_1.5px,transparent_1.5px)] [background-size:20px_20px]"
           aria-hidden="true" 
         />
 
@@ -144,33 +144,33 @@ export const FlipkartBannerCarousel: React.FC = () => {
           <div className="md:col-span-7 space-y-4 sm:space-y-5 animate-fade-in">
             
             {/* Top Pill Offer Badge */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] sm:text-xs font-black uppercase tracking-wider shadow-sm transition-all">
-              <span className={`px-2 py-0.5 rounded-full ${slide.pillBg}`}>
+            <div className="inline-flex items-center gap-2 rounded-full text-[10px] sm:text-xs font-black uppercase tracking-wider transition-all">
+              <span className={`px-3 py-1 rounded-full ${slide.pillBg}`}>
                 {slide.pill}
               </span>
             </div>
 
             {/* Title & Highlight */}
             <div className="space-y-1">
-              <h2 className="text-2xl sm:text-4xl md:text-5xl font-black uppercase tracking-tight text-white leading-[1.05]">
+              <h2 className="text-2xl sm:text-4xl md:text-5xl font-black uppercase tracking-tight text-white leading-[1.05] drop-shadow-xs">
                 {slide.title}
               </h2>
-              <div className="text-xl sm:text-2xl md:text-3xl font-black tracking-tight text-amber-300">
+              <div className="text-xl sm:text-2xl md:text-3xl font-black tracking-tight text-amber-200 drop-shadow-xs">
                 {slide.highlight}
               </div>
             </div>
 
             {/* Description */}
-            <p className="text-xs sm:text-sm md:text-base text-slate-200/90 leading-relaxed max-w-xl">
+            <p className="text-xs sm:text-sm md:text-base text-white/95 leading-relaxed max-w-xl font-medium">
               {slide.description}
             </p>
 
             {/* Feature Pills */}
-            <div className="flex flex-wrap items-center gap-2 pt-1 text-[11px] font-bold text-slate-200">
+            <div className="flex flex-wrap items-center gap-2 pt-1 text-[11px] font-bold text-white">
               {slide.tags.map((tag, idx) => (
                 <span
                   key={idx}
-                  className="px-2.5 py-1 rounded-lg bg-white/10 backdrop-blur-xs border border-white/15"
+                  className="px-3 py-1 rounded-lg bg-black/15 backdrop-blur-xs border border-white/20 shadow-xs"
                 >
                   {tag}
                 </span>
@@ -181,16 +181,16 @@ export const FlipkartBannerCarousel: React.FC = () => {
             <div className="pt-3 flex flex-wrap items-center gap-3">
               <Link
                 to={slide.ctaLink}
-                className="inline-flex items-center gap-2 rounded-xl bg-amber-400 px-6 py-3 text-xs sm:text-sm font-black uppercase tracking-wider text-slate-950 shadow-md hover:bg-amber-300 hover:shadow-lg transition-all active:scale-95"
+                className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 text-xs sm:text-sm font-black uppercase tracking-wider text-slate-950 shadow-lg hover:bg-amber-100 hover:shadow-xl transition-all active:scale-95"
               >
                 <span>{slide.ctaText}</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-4 h-4 text-[#ED2C23]" />
               </Link>
 
               {slide.secondaryLink && slide.secondaryText && (
                 <Link
                   to={slide.secondaryLink}
-                  className="inline-flex items-center gap-2 rounded-xl border border-white/40 bg-white/10 backdrop-blur-xs px-5 py-3 text-xs sm:text-sm font-bold uppercase tracking-wider text-white hover:bg-white/20 transition-all active:scale-95"
+                  className="inline-flex items-center gap-2 rounded-xl border-2 border-white/80 bg-white/10 backdrop-blur-xs px-5 py-3 text-xs sm:text-sm font-bold uppercase tracking-wider text-white hover:bg-white/20 transition-all active:scale-95"
                 >
                   {slide.secondaryText}
                 </Link>
@@ -201,7 +201,7 @@ export const FlipkartBannerCarousel: React.FC = () => {
 
           {/* Right Visual Image Column (5 cols) */}
           <div className="md:col-span-5 flex justify-center items-center relative">
-            <div className="relative w-full max-w-sm sm:max-w-md aspect-[4/3] rounded-3xl overflow-hidden border border-white/20 shadow-2xl bg-slate-900/40 backdrop-blur-xs group">
+            <div className="relative w-full max-w-sm sm:max-w-md aspect-[4/3] rounded-3xl overflow-hidden border-2 border-white/40 shadow-2xl bg-white/10 backdrop-blur-xs group">
               <img
                 src={slide.imageSrc}
                 alt={slide.imageAlt}
@@ -209,18 +209,18 @@ export const FlipkartBannerCarousel: React.FC = () => {
                 loading="eager"
               />
 
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
 
               {/* Offer Badge Overlay on Image */}
-              <div className="absolute top-4 right-4 bg-rose-600 text-white font-black text-[11px] sm:text-xs uppercase px-3 py-1 rounded-xl shadow-lg border border-white/20 flex items-center gap-1">
+              <div className="absolute top-4 right-4 bg-[#ED2C23] text-white font-black text-[11px] sm:text-xs uppercase px-3 py-1.5 rounded-xl shadow-lg border border-white/30 flex items-center gap-1">
                 <Sparkles className="w-3.5 h-3.5 text-amber-300" />
                 <span>{slide.badgeText}</span>
               </div>
 
               {/* Bottom Authentic Seal */}
-              <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-[11px] font-bold text-slate-200">
-                <span className="flex items-center gap-1.5 bg-slate-950/70 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/10">
-                  <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
+              <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-[11px] font-bold text-white">
+                <span className="flex items-center gap-1.5 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/20">
+                  <ShieldCheck className="w-3.5 h-3.5 text-amber-300" />
                   <span>Shoes Net • Walkaroo Official</span>
                 </span>
               </div>
@@ -234,7 +234,7 @@ export const FlipkartBannerCarousel: React.FC = () => {
       <button
         onClick={handlePrev}
         aria-label="Previous Slide"
-        className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-10 h-14 sm:w-12 sm:h-20 bg-white/90 hover:bg-white text-slate-900 rounded-r-xl sm:rounded-r-2xl shadow-xl flex items-center justify-center transition-all opacity-80 hover:opacity-100 hover:scale-105 active:scale-95 z-20 cursor-pointer"
+        className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-10 h-14 sm:w-12 sm:h-20 bg-white/95 hover:bg-white text-slate-900 rounded-r-xl sm:rounded-r-2xl shadow-xl flex items-center justify-center transition-all opacity-85 hover:opacity-100 hover:scale-105 active:scale-95 z-20 cursor-pointer"
       >
         <ChevronLeft className="w-6 h-6 text-slate-800" />
       </button>
@@ -242,13 +242,13 @@ export const FlipkartBannerCarousel: React.FC = () => {
       <button
         onClick={handleNext}
         aria-label="Next Slide"
-        className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-10 h-14 sm:w-12 sm:h-20 bg-white/90 hover:bg-white text-slate-900 rounded-l-xl sm:rounded-l-2xl shadow-xl flex items-center justify-center transition-all opacity-80 hover:opacity-100 hover:scale-105 active:scale-95 z-20 cursor-pointer"
+        className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-10 h-14 sm:w-12 sm:h-20 bg-white/95 hover:bg-white text-slate-900 rounded-l-xl sm:rounded-l-2xl shadow-xl flex items-center justify-center transition-all opacity-85 hover:opacity-100 hover:scale-105 active:scale-95 z-20 cursor-pointer"
       >
         <ChevronRight className="w-6 h-6 text-slate-800" />
       </button>
 
-      {/* Indicator Dots (Flipkart Style) */}
-      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-2 z-20">
+      {/* Indicator Dots (Walkaroo Style) */}
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 z-20">
         {SLIDES.map((_, idx) => (
           <button
             key={idx}
@@ -256,8 +256,8 @@ export const FlipkartBannerCarousel: React.FC = () => {
             aria-label={`Go to slide ${idx + 1}`}
             className={`transition-all duration-300 rounded-full cursor-pointer ${
               idx === currentSlide
-                ? 'w-7 h-2 bg-amber-400 shadow-sm'
-                : 'w-2 h-2 bg-white/50 hover:bg-white'
+                ? 'w-8 h-2.5 bg-white shadow-md'
+                : 'w-2.5 h-2.5 bg-white/50 hover:bg-white'
             }`}
           />
         ))}

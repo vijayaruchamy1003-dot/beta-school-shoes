@@ -24,7 +24,7 @@ export const Footer: React.FC = () => {
           {/* Brand & Partner Column */}
           <div className="md:col-span-4 space-y-4">
             <Link to="/" className="flex items-center gap-3" aria-label="Shoes Net Home">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-white font-black text-lg shadow-sm">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-tr from-[#ED2C23] via-rose-600 to-amber-500 text-white font-black text-lg shadow-sm">
                 SN
               </div>
               <div className="flex flex-col">
@@ -137,7 +137,7 @@ export const Footer: React.FC = () => {
                 />
                 <button
                   type="submit"
-                  className="rounded-lg bg-blue-600 px-3 py-2 text-xs font-bold uppercase tracking-wider text-white hover:bg-blue-700 transition-colors"
+                  className="rounded-lg bg-[#ED2C23] hover:bg-[#D41C14] px-4 py-2 text-xs font-bold uppercase tracking-wider text-white transition-colors"
                 >
                   Join
                 </button>

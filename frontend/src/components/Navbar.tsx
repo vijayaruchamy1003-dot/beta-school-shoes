@@ -52,30 +52,30 @@ export const Navbar: React.FC = () => {
   }`;
 
   return (
-    <header className="sticky top-0 z-40 bg-white shadow-xs">
+    <header className="sticky top-0 z-40 bg-white border-b border-slate-200/80 shadow-xs">
       
-      {/* Asian Footwears Style Top Announcement Ticker */}
-      <div className="bg-slate-900 text-white py-1.5 px-4 sm:px-6 text-[11px] font-medium flex flex-wrap justify-between items-center gap-2">
+      {/* Walkaroo Signature Energetic Bright Red Announcement Ticker */}
+      <div className="bg-gradient-to-r from-[#ED2C23] via-[#E52D27] to-[#C91A12] text-white py-2 px-4 sm:px-6 text-[11px] font-medium flex flex-wrap justify-between items-center gap-2 shadow-xs">
         <div className="flex items-center gap-3">
-          <span className="inline-flex items-center gap-1 text-amber-300 font-bold">
-            <Sparkles className="h-3 w-3" />
+          <span className="inline-flex items-center gap-1 bg-white/20 backdrop-blur-xs px-2 py-0.5 rounded-full text-white font-black tracking-wider text-[10px]">
+            <Sparkles className="h-3 w-3 text-amber-300" />
             <span>SHOES NET</span>
           </span>
-          <span className="hidden sm:inline text-slate-400">•</span>
-          <span className="hidden sm:inline text-slate-200">Official Partner of <strong>Walkaroo</strong> Company</span>
-          <span className="hidden md:inline text-slate-400">•</span>
-          <span className="hidden md:inline text-emerald-300 font-semibold">🚚 Free Shipping & COD across India</span>
+          <span className="hidden sm:inline text-white/60">•</span>
+          <span className="hidden sm:inline text-white font-semibold">Official Partner of <strong>Walkaroo</strong> Company</span>
+          <span className="hidden md:inline text-white/60">•</span>
+          <span className="hidden md:inline text-amber-200 font-bold">🚚 Free Express Delivery & COD across India</span>
         </div>
 
-        <div className="flex items-center gap-4 text-slate-300 text-[11px]">
-          <Link to="/track" className="hover:text-white transition-colors">Track Order</Link>
-          <span className="text-slate-600">|</span>
-          <Link to="/bulk-enquiry" className="hover:text-white transition-colors">Bulk School Orders</Link>
+        <div className="flex items-center gap-4 text-white/90 text-[11px] font-semibold">
+          <Link to="/track" className="hover:text-white transition-colors underline-offset-2 hover:underline">Track Order</Link>
+          <span className="text-white/40">|</span>
+          <Link to="/bulk-enquiry" className="hover:text-white transition-colors underline-offset-2 hover:underline">Bulk School Orders</Link>
           {isAdmin && (
             <>
-              <span className="text-slate-600">|</span>
-              <Link to="/admin" className="text-amber-300 hover:text-white flex items-center gap-1 font-bold">
-                <ShieldCheck className="w-3 h-3" />
+              <span className="text-white/40">|</span>
+              <Link to="/admin" className="text-amber-300 hover:text-white flex items-center gap-1 font-black">
+                <ShieldCheck className="w-3.5 h-3.5" />
                 <span>Admin</span>
               </Link>
             </>
@@ -84,20 +84,20 @@ export const Navbar: React.FC = () => {
       </div>
 
       {/* Main Navbar Header */}
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 md:h-20">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 md:h-20 bg-white">
         
         {/* Brand Logo: Shoes Net + Walkaroo Partner */}
         <Link to="/" className="flex items-center gap-3" aria-label="Shoes Net Home">
-          <div className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-xl bg-gradient-to-tr from-blue-700 to-indigo-800 text-white font-black text-lg shadow-sm">
+          <div className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-2xl bg-gradient-to-tr from-[#ED2C23] via-rose-600 to-amber-500 text-white font-black text-lg shadow-md">
             SN
           </div>
           <div className="flex flex-col">
             <span className="text-base sm:text-xl font-black uppercase tracking-tight text-slate-900 leading-none">
               Shoes Net
             </span>
-            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-blue-700 flex items-center gap-1 mt-0.5">
+            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-[#ED2C23] flex items-center gap-1 mt-0.5">
               <span>Official</span>
-              <span className="rounded bg-blue-100 px-1 py-0.2 text-[9px] font-extrabold text-blue-800">
+              <span className="rounded bg-red-100 border border-red-200 px-1 py-0.2 text-[9px] font-black text-[#ED2C23]">
                 WALKAROO
               </span>
               <span>Partner</span>
@@ -215,7 +215,7 @@ export const Navbar: React.FC = () => {
           ) : (
             <Link
               to="/login"
-              className="rounded-xl bg-blue-700 px-4 py-2 text-xs font-bold uppercase tracking-wider text-white shadow-xs transition-all hover:bg-blue-800 active:scale-95"
+              className="rounded-xl bg-[#ED2C23] hover:bg-[#D41C14] px-4 py-2 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition-all active:scale-95"
             >
               Sign In
             </Link>

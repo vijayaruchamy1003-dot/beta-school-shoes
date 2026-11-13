@@ -100,10 +100,10 @@ export const ProductCard: React.FC<Props> = ({ product, index = 0 }) => {
           {/* Card Media Stage (Asian Footwears style clean light studio background) */}
           <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-gradient-to-b from-slate-50 via-slate-100/40 to-slate-100/70 p-4 flex items-center justify-center">
             
-            {/* Asian Footwears Promotional Badge */}
+            {/* Walkaroo Promotional Badge */}
             <div className="absolute top-2.5 left-2.5 z-10">
               {badgeType === 'BESTSELLER' ? (
-                <span className="inline-flex items-center gap-1 rounded-md bg-gradient-to-r from-amber-500 to-rose-500 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-white shadow-xs">
+                <span className="inline-flex items-center gap-1 rounded-md bg-gradient-to-r from-amber-500 to-[#ED2C23] px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-white shadow-xs">
                   ★ Bestseller
                 </span>
               ) : badgeType === 'NEW ARRIVAL' ? (
@@ -111,7 +111,7 @@ export const ProductCard: React.FC<Props> = ({ product, index = 0 }) => {
                   New Arrival
                 </span>
               ) : (
-                <span className="inline-flex items-center rounded-md bg-rose-600 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-white shadow-xs">
+                <span className="inline-flex items-center rounded-md bg-[#ED2C23] px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-white shadow-xs">
                   {badgeType}
                 </span>
               )}
@@ -158,12 +158,12 @@ export const ProductCard: React.FC<Props> = ({ product, index = 0 }) => {
           {/* Product Details */}
           <div className="mt-3.5 space-y-1.5">
             {/* Category Subtitle */}
-            <p className="text-[11px] font-bold uppercase tracking-wider text-blue-700">
+            <p className="text-[11px] font-black uppercase tracking-wider text-[#ED2C23]">
               {categoryLabel}
             </p>
 
             {/* Product Title */}
-            <h3 className="line-clamp-1 text-sm sm:text-base font-bold text-slate-900 transition-colors group-hover:text-blue-700">
+            <h3 className="line-clamp-1 text-sm sm:text-base font-bold text-slate-900 transition-colors group-hover:text-[#ED2C23]">
               {product.name}
             </h3>
 
@@ -222,9 +222,9 @@ export const ProductCard: React.FC<Props> = ({ product, index = 0 }) => {
                 }}
                 className={`min-w-[34px] rounded-md px-2 py-1 text-[11px] font-bold transition-all ${
                   isSelected
-                    ? 'bg-slate-900 text-white shadow-xs'
+                    ? 'bg-[#ED2C23] text-white shadow-xs'
                     : inStock
-                    ? 'border border-slate-200 bg-white text-slate-800 hover:border-slate-900 hover:text-slate-900'
+                    ? 'border border-slate-200 bg-white text-slate-800 hover:border-[#ED2C23] hover:text-[#ED2C23]'
                     : 'border border-slate-100 bg-slate-50 text-slate-300 line-through cursor-not-allowed'
                 }`}
                 title={inStock ? `Size ${size.ukSize} available` : `Size ${size.ukSize} out of stock`}
@@ -246,12 +246,12 @@ export const ProductCard: React.FC<Props> = ({ product, index = 0 }) => {
           type="button"
           onClick={handleAddToCart}
           disabled={isAdding || !hasAnyStock}
-          className={`flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-bold uppercase tracking-wider transition-all duration-200 active:scale-[0.98] ${
+          className={`flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-black uppercase tracking-wider transition-all duration-200 active:scale-[0.98] ${
             addedSuccess
               ? 'bg-emerald-600 text-white shadow-sm'
               : !hasAnyStock
               ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
-              : 'bg-blue-700 text-white shadow-xs hover:bg-blue-800 hover:shadow-md'
+              : 'bg-[#ED2C23] hover:bg-[#D41C14] text-white shadow-sm hover:shadow-md'
           }`}
         >
           {addedSuccess ? (
