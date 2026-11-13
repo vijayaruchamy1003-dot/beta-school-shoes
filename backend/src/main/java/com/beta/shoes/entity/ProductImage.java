@@ -30,6 +30,12 @@ public class ProductImage {
     @Column(name = "storage_key", length = 255)
     private String storageKey;
 
+    @Column(name = "content_type", length = 128)
+    private String contentType;
+
+    @Column(name = "image_data_base64", columnDefinition = "TEXT")
+    private String imageDataBase64;
+
     @Column(name = "is_primary", nullable = false)
     @Builder.Default
     private boolean isPrimary = false;

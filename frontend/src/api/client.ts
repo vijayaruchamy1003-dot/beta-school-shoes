@@ -43,7 +43,10 @@ const getApiBaseUrl = (): string => {
 const normalizeUploadUrls = (value: any, origin: string): any => {
   if (!origin || !value) return value;
   if (typeof value === 'string') {
-    return value.startsWith('/uploads/') ? `${origin}${value}` : value;
+    if (value.startsWith('/uploads/') || value.startsWith('/api/products/images/')) {
+      return `${origin}${value}`;
+    }
+    return value;
   }
   if (Array.isArray(value)) {
     return value.map((item) => normalizeUploadUrls(item, origin));
@@ -58,6 +61,15 @@ const normalizeUploadUrls = (value: any, origin: string): any => {
   return value;
 };
 
+export const resolveImageUrl = (url?: string | null): string | undefined => {
+  if (!url) return undefined;
+  const origin = getBackendOrigin();
+  if (origin && (url.startsWith('/uploads/') || url.startsWith('/api/products/images/'))) {
+    return `${origin}${url}`;
+  }
+  return url;
+};
+
 const api = axios.create({
   baseURL: getApiBaseUrl(),
   headers: {
@@ -65,11 +77,14 @@ const api = axios.create({
   },
 });
 
-// Attach JWT token to requests if available
+// Attach JWT token to requests if available & let browser set boundary for FormData
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('beta_token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
+  }
+  if (typeof FormData !== 'undefined' && config.data instanceof FormData) {
+    delete config.headers['Content-Type'];
   }
   return config;
 });
@@ -142,9 +157,8 @@ export const adminApi = {
   createProduct: (data: any) => api.post<AdminProduct>('/admin/products', data),
   updateProduct: (id: string, data: any) => api.put<AdminProduct>(`/admin/products/${id}`, data),
   toggleActive: (id: string, isActive: boolean) => api.patch<AdminProduct>(`/admin/products/${id}/status`, null, { params: { isActive } }),
-  uploadProductImage: (productId: string, formData: FormData, isPrimary = false) =>
+  uploadProductImage: (productId: string, formData: FormData, isPrimary = true) =>
     api.post<AdminProduct>(`/admin/products/${productId}/images`, formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
       params: { isPrimary }
     }),
   deleteProductImage: (imageId: string) => api.delete<void>(`/admin/products/images/${imageId}`),

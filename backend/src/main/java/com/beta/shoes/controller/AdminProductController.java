@@ -63,7 +63,7 @@ public class AdminProductController {
     public ResponseEntity<ProductDto.AdminProductResponse> uploadImage(
         @PathVariable UUID id,
         @RequestParam("file") MultipartFile file,
-        @RequestParam(defaultValue = "false") boolean isPrimary
+        @RequestParam(defaultValue = "true") boolean isPrimary
     ) {
         return ResponseEntity.ok(productService.uploadImage(id, file, isPrimary));
     }

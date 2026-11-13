@@ -21,7 +21,9 @@ import java.util.UUID;
 public class LocalStorageService implements StorageService {
 
     private final Path rootLocation;
-    private static final List<String> ALLOWED_EXTENSIONS = Arrays.asList(".jpg", ".jpeg", ".png", ".webp", ".svg");
+    private static final List<String> ALLOWED_EXTENSIONS = Arrays.asList(
+        ".jpg", ".jpeg", ".png", ".webp", ".svg", ".avif", ".gif", ".jfif", ".bmp"
+    );
 
     public LocalStorageService(@Value("${storage.local.upload-dir:./uploads}") String uploadDir) {
         this.rootLocation = Paths.get(uploadDir).toAbsolutePath().normalize();
@@ -48,10 +50,17 @@ public class LocalStorageService implements StorageService {
         int extIndex = originalFilename.lastIndexOf('.');
         if (extIndex > 0) {
             extension = originalFilename.substring(extIndex).toLowerCase();
+        } else if (file.getContentType() != null && file.getContentType().startsWith("image/")) {
+            String subtype = file.getContentType().substring("image/".length()).toLowerCase();
+            extension = "." + (subtype.equals("jpeg") ? "jpg" : subtype);
         }
 
         if (!ALLOWED_EXTENSIONS.contains(extension)) {
-            throw new BadRequestException("Invalid file type. Allowed formats: " + ALLOWED_EXTENSIONS);
+            if (file.getContentType() != null && file.getContentType().startsWith("image/")) {
+                extension = ".jpg";
+            } else {
+                throw new BadRequestException("Invalid file type. Allowed formats: " + ALLOWED_EXTENSIONS);
+            }
         }
 
         String storedFilename = UUID.randomUUID().toString() + extension;
@@ -65,10 +74,25 @@ public class LocalStorageService implements StorageService {
         try (InputStream inputStream = file.getInputStream()) {
             Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);
             // Return public URL path
-            return "/uploads/" + storedFilename;
+            return "/api/products/images/" + storedFilename;
         } catch (IOException e) {
             log.error("Failed to store file {}", originalFilename, e);
             throw new RuntimeException("Failed to store file", e);
+        }
+    }
+
+    public byte[] readFileIfExists(String filename) {
+        if (!StringUtils.hasText(filename)) return null;
+        String cleanName = filename.substring(filename.lastIndexOf('/') + 1);
+        Path filePath = this.rootLocation.resolve(cleanName).normalize();
+        if (!filePath.getParent().equals(this.rootLocation) || !Files.exists(filePath)) {
+            return null;
+        }
+        try {
+            return Files.readAllBytes(filePath);
+        } catch (IOException e) {
+            log.warn("Failed to read file from disk: {}", cleanName, e);
+            return null;
         }
     }
 

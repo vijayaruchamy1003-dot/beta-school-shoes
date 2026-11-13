@@ -18,7 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -71,15 +73,37 @@ public class ProductService {
         return "PRD-" + str.substring(0, 6).toUpperCase();
     }
 
+    public static String resolvePublicImageUrl(String rawUrl) {
+        if (!StringUtils.hasText(rawUrl)) {
+            return null;
+        }
+        String trimmed = rawUrl.trim();
+        if (trimmed.startsWith("http://") || trimmed.startsWith("https://") || trimmed.startsWith("data:")) {
+            return trimmed;
+        }
+        String filename = trimmed.substring(trimmed.lastIndexOf('/') + 1);
+        String apiPath = "/api/products/images/" + filename;
+        try {
+            return ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path(apiPath)
+                .toUriString();
+        } catch (Exception ignored) {
+            return apiPath;
+        }
+    }
+
     private ProductDto.PublicProductResponse mapToPublicResponse(Product product) {
-        String primaryImg = product.getImages().stream()
+        String rawPrimaryImg = product.getImages().stream()
             .filter(ProductImage::isPrimary)
             .map(ProductImage::getImageUrl)
             .findFirst()
             .orElseGet(() -> product.getImages().isEmpty() ? null : product.getImages().get(0).getImageUrl());
 
+        String primaryImg = resolvePublicImageUrl(rawPrimaryImg);
+
         List<String> allImages = product.getImages().stream()
-            .map(ProductImage::getImageUrl)
+            .map(img -> resolvePublicImageUrl(img.getImageUrl()))
+            .filter(Objects::nonNull)
             .collect(Collectors.toList());
 
         List<ProductDto.PublicSizeResponse> sizeResponses = product.getSizes().stream()
@@ -273,25 +297,50 @@ public class ProductService {
             .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID: " + productId));
 
         String imageUrl = storageService.storeFile(file);
+        String filename = imageUrl.substring(imageUrl.lastIndexOf('/') + 1);
+
+        String base64Data = null;
+        try {
+            base64Data = Base64.getEncoder().encodeToString(file.getBytes());
+        } catch (IOException ignored) {
+        }
 
         if (isPrimary || product.getImages().isEmpty()) {
-            // Unset current primary
-            product.getImages().forEach(img -> img.setPrimary(false));
+            // Unset current primary and shift displayOrder
+            for (ProductImage existingImg : product.getImages()) {
+                existingImg.setPrimary(false);
+                existingImg.setDisplayOrder(existingImg.getDisplayOrder() + 1);
+            }
+            productImageRepository.saveAll(product.getImages());
             isPrimary = true;
         }
 
         ProductImage image = ProductImage.builder()
             .product(product)
             .imageUrl(imageUrl)
-            .storageKey(imageUrl)
+            .storageKey(filename)
+            .contentType(StringUtils.hasText(file.getContentType()) ? file.getContentType() : "image/jpeg")
+            .imageDataBase64(base64Data)
             .isPrimary(isPrimary)
-            .displayOrder(product.getImages().size())
+            .displayOrder(isPrimary ? 0 : product.getImages().size())
             .build();
 
-        product.getImages().add(image);
+        image = productImageRepository.saveAndFlush(image);
+        if (isPrimary) {
+            product.getImages().add(0, image);
+        } else {
+            product.getImages().add(image);
+        }
         productRepository.save(product);
 
         return mapToAdminResponse(product);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<ProductImage> findImageByFilename(String filename) {
+        if (!StringUtils.hasText(filename)) return Optional.empty();
+        String cleanName = filename.substring(filename.lastIndexOf('/') + 1);
+        return productImageRepository.findByFilename(cleanName).stream().findFirst();
     }
 
     @Transactional
@@ -341,16 +390,18 @@ public class ProductService {
     }
 
     public ProductDto.AdminProductResponse mapToAdminResponse(Product product) {
-        String primaryImg = product.getImages().stream()
+        String rawPrimaryImg = product.getImages().stream()
             .filter(ProductImage::isPrimary)
             .map(ProductImage::getImageUrl)
             .findFirst()
             .orElseGet(() -> product.getImages().isEmpty() ? null : product.getImages().get(0).getImageUrl());
 
+        String primaryImg = resolvePublicImageUrl(rawPrimaryImg);
+
         List<ProductDto.AdminImageResponse> imgResponses = product.getImages().stream()
             .map(img -> ProductDto.AdminImageResponse.builder()
                 .id(img.getId())
-                .imageUrl(img.getImageUrl())
+                .imageUrl(resolvePublicImageUrl(img.getImageUrl()))
                 .storageKey(img.getStorageKey())
                 .isPrimary(img.isPrimary())
                 .displayOrder(img.getDisplayOrder())

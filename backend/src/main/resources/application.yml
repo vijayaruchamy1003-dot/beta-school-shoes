@@ -17,6 +17,11 @@ management:
 spring:
   application:
     name: beta-shoes-backend
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 20MB
+      max-request-size: 25MB
   datasource:
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://${PGHOST:${DB_HOST:localhost}}:${PGPORT:${DB_PORT:5432}}/${PGDATABASE:${POSTGRES_DB:${DB_NAME:beta_school_shoes}}}}
     username: ${SPRING_DATASOURCE_USERNAME:${PGUSER:${POSTGRES_USER:${DB_USER:postgres}}}}
