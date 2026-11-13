@@ -1,30 +1,33 @@
-name: Render Backend Keep-Alive
+name: Railway Backend Healthcheck
 
 on:
-  schedule:
-    # Runs every 10 minutes to prevent Render free instance from spinning down (15-min idle timeout)
-    - cron: '*/10 * * * *'
-  workflow_dispatch: # Allows manual trigger from the GitHub Actions tab
+  workflow_dispatch: # Manual trigger from the GitHub Actions tab
 
 jobs:
-  keep-alive:
-    name: Ping Render Spring Boot Backend
+  healthcheck:
+    name: Ping Railway Spring Boot Backend
     runs-on: ubuntu-latest
+    env:
+      BACKEND_URL: ${{ vars.RAILWAY_BACKEND_URL || secrets.RAILWAY_BACKEND_URL || 'https://beta-shoes-backend-production.up.railway.app' }}
     steps:
       - name: Ping Backend Health & Catalogue
         run: |
-          echo "Pinging Render backend at $(date -u)..."
+          if [ -z "$BACKEND_URL" ]; then
+            echo "RAILWAY_BACKEND_URL is not configured in repository variables/secrets. Skipping ping."
+            exit 0
+          fi
+
+          BASE_URL="${BACKEND_URL%/}"
+          echo "Pinging Railway backend ($BASE_URL) at $(date -u)..."
           
-          # Ping the catalogue endpoint to keep Spring Boot and database connections active
-          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 60 "https://beta-backend-z3su.onrender.com/api/products?page=0&size=1")
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 60 "$BASE_URL/api/products?page=0&size=1")
           echo "API Products Response Code: $HTTP_STATUS"
           
-          # Also ping actuator health check
-          ACTUATOR_STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 60 "https://beta-backend-z3su.onrender.com/actuator/health")
+          ACTUATOR_STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 60 "$BASE_URL/actuator/health")
           echo "Actuator Health Response Code: $ACTUATOR_STATUS"
           
           if [ "$HTTP_STATUS" -eq 200 ] || [ "$ACTUATOR_STATUS" -eq 200 ]; then
-            echo "Success: Render backend is awake and warm!"
+            echo "Success: Railway backend is healthy!"
           else
-            echo "Warning: Received unexpected status, but request has woken up the server."
+            echo "Warning: Received unexpected status from Railway backend."
           fi

@@ -1,5 +1,6 @@
 server:
   port: ${PORT:${SERVER_PORT:8081}}
+  forward-headers-strategy: framework
   error:
     include-message: always
     include-binding-errors: always
@@ -17,16 +18,17 @@ spring:
   application:
     name: beta-shoes-backend
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:beta_school_shoes}}
-    username: ${DB_USER:postgres}
-    password: ${DB_PASSWORD:1234}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://${PGHOST:${DB_HOST:localhost}}:${PGPORT:${DB_PORT:5432}}/${PGDATABASE:${POSTGRES_DB:${DB_NAME:beta_school_shoes}}}}
+    username: ${SPRING_DATASOURCE_USERNAME:${PGUSER:${POSTGRES_USER:${DB_USER:postgres}}}}
+    password: ${SPRING_DATASOURCE_PASSWORD:${PGPASSWORD:${POSTGRES_PASSWORD:${DB_PASSWORD:1234}}}}
     driver-class-name: org.postgresql.Driver
     hikari:
-      maximum-pool-size: 15
-      minimum-idle: 5
+      maximum-pool-size: ${DB_POOL_SIZE:10}
+      minimum-idle: ${DB_POOL_MIN_IDLE:2}
       connection-timeout: 30000
       idle-timeout: 600000
       max-lifetime: 1800000
+      keepalive-time: 60000
   jpa:
     hibernate:
       ddl-auto: validate

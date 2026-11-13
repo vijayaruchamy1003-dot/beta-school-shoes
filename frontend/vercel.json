@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/uploads/(.*)",
-      "destination": "https://beta-backend-z3su.onrender.com/uploads/$1"
+      "destination": "https://beta-shoes-backend-production.up.railway.app/uploads/$1"
     },
     {
       "source": "/(.*)",

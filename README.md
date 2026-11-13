@@ -87,9 +87,26 @@ beta-school-shoes/
 
 ---
 
-## 🚀 Quick Start Guide
+## 🚀 Quick Start & Deployment Guide
 
-### Option A: Running with Docker Compose (Recommended)
+### Option A: Deploying Server & PostgreSQL DB on Railway
+
+1. **Create a Railway Project & Add PostgreSQL:**
+   - In your Railway project, click **New** → **Database** → **Add PostgreSQL**.
+2. **Deploy the Spring Boot Backend Service:**
+   - Click **New** → **GitHub Repo** and select this repository (works both from the repository root `/` via [railway.json](railway.json) or with Root Directory set to `/backend` via [backend/railway.json](backend/railway.json)).
+   - Under the backend service **Variables**, link the Railway PostgreSQL database using either:
+     - `DATABASE_URL=${{Postgres.DATABASE_URL}}` *(automatically parsed into JDBC format by `RailwayDatabaseEnvironmentPostProcessor`)*, **or**
+     - `PGHOST=${{Postgres.PGHOST}}`, `PGPORT=${{Postgres.PGPORT}}`, `PGDATABASE=${{Postgres.PGDATABASE}}`, `PGUSER=${{Postgres.PGUSER}}`, `PGPASSWORD=${{Postgres.PGPASSWORD}}`
+   - Set your application environment variables (`JWT_SECRET`, `ADMIN_BOOTSTRAP_EMAIL`, `ADMIN_BOOTSTRAP_PASSWORD`, `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET`, etc.).
+   - *(Optional)* Attach a Railway **Volume** mounted at `/app/uploads` so local product image uploads persist across redeployments.
+   - Generate a public domain under **Settings** → **Networking** → **Generate Domain**.
+3. **Configure Frontend (`VITE_API_BASE_URL`):**
+   - Set `VITE_API_BASE_URL=https://<your-railway-backend-domain>.up.railway.app` in your frontend environment variables.
+
+---
+
+### Option B: Running with Docker Compose (Local)
 
 1. Clone or navigate to the repository directory:
    ```bash

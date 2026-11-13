@@ -17,18 +17,45 @@ import {
   StudentOrder
 } from '../types';
 
-const getApiBaseUrl = (): string => {
+const RAILWAY_BACKEND_URL = 'https://beta-shoes-backend-production.up.railway.app';
+
+const getBackendOrigin = (): string => {
   const envUrl = import.meta.env.VITE_API_BASE_URL;
   if (envUrl && typeof envUrl === 'string' && envUrl.trim() !== '') {
     const trimmed = envUrl.trim().replace(/\/+$/, '');
-    return trimmed.endsWith('/api') ? trimmed : `${trimmed}/api`;
+    return trimmed.endsWith('/api') ? trimmed.slice(0, -4) : trimmed;
   }
-  // Production fallback: default to Render backend if no env var is provided
   if (import.meta.env.PROD) {
-    return 'https://beta-backend-z3su.onrender.com/api';
+    return RAILWAY_BACKEND_URL;
   }
-  // Local development fallback: proxied by Vite dev server
+  return '';
+};
+
+const getApiBaseUrl = (): string => {
+  const origin = getBackendOrigin();
+  if (origin) {
+    return `${origin}/api`;
+  }
+  // Local development / same-origin proxy fallback
   return '/api';
+};
+
+const normalizeUploadUrls = (value: any, origin: string): any => {
+  if (!origin || !value) return value;
+  if (typeof value === 'string') {
+    return value.startsWith('/uploads/') ? `${origin}${value}` : value;
+  }
+  if (Array.isArray(value)) {
+    return value.map((item) => normalizeUploadUrls(item, origin));
+  }
+  if (typeof value === 'object') {
+    const result: Record<string, any> = {};
+    for (const [k, v] of Object.entries(value)) {
+      result[k] = normalizeUploadUrls(v, origin);
+    }
+    return result;
+  }
+  return value;
 };
 
 const api = axios.create({
@@ -47,9 +74,15 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Handle 401 unauthenticated
+// Normalize relative /uploads/ paths against Railway backend origin & handle 401
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    const origin = getBackendOrigin();
+    if (origin && response.data && typeof response.data === 'object') {
+      response.data = normalizeUploadUrls(response.data, origin);
+    }
+    return response;
+  },
   (error) => {
     if (error.response?.status === 401) {
       // Don't auto-clear on failed login request itself
