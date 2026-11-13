@@ -16,11 +16,12 @@ import {
 } from 'lucide-react';
 
 const CATEGORIES = [
-  { id: 'ALL', label: 'All Shoes' },
-  { id: 'BOYS_FORMAL', label: 'Boys Formal' },
-  { id: 'GIRLS_FORMAL', label: 'Girls Formal' },
-  { id: 'SPORTS_PT', label: 'Sports & PT Canvas' },
-  { id: 'JUNIOR_VELCRO', label: 'Junior Velcro' },
+  { id: 'ALL', label: 'All Products' },
+  { id: 'BOYS', label: 'Boys' },
+  { id: 'GIRLS', label: 'Girls' },
+  { id: 'MEN', label: 'Men' },
+  { id: 'WOMEN', label: 'Women' },
+  { id: 'SCHOOL_SHOES', label: 'School Shoes' },
 ];
 
 const PRICE_RANGES = [

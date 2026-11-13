@@ -12,7 +12,7 @@ export const AdminProductFormPage: React.FC = () => {
     name: '',
     sku: '',
     shortDescription: '',
-    category: 'BOYS_FORMAL',
+    category: 'SCHOOL_SHOES',
     basePrice: '',
     mrp: '',
     isBestseller: false,

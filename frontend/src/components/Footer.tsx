@@ -55,27 +55,32 @@ export const Footer: React.FC = () => {
             <ul className="mt-4 space-y-2.5 text-xs sm:text-sm text-slate-300">
               <li>
                 <Link to="/catalogue" className="hover:text-white transition-colors">
-                  All School Shoes
+                  All Products
                 </Link>
               </li>
               <li>
-                <Link to="/catalogue?category=BOYS_FORMAL" className="hover:text-white transition-colors">
-                  Boys Formal Derby
+                <Link to="/catalogue?category=BOYS" className="hover:text-white transition-colors">
+                  Boys
                 </Link>
               </li>
               <li>
-                <Link to="/catalogue?category=GIRLS_FORMAL" className="hover:text-white transition-colors">
-                  Girls Formal Buckle
+                <Link to="/catalogue?category=GIRLS" className="hover:text-white transition-colors">
+                  Girls
                 </Link>
               </li>
               <li>
-                <Link to="/catalogue?category=SPORTS_PT" className="hover:text-white transition-colors">
-                  Sports & PT Canvas
+                <Link to="/catalogue?category=MEN" className="hover:text-white transition-colors">
+                  Men
                 </Link>
               </li>
               <li>
-                <Link to="/catalogue?category=JUNIOR_VELCRO" className="hover:text-white transition-colors">
-                  Junior Velcro Strap
+                <Link to="/catalogue?category=WOMEN" className="hover:text-white transition-colors">
+                  Women
+                </Link>
+              </li>
+              <li>
+                <Link to="/catalogue?category=SCHOOL_SHOES" className="hover:text-white transition-colors">
+                  School Shoes
                 </Link>
               </li>
             </ul>

@@ -18,7 +18,7 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
 
     // Public active products with search and category filtering
     @Query("SELECT DISTINCT p FROM Product p LEFT JOIN p.sizes s WHERE p.isActive = true " +
-           "AND (cast(:category as string) IS NULL OR p.category = :category) " +
+           "AND (cast(:category as string) IS NULL OR UPPER(REPLACE(p.category, ' ', '_')) = UPPER(REPLACE(cast(:category as string), ' ', '_'))) " +
            "AND (cast(:search as string) IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', cast(:search as string), '%')) OR LOWER(p.shortDescription) LIKE LOWER(CONCAT('%', cast(:search as string), '%'))) " +
            "AND (cast(:ukSize as string) IS NULL OR (s.ukSize = :ukSize AND s.isAvailable = true))")
     Page<Product> findPublicProducts(
@@ -30,7 +30,7 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
 
     // Admin catalogue (includes inactive)
     @Query("SELECT p FROM Product p WHERE " +
-           "(cast(:category as string) IS NULL OR p.category = :category) " +
+           "(cast(:category as string) IS NULL OR UPPER(REPLACE(p.category, ' ', '_')) = UPPER(REPLACE(cast(:category as string), ' ', '_'))) " +
            "AND (cast(:search as string) IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', cast(:search as string), '%')) OR LOWER(p.sku) LIKE LOWER(CONCAT('%', cast(:search as string), '%')))")
     Page<Product> findAdminProducts(
         @Param("category") String category,

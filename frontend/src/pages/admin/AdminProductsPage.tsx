@@ -74,13 +74,18 @@ export const AdminProductsPage: React.FC = () => {
           />
         </div>
 
-        <input
-          type="text"
-          placeholder="Filter by Category (e.g. Boys Formal)..."
+        <select
           value={category}
           onChange={e => setCategory(e.target.value)}
-          className="px-3 py-2 rounded-lg border border-slate-300 text-xs text-slate-800 focus:outline-none focus:border-navy-950"
-        />
+          className="px-3 py-2 rounded-lg border border-slate-300 text-xs text-slate-800 bg-white focus:outline-none focus:border-navy-950"
+        >
+          <option value="">All Categories</option>
+          <option value="BOYS">Boys</option>
+          <option value="GIRLS">Girls</option>
+          <option value="MEN">Men</option>
+          <option value="WOMEN">Women</option>
+          <option value="SCHOOL_SHOES">School Shoes</option>
+        </select>
 
         <button
           type="submit"

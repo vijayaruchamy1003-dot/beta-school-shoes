@@ -125,11 +125,12 @@ export const HomePage: React.FC = () => {
           {/* Category Filter Pills (Walkaroo Vibrant Style) */}
           <div className="mb-8 flex flex-wrap gap-2">
             {[
-              { id: 'ALL', label: 'All Shoes' },
-              { id: 'BOYS_FORMAL', label: 'Boys Formal Oxford' },
-              { id: 'GIRLS_FORMAL', label: 'Girls Formal Buckle' },
-              { id: 'SPORTS_PT', label: 'Sports & PT Canvas' },
-              { id: 'JUNIOR_VELCRO', label: 'Junior Velcro' },
+              { id: 'ALL', label: 'All Products' },
+              { id: 'BOYS', label: 'Boys' },
+              { id: 'GIRLS', label: 'Girls' },
+              { id: 'MEN', label: 'Men' },
+              { id: 'WOMEN', label: 'Women' },
+              { id: 'SCHOOL_SHOES', label: 'School Shoes' },
             ].map(cat => (
               <button
                 key={cat.id}

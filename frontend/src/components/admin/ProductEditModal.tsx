@@ -279,16 +279,38 @@ export const ProductEditModal: React.FC<ProductEditModalProps> = ({
             </div>
           </div>
 
-          {/* Row 2: Category (Written Text Input - NO DROPDOWN) & Base Price */}
+          {/* Row 2: Category & Base Price */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               <label className="font-bold text-slate-700 block">
-                Category * <span className="font-normal text-slate-400">(Written Text)</span>
+                Category / Type *
               </label>
+              <div className="flex flex-wrap gap-1.5 pb-1">
+                {[
+                  { id: 'BOYS', label: 'Boys' },
+                  { id: 'GIRLS', label: 'Girls' },
+                  { id: 'MEN', label: 'Men' },
+                  { id: 'WOMEN', label: 'Women' },
+                  { id: 'SCHOOL_SHOES', label: 'School Shoes' },
+                ].map(opt => (
+                  <button
+                    key={opt.id}
+                    type="button"
+                    onClick={() => setCategory(opt.id)}
+                    className={`px-2.5 py-1 rounded-md text-[11px] font-bold border transition ${
+                      category.toUpperCase().replace(/\s+/g, '_') === opt.id
+                        ? 'bg-navy-950 text-white border-navy-950'
+                        : 'bg-slate-50 text-slate-700 border-slate-300 hover:bg-slate-100'
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
               <input
                 type="text"
                 required
-                placeholder="Type category (e.g. Boys Formal, Junior Velcro, Sports)..."
+                placeholder="Select above or type category (BOYS, GIRLS, MEN, WOMEN, SCHOOL_SHOES)..."
                 value={category}
                 onChange={e => setCategory(e.target.value)}
                 className="w-full px-3 py-2 rounded-lg border border-slate-300 text-slate-900 text-xs focus:outline-none focus:border-navy-950 bg-white"

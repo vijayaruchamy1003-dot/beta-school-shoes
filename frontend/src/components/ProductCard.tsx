@@ -27,12 +27,19 @@ export const ProductCard: React.FC<Props> = ({ product, index = 0 }) => {
   const [errorMsg, setErrorMsg] = useState('');
 
   const categoryLabels: Record<string, string> = {
-    BOYS_FORMAL: 'Boys Formal Uniform',
-    GIRLS_FORMAL: 'Girls Formal Buckle',
-    SPORTS_PT: 'Sports & PT Canvas',
-    JUNIOR_VELCRO: 'Junior Easy-Strap',
+    BOYS: 'Boys',
+    GIRLS: 'Girls',
+    MEN: 'Men',
+    WOMEN: 'Women',
+    SCHOOL_SHOES: 'School Shoes',
+    'SCHOOL SHOES': 'School Shoes',
+    BOYS_FORMAL: 'Boys',
+    GIRLS_FORMAL: 'Girls',
+    SPORTS_PT: 'School Shoes',
+    JUNIOR_VELCRO: 'School Shoes',
   };
-  const categoryLabel = categoryLabels[product.category] || 'Official Uniform Footwear';
+  const normalizedCat = product.category ? product.category.trim().toUpperCase() : '';
+  const categoryLabel = categoryLabels[normalizedCat] || product.category?.replace(/_/g, ' ') || 'Official Walkaroo Footwear';
 
   // Realistic MRP calculation (Uses admin configured MRP or falls back)
   const mrp = product.mrp && product.mrp > product.basePrice ? product.mrp : Math.round(product.basePrice * 1.38);

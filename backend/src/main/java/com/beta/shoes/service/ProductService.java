@@ -35,11 +35,18 @@ public class ProductService {
 
     // --- PUBLIC ENDPOINTS (Strictly hides exact stock counts) ---
 
+    public static String normalizeCategory(String category) {
+        if (!StringUtils.hasText(category)) {
+            return null;
+        }
+        return category.trim().toUpperCase().replaceAll("\\s+", "_");
+    }
+
     @Transactional(readOnly = true)
     public Page<ProductDto.PublicProductResponse> getPublicProducts(
         String category, String search, String ukSize, Pageable pageable
     ) {
-        String cleanCategory = StringUtils.hasText(category) && !"ALL".equalsIgnoreCase(category) ? category.trim() : null;
+        String cleanCategory = StringUtils.hasText(category) && !"ALL".equalsIgnoreCase(category) ? normalizeCategory(category) : null;
         String cleanSearch = StringUtils.hasText(search) ? search.trim() : null;
         String cleanSize = StringUtils.hasText(ukSize) && !"ALL".equalsIgnoreCase(ukSize) ? ukSize.trim() : null;
 
@@ -111,7 +118,7 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public Page<ProductDto.AdminProductResponse> getAdminProducts(String category, String search, Pageable pageable) {
-        String cleanCategory = StringUtils.hasText(category) && !"ALL".equalsIgnoreCase(category) ? category.trim() : null;
+        String cleanCategory = StringUtils.hasText(category) && !"ALL".equalsIgnoreCase(category) ? normalizeCategory(category) : null;
         String cleanSearch = StringUtils.hasText(search) ? search.trim() : null;
 
         Page<Product> products = productRepository.findAdminProducts(cleanCategory, cleanSearch, pageable);
@@ -135,7 +142,7 @@ public class ProductService {
             .sku(request.getSku().trim())
             .name(request.getName().trim())
             .shortDescription(request.getShortDescription().trim())
-            .category(request.getCategory().trim().toUpperCase())
+            .category(normalizeCategory(request.getCategory()))
             .basePrice(request.getBasePrice())
             .mrp(request.getMrp())
             .isBestseller(request.getIsBestseller() != null ? request.getIsBestseller() : false)
@@ -181,7 +188,7 @@ public class ProductService {
 
         product.setName(request.getName().trim());
         product.setShortDescription(request.getShortDescription().trim());
-        product.setCategory(request.getCategory().trim());
+        product.setCategory(normalizeCategory(request.getCategory()));
         product.setBasePrice(request.getBasePrice());
         product.setMrp(request.getMrp());
         if (request.getIsBestseller() != null) {

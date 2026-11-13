@@ -106,21 +106,27 @@ export const Navbar: React.FC = () => {
         </Link>
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden items-center gap-6 xl:gap-8 lg:flex" aria-label="Main navigation">
+        <nav className="hidden items-center gap-5 xl:gap-7 lg:flex" aria-label="Main navigation">
           <Link to="/" className={navLinkClass('/')}>
             Home
           </Link>
           <Link to="/catalogue" className={navLinkClass('/catalogue')}>
             All Products
           </Link>
-          <Link to="/catalogue?category=BOYS_FORMAL" className="text-xs md:text-[13px] font-semibold uppercase tracking-wider text-slate-600 hover:text-blue-700 transition-colors">
-            Boys Formal
+          <Link to="/catalogue?category=BOYS" className="text-xs md:text-[13px] font-semibold uppercase tracking-wider text-slate-600 hover:text-blue-700 transition-colors">
+            Boys
           </Link>
-          <Link to="/catalogue?category=GIRLS_FORMAL" className="text-xs md:text-[13px] font-semibold uppercase tracking-wider text-slate-600 hover:text-blue-700 transition-colors">
-            Girls Formal
+          <Link to="/catalogue?category=GIRLS" className="text-xs md:text-[13px] font-semibold uppercase tracking-wider text-slate-600 hover:text-blue-700 transition-colors">
+            Girls
           </Link>
-          <Link to="/catalogue?category=SPORTS_PT" className="relative text-xs md:text-[13px] font-semibold uppercase tracking-wider text-slate-600 hover:text-blue-700 transition-colors">
-            <span>Sports PT</span>
+          <Link to="/catalogue?category=MEN" className="text-xs md:text-[13px] font-semibold uppercase tracking-wider text-slate-600 hover:text-blue-700 transition-colors">
+            Men
+          </Link>
+          <Link to="/catalogue?category=WOMEN" className="text-xs md:text-[13px] font-semibold uppercase tracking-wider text-slate-600 hover:text-blue-700 transition-colors">
+            Women
+          </Link>
+          <Link to="/catalogue?category=SCHOOL_SHOES" className="relative text-xs md:text-[13px] font-semibold uppercase tracking-wider text-slate-600 hover:text-blue-700 transition-colors">
+            <span>School Shoes</span>
             <span className="absolute -top-2.5 -right-3.5 rounded-full bg-rose-600 px-1.5 py-0.2 text-[8px] font-extrabold text-white">
               NEW
             </span>
@@ -261,28 +267,42 @@ export const Navbar: React.FC = () => {
               onClick={() => setMobileMenuOpen(false)}
               className="rounded-lg px-2 py-1.5 text-xs font-bold uppercase tracking-wider text-slate-800 hover:bg-slate-50"
             >
-              All Shoes Collection
+              All Products
             </Link>
             <Link
-              to="/catalogue?category=BOYS_FORMAL"
+              to="/catalogue?category=BOYS"
               onClick={() => setMobileMenuOpen(false)}
               className="rounded-lg px-2 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50"
             >
-              Boys Formal Uniform
+              Boys
             </Link>
             <Link
-              to="/catalogue?category=GIRLS_FORMAL"
+              to="/catalogue?category=GIRLS"
               onClick={() => setMobileMenuOpen(false)}
               className="rounded-lg px-2 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50"
             >
-              Girls Formal Buckle
+              Girls
             </Link>
             <Link
-              to="/catalogue?category=SPORTS_PT"
+              to="/catalogue?category=MEN"
               onClick={() => setMobileMenuOpen(false)}
               className="rounded-lg px-2 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50"
             >
-              Sports & PT Canvas
+              Men
+            </Link>
+            <Link
+              to="/catalogue?category=WOMEN"
+              onClick={() => setMobileMenuOpen(false)}
+              className="rounded-lg px-2 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50"
+            >
+              Women
+            </Link>
+            <Link
+              to="/catalogue?category=SCHOOL_SHOES"
+              onClick={() => setMobileMenuOpen(false)}
+              className="rounded-lg px-2 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50"
+            >
+              School Shoes
             </Link>
             <Link
               to="/bulk-enquiry"

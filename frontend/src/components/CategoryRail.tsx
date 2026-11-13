@@ -16,51 +16,67 @@ const CATEGORIES: CategoryItem[] = [
   {
     id: 'all',
     name: 'All Footwear',
-    subtitle: 'Full Uniform Range',
+    subtitle: 'Full Collection',
     path: '/catalogue',
     iconBg: 'bg-red-50 text-[#ED2C23] border-red-200/80',
     icon: <Package className="w-6 h-6 text-[#ED2C23]" />,
   },
   {
-    id: 'boys-formal',
-    name: 'Boys Formal',
-    subtitle: 'Oxford & Derby',
-    path: '/catalogue?category=BOYS_FORMAL',
+    id: 'boys',
+    name: 'Boys',
+    subtitle: 'Casual & Active',
+    path: '/catalogue?category=BOYS',
     iconBg: 'bg-amber-50 text-amber-700 border-amber-200/80',
     icon: (
-      <span className="text-2xl" role="img" aria-label="Formal shoe">
+      <span className="text-2xl" role="img" aria-label="Boys footwear">
+        👦
+      </span>
+    ),
+  },
+  {
+    id: 'girls',
+    name: 'Girls',
+    subtitle: 'Everyday & Strap',
+    path: '/catalogue?category=GIRLS',
+    iconBg: 'bg-rose-50 text-rose-600 border-rose-200/80',
+    icon: (
+      <span className="text-2xl" role="img" aria-label="Girls footwear">
+        👧
+      </span>
+    ),
+  },
+  {
+    id: 'men',
+    name: 'Men',
+    subtitle: 'Formal & Sports',
+    path: '/catalogue?category=MEN',
+    iconBg: 'bg-blue-50 text-blue-600 border-blue-200/80',
+    icon: (
+      <span className="text-2xl" role="img" aria-label="Men footwear">
         👞
       </span>
     ),
   },
   {
-    id: 'girls-formal',
-    name: 'Girls Buckle',
-    subtitle: 'Mary Jane & Strap',
-    path: '/catalogue?category=GIRLS_FORMAL',
-    iconBg: 'bg-rose-50 text-rose-600 border-rose-200/80',
+    id: 'women',
+    name: 'Women',
+    subtitle: 'Comfort & Daily',
+    path: '/catalogue?category=WOMEN',
+    iconBg: 'bg-purple-50 text-purple-600 border-purple-200/80',
     icon: (
-      <span className="text-2xl" role="img" aria-label="Buckle shoe">
+      <span className="text-2xl" role="img" aria-label="Women footwear">
         👡
       </span>
     ),
   },
   {
-    id: 'sports-pt',
-    name: 'Sports & PT',
-    subtitle: 'White & Mesh Trainers',
-    path: '/catalogue?category=SPORTS_PT',
+    id: 'school-shoes',
+    name: 'School Shoes',
+    subtitle: 'Uniform & PT',
+    path: '/catalogue?category=SCHOOL_SHOES',
     badge: 'HOT',
-    iconBg: 'bg-blue-50 text-blue-600 border-blue-200/80',
-    icon: <Trophy className="w-6 h-6 text-blue-600" />,
-  },
-  {
-    id: 'junior-velcro',
-    name: 'Junior Velcro',
-    subtitle: 'Easy Fastener Straps',
-    path: '/catalogue?category=JUNIOR_VELCRO',
     iconBg: 'bg-orange-50 text-orange-600 border-orange-200/80',
-    icon: <Sparkles className="w-6 h-6 text-orange-600" />,
+    icon: <GraduationCap className="w-6 h-6 text-orange-600" />,
   },
   {
     id: 'top-deals',
@@ -78,7 +94,7 @@ const CATEGORIES: CategoryItem[] = [
     path: '/bulk-enquiry',
     badge: 'INSTITUTIONAL',
     iconBg: 'bg-emerald-50 text-emerald-700 border-emerald-200/80',
-    icon: <GraduationCap className="w-6 h-6 text-emerald-600" />,
+    icon: <Trophy className="w-6 h-6 text-emerald-600" />,
   },
 ];
 
