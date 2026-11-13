@@ -31,6 +31,7 @@ export interface PublicProduct {
   name: string;
   shortDescription: string;
   category: string;
+  catalogType?: 'WEBSITE' | 'SCHOOL_ORDER' | string;
   basePrice: number;
   mrp?: number;
   isBestseller?: boolean;
@@ -48,6 +49,7 @@ export interface AdminProduct {
   name: string;
   shortDescription: string;
   category: string;
+  catalogType?: 'WEBSITE' | 'SCHOOL_ORDER' | string;
   basePrice: number;
   mrp?: number;
   isBestseller?: boolean;
@@ -294,4 +296,41 @@ export interface StudentOrder {
   updatedAt: string;
   items: StudentOrderItem[];
 }
+
+export interface BulkImportRow {
+  admissionNumber?: string;
+  studentName: string;
+  gradeClass?: string;
+  section?: string;
+  parentName?: string;
+  parentPhone?: string;
+  gender?: string;
+  category?: string;
+  productName: string;
+  sizeLabel: string;
+  quantity: number;
+  unitPrice?: number;
+  notes?: string;
+}
+
+export interface BulkImportResponse {
+  studentsProcessed: number;
+  newStudentsCreated: number;
+  ordersCreated: number;
+  totalItemsImported: number;
+  orders: StudentOrder[];
+}
+
+export interface AdminUser {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  phone?: string;
+  enabled: boolean;
+  roles: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
 

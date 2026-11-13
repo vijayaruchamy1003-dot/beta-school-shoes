@@ -114,8 +114,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const newItem: CartItem = {
           itemId: `guest-${productSizeId}-${Date.now()}`,
           productId: meta?.productId || 'prod-default',
-          productName: meta?.productName || 'Walkaroo School Footwear',
-          sku: meta?.sku || 'WLK-SCH-01',
+          productName: meta?.productName || 'Shoes Net School Footwear',
+          sku: meta?.sku || 'SN-SCH-01',
           productSizeId,
           ukSize: meta?.ukSize || 'Standard',
           unitPrice,

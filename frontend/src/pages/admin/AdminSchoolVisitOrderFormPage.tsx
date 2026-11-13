@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
-import { schoolApi, studentApi, schoolOrderApi } from '../../api/client';
+import { adminApi, schoolApi, studentApi, schoolOrderApi } from '../../api/client';
 import { School, Student, SchoolProductCategory, SchoolOrderStatus, SchoolOrderStockPolicy } from '../../types';
-import { CATALOG_PRESETS, CatalogPreset } from '../../components/admin/SchoolOrderModal';
+import { CATALOG_PRESETS, CatalogPreset, convertAdminProductsToPresets } from '../../components/admin/SchoolOrderModal';
 import { 
-  ClipboardList, 
   ArrowLeft, 
   Plus, 
   Trash2, 
@@ -13,15 +12,13 @@ import {
   Building2, 
   UserPlus, 
   ShieldCheck, 
-  Calendar,
-  Sparkles,
   ShoppingBag,
-  Layers,
   ArrowRight
 } from 'lucide-react';
 
 interface ItemEntry {
   id: string;
+  productId?: string;
   category: SchoolProductCategory;
   productName: string;
   sizeLabel: string;
@@ -61,37 +58,24 @@ export const AdminSchoolVisitOrderFormPage: React.FC = () => {
   const [visitDate, setVisitDate] = useState(new Date().toISOString().split('T')[0]);
   const [orderNotes, setOrderNotes] = useState('');
 
-  // Item Picker State
+  // Dynamic School Order Products
+  const [catalogItems, setCatalogItems] = useState<CatalogPreset[]>(CATALOG_PRESETS);
   const [selectedCategory, setSelectedCategory] = useState<SchoolProductCategory>('SHOES');
-  const [selectedPresetId, setSelectedPresetId] = useState<string>('sh-1');
-  const [selectedSize, setSelectedSize] = useState<string>('UK 3');
+  const [selectedPresetId, setSelectedPresetId] = useState<string>(CATALOG_PRESETS[0].id);
+  const [productNameInput, setProductNameInput] = useState<string>(CATALOG_PRESETS[0].name);
+  const [selectedSize, setSelectedSize] = useState<string>(CATALOG_PRESETS[0].availableSizes[0]);
   const [itemQuantity, setItemQuantity] = useState<number>(1);
-  const [itemPrice, setItemPrice] = useState<number>(749);
+  const [itemPrice, setItemPrice] = useState<number>(CATALOG_PRESETS[0].defaultPrice);
   const [itemNotes, setItemNotes] = useState<string>('');
 
-  // Custom Item Mode
-  const [isCustomProduct, setIsCustomProduct] = useState(false);
-  const [customName, setCustomName] = useState('');
-  const [customSize, setCustomSize] = useState('');
-
   // Items in Order Basket
-  const [basket, setBasket] = useState<ItemEntry[]>([
-    {
-      id: 'default-1',
-      category: 'SHOES',
-      productName: 'Walkaroo Classic Oxford Lace-Up',
-      sizeLabel: 'UK 3',
-      quantity: 1,
-      unitPrice: 749,
-      itemNotes: 'Formal school shoe',
-    }
-  ]);
+  const [basket, setBasket] = useState<ItemEntry[]>([]);
 
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [successNotice, setSuccessNotice] = useState('');
 
-  // Fetch all schools for the dropdown
+  // Fetch all schools and School Order Products
   useEffect(() => {
     schoolApi.getSchools({ size: 100 }).then(res => {
       setSchools(res.data.content);
@@ -99,6 +83,22 @@ export const AdminSchoolVisitOrderFormPage: React.FC = () => {
         setSelectedSchoolId(res.data.content[0].id);
       }
     });
+
+    adminApi.getProducts({ catalogType: 'SCHOOL_ORDER', size: 200 })
+      .then(res => {
+        const merged = convertAdminProductsToPresets(res.data.content || []);
+        setCatalogItems(merged);
+        const shoes = merged.filter(p => p.category === 'SHOES');
+        const first = shoes[0] || merged[0];
+        if (first) {
+          setSelectedCategory(first.category);
+          setSelectedPresetId(first.id);
+          setProductNameInput(first.name);
+          setSelectedSize(first.availableSizes[0] || '3');
+          setItemPrice(first.defaultPrice);
+        }
+      })
+      .catch(() => {});
   }, []);
 
   // Fetch students when school changes
@@ -115,42 +115,47 @@ export const AdminSchoolVisitOrderFormPage: React.FC = () => {
     }
   }, [selectedSchoolId]);
 
-  const currentPresets = CATALOG_PRESETS.filter(p => p.category === selectedCategory);
+  const currentPresets = catalogItems.filter(p => p.category === selectedCategory);
   const activePreset = currentPresets.find(p => p.id === selectedPresetId) || currentPresets[0];
 
   const handleCategoryTab = (cat: SchoolProductCategory) => {
     setSelectedCategory(cat);
-    const presetsForCat = CATALOG_PRESETS.filter(p => p.category === cat);
+    const presetsForCat = catalogItems.filter(p => p.category === cat);
     if (presetsForCat.length > 0) {
       setSelectedPresetId(presetsForCat[0].id);
+      setProductNameInput(presetsForCat[0].name);
       setSelectedSize(presetsForCat[0].availableSizes[0] || 'Standard');
       setItemPrice(presetsForCat[0].defaultPrice);
+    } else {
+      setSelectedPresetId('');
+      setProductNameInput('');
+      setSelectedSize('');
     }
-    setIsCustomProduct(false);
   };
 
   const handlePresetSelect = (preset: CatalogPreset) => {
     setSelectedPresetId(preset.id);
+    setProductNameInput(preset.name);
     setSelectedSize(preset.availableSizes[0] || 'Standard');
     setItemPrice(preset.defaultPrice);
-    setIsCustomProduct(false);
   };
 
   const handleAddItemToBasket = () => {
-    const productName = isCustomProduct ? customName.trim() : (activePreset?.name || 'Product');
-    const sizeLabel = isCustomProduct ? customSize.trim() : selectedSize;
+    const productName = productNameInput.trim() || activePreset?.name || '';
+    const sizeLabel = selectedSize.trim();
 
     if (!productName) {
-      setErrorMsg('Please select or specify a product name');
+      setErrorMsg('Please select or type a product name');
       return;
     }
     if (!sizeLabel) {
-      setErrorMsg('Please select a size');
+      setErrorMsg('Please select or type a size');
       return;
     }
 
     const newItem: ItemEntry = {
       id: 'draft-' + Date.now() + '-' + Math.random().toString(36).substring(2, 6),
+      productId: activePreset?.name === productName ? activePreset?.productId : undefined,
       category: selectedCategory,
       productName,
       sizeLabel,
@@ -193,14 +198,14 @@ export const AdminSchoolVisitOrderFormPage: React.FC = () => {
     }
 
     if (isNewStudent) {
-      if (!newStudentData.admissionNumber.trim() || !newStudentData.firstName.trim() || !newStudentData.lastName.trim()) {
-        setErrorMsg('Please complete admission number, first name, and last name for the new student.');
+      if (!newStudentData.admissionNumber.trim() || !newStudentData.firstName.trim()) {
+        setErrorMsg('Please complete admission number and student name.');
         return;
       }
     }
 
     if (basket.length === 0) {
-      setErrorMsg('Please add at least one product requirement to the order.');
+      setErrorMsg('Please add at least one product item to the order.');
       return;
     }
 
@@ -214,7 +219,7 @@ export const AdminSchoolVisitOrderFormPage: React.FC = () => {
           schoolId: selectedSchoolId,
           admissionNumber: newStudentData.admissionNumber.trim().toUpperCase(),
           firstName: newStudentData.firstName.trim(),
-          lastName: newStudentData.lastName.trim(),
+          lastName: newStudentData.lastName.trim() || '.',
           gradeClass: newStudentData.gradeClass.trim(),
           section: newStudentData.section.trim(),
           parentName: newStudentData.parentName.trim() || undefined,
@@ -226,6 +231,7 @@ export const AdminSchoolVisitOrderFormPage: React.FC = () => {
         visitDate,
         notes: orderNotes,
         items: basket.map(item => ({
+          productId: item.productId,
           category: item.category,
           productName: item.productName,
           sizeLabel: item.sizeLabel,
@@ -239,29 +245,18 @@ export const AdminSchoolVisitOrderFormPage: React.FC = () => {
       setSuccessNotice(`Order ${res.data.orderNumber} successfully recorded for ${res.data.studentName}!`);
 
       if (recordNextStudent) {
-        // Reset student inputs and basket for fast consecutive student entry
         setIsNewStudent(false);
         setNewStudentData({
           admissionNumber: '',
           firstName: '',
           lastName: '',
-          gradeClass: newStudentData.gradeClass, // preserve class for speed
+          gradeClass: newStudentData.gradeClass,
           section: newStudentData.section,
           parentName: '',
           parentPhone: '',
           gender: 'MALE',
         });
-        setBasket([
-          {
-            id: 'default-' + Date.now(),
-            category: 'SHOES',
-            productName: 'Walkaroo Classic Oxford Lace-Up',
-            sizeLabel: 'UK 3',
-            quantity: 1,
-            unitPrice: 749,
-            itemNotes: '',
-          }
-        ]);
+        setBasket([]);
         studentApi.getStudents(selectedSchoolId, { size: 100 }).then(sRes => {
           setStudents(sRes.data.content);
         });
@@ -313,7 +308,7 @@ export const AdminSchoolVisitOrderFormPage: React.FC = () => {
               Record School Visit Order
             </h1>
             <p className="mt-0.5 text-xs text-muted-foreground">
-              Record student uniform and footwear measurements directly during school visits without credit card or payment gateway steps.
+              Record student uniform and footwear measurements directly during school visits. Products added in Products &rarr; School Order Products appear here automatically.
             </p>
           </div>
         </div>
@@ -422,10 +417,9 @@ export const AdminSchoolVisitOrderFormPage: React.FC = () => {
                       />
                     </div>
                     <div>
-                      <label className="mb-1 block font-bold uppercase text-[10px] text-muted-foreground">Last Name *</label>
+                      <label className="mb-1 block font-bold uppercase text-[10px] text-muted-foreground">Last Name</label>
                       <input
                         type="text"
-                        required
                         placeholder="Student last name"
                         value={newStudentData.lastName}
                         onChange={e => setNewStudentData({ ...newStudentData, lastName: e.target.value })}
@@ -488,16 +482,15 @@ export const AdminSchoolVisitOrderFormPage: React.FC = () => {
             <div className="border border-border bg-card rounded-2xl p-5 shadow-xs space-y-4">
               <div className="flex items-center justify-between pb-2 border-b border-border/60">
                 <div>
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-primary">Catalog Quick-Picker</span>
-                  <h3 className="text-sm font-bold text-foreground">3. Select Uniform & Footwear Items</h3>
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-primary">School Order Products</span>
+                  <h3 className="text-sm font-bold text-foreground">3. Select Uniform &amp; Footwear Items</h3>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => setIsCustomProduct(!isCustomProduct)}
-                  className="text-xs font-semibold text-primary hover:underline"
+                <Link
+                  to="/admin/products"
+                  className="text-xs font-bold text-primary hover:underline"
                 >
-                  {isCustomProduct ? '← Choose from Preset Catalog' : '+ Custom Product Item'}
-                </button>
+                  + Manage School Order Products
+                </Link>
               </div>
 
               {/* Category Tabs */}
@@ -522,117 +515,97 @@ export const AdminSchoolVisitOrderFormPage: React.FC = () => {
               </div>
 
               {/* Presets Grid */}
-              {!isCustomProduct ? (
-                <div className="space-y-3 pt-1">
-                  <div>
-                    <label className="block text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
-                      Select {selectedCategory} Model
-                    </label>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
-                      {currentPresets.map((preset) => {
-                        const isSelected = activePreset?.id === preset.id;
-                        return (
-                          <div
-                            key={preset.id}
-                            onClick={() => handlePresetSelect(preset)}
-                            className={`p-2.5 rounded-xl border text-left cursor-pointer transition ${
-                              isSelected
-                                ? 'border-primary bg-primary/5 ring-1 ring-primary'
-                                : 'border-border bg-background hover:border-foreground/30'
-                            }`}
-                          >
-                            <div className="text-xs font-bold text-foreground line-clamp-1">{preset.name}</div>
-                            <div className="text-[11px] font-mono font-semibold text-primary mt-1">₹{preset.defaultPrice}</div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  {/* Size Selector Pills */}
-                  {activePreset && (
-                    <div>
-                      <label className="block text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
-                        Select Size for {activePreset.name} *
-                      </label>
-                      <div className="flex flex-wrap gap-1.5">
-                        {activePreset.availableSizes.map((size) => {
-                          const isSelected = selectedSize === size;
-                          return (
-                            <button
-                              key={size}
-                              type="button"
-                              onClick={() => setSelectedSize(size)}
-                              className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase transition ${
-                                isSelected
-                                  ? 'bg-foreground text-background shadow-xs ring-2 ring-primary ring-offset-1'
-                                  : 'bg-muted text-foreground hover:bg-muted/80 border border-border'
-                              }`}
-                            >
-                              {size}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                /* Custom Product Inputs */
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 bg-muted/30 border border-border rounded-xl">
-                  <div>
-                    <label className="block text-[11px] font-bold uppercase text-muted-foreground mb-1">Product Description *</label>
-                    <input
-                      type="text"
-                      placeholder="e.g. Special Blazer with Gold Crest"
-                      value={customName}
-                      onChange={(e) => setCustomName(e.target.value)}
-                      className="w-full bg-background border border-input rounded-lg p-2 text-xs font-medium outline-none focus:ring-1 focus:ring-primary"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-[11px] font-bold uppercase text-muted-foreground mb-1">Size Specification *</label>
-                    <input
-                      type="text"
-                      placeholder="e.g. Size 34 or UK 5"
-                      value={customSize}
-                      onChange={(e) => setCustomSize(e.target.value)}
-                      className="w-full bg-background border border-input rounded-lg p-2 text-xs font-bold uppercase outline-none focus:ring-1 focus:ring-primary"
-                    />
+              {currentPresets.length > 0 && (
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
+                    Select {selectedCategory} Product
+                  </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+                    {currentPresets.map((preset) => {
+                      const isSelected = activePreset?.id === preset.id && productNameInput === preset.name;
+                      return (
+                        <div
+                          key={preset.id}
+                          onClick={() => handlePresetSelect(preset)}
+                          className={`p-2.5 rounded-xl border text-left cursor-pointer transition ${
+                            isSelected
+                              ? 'border-primary bg-primary/5 ring-1 ring-primary'
+                              : 'border-border bg-background hover:border-foreground/30'
+                          }`}
+                        >
+                          <div className="text-xs font-bold text-foreground line-clamp-1">{preset.name}</div>
+                          <div className="text-[11px] font-mono font-semibold text-primary mt-1">₹{preset.defaultPrice}</div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               )}
 
-              {/* Quantity, Price, Notes & Add Button */}
-              <div className="pt-3 border-t border-border/60 grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
-                <div className="sm:col-span-3">
-                  <label className="block text-[10px] font-bold uppercase text-muted-foreground mb-1">Quantity</label>
-                  <div className="flex items-center border border-input rounded-lg overflow-hidden bg-background">
-                    <button
-                      type="button"
-                      onClick={() => setItemQuantity(Math.max(1, itemQuantity - 1))}
-                      className="px-3 py-1.5 text-sm font-bold hover:bg-muted text-muted-foreground hover:text-foreground transition"
-                    >
-                      -
-                    </button>
-                    <input
-                      type="number"
-                      min={1}
-                      value={itemQuantity}
-                      onChange={(e) => setItemQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-                      className="w-full text-center text-xs font-bold bg-transparent outline-none py-1.5"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setItemQuantity(itemQuantity + 1)}
-                      className="px-3 py-1.5 text-sm font-bold hover:bg-muted text-muted-foreground hover:text-foreground transition"
-                    >
-                      +
-                    </button>
+              {/* Size Selector Pills */}
+              {activePreset && activePreset.availableSizes.length > 0 && (
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
+                    Quick Select Size
+                  </label>
+                  <div className="flex flex-wrap gap-1.5">
+                    {activePreset.availableSizes.map((size) => {
+                      const isSelected = selectedSize === size;
+                      return (
+                        <button
+                          key={size}
+                          type="button"
+                          onClick={() => setSelectedSize(size)}
+                          className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase transition ${
+                            isSelected
+                              ? 'bg-foreground text-background shadow-xs ring-2 ring-primary ring-offset-1'
+                              : 'bg-muted text-foreground hover:bg-muted/80 border border-border'
+                          }`}
+                        >
+                          {size}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
+              )}
 
-                <div className="sm:col-span-3">
+              {/* Direct Inputs for Product Name, Size, Quantity, Price & Add Button */}
+              <div className="pt-3 border-t border-border/60 grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
+                <div className="sm:col-span-4">
+                  <label className="block text-[10px] font-bold uppercase text-muted-foreground mb-1">Product Name *</label>
+                  <input
+                    type="text"
+                    placeholder="Type or select product"
+                    value={productNameInput}
+                    onChange={(e) => setProductNameInput(e.target.value)}
+                    className="w-full bg-background border border-input rounded-lg px-2.5 py-1.5 text-xs font-bold outline-none focus:ring-1 focus:ring-primary"
+                  />
+                </div>
+
+                <div className="sm:col-span-2">
+                  <label className="block text-[10px] font-bold uppercase text-muted-foreground mb-1">Size *</label>
+                  <input
+                    type="text"
+                    placeholder="Size"
+                    value={selectedSize}
+                    onChange={(e) => setSelectedSize(e.target.value)}
+                    className="w-full bg-background border border-input rounded-lg px-2.5 py-1.5 text-xs font-mono font-bold outline-none focus:ring-1 focus:ring-primary"
+                  />
+                </div>
+
+                <div className="sm:col-span-2">
+                  <label className="block text-[10px] font-bold uppercase text-muted-foreground mb-1">Quantity</label>
+                  <input
+                    type="number"
+                    min={1}
+                    value={itemQuantity}
+                    onChange={(e) => setItemQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                    className="w-full bg-background border border-input rounded-lg px-2.5 py-1.5 text-xs font-mono font-bold outline-none focus:ring-1 focus:ring-primary"
+                  />
+                </div>
+
+                <div className="sm:col-span-2">
                   <label className="block text-[10px] font-bold uppercase text-muted-foreground mb-1">Unit Price (₹)</label>
                   <input
                     type="number"
@@ -640,17 +613,6 @@ export const AdminSchoolVisitOrderFormPage: React.FC = () => {
                     value={itemPrice}
                     onChange={(e) => setItemPrice(parseFloat(e.target.value) || 0)}
                     className="w-full bg-background border border-input rounded-lg px-2.5 py-1.5 text-xs font-mono font-bold outline-none focus:ring-1 focus:ring-primary"
-                  />
-                </div>
-
-                <div className="sm:col-span-4">
-                  <label className="block text-[10px] font-bold uppercase text-muted-foreground mb-1">Optional Notes</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Double stitch, House crest"
-                    value={itemNotes}
-                    onChange={(e) => setItemNotes(e.target.value)}
-                    className="w-full bg-background border border-input rounded-lg px-2.5 py-1.5 text-xs outline-none focus:ring-1 focus:ring-primary"
                   />
                 </div>
 
@@ -683,7 +645,7 @@ export const AdminSchoolVisitOrderFormPage: React.FC = () => {
 
               {basket.length === 0 ? (
                 <div className="p-6 text-center border border-dashed border-border rounded-xl text-muted-foreground text-xs">
-                  No items added yet. Pick a product category above and click "+ Add Item".
+                  No items added yet. Pick a product above and click "+ Add Item".
                 </div>
               ) : (
                 <div className="overflow-x-auto">
@@ -696,7 +658,6 @@ export const AdminSchoolVisitOrderFormPage: React.FC = () => {
                         <th className="py-2 px-3 text-center">Qty</th>
                         <th className="py-2 px-3 text-right">Unit Price</th>
                         <th className="py-2 px-3 text-right">Subtotal</th>
-                        <th className="py-2 px-3">Notes</th>
                         <th className="py-2 px-2 text-right"></th>
                       </tr>
                     </thead>
@@ -738,9 +699,6 @@ export const AdminSchoolVisitOrderFormPage: React.FC = () => {
                           </td>
                           <td className="py-2 px-3 text-right font-mono font-bold text-foreground">
                             ₹{(item.quantity * item.unitPrice).toFixed(2)}
-                          </td>
-                          <td className="py-2 px-3 text-muted-foreground italic text-[11px]">
-                            {item.itemNotes || '—'}
                           </td>
                           <td className="py-2 px-2 text-right">
                             <button
@@ -823,7 +781,7 @@ export const AdminSchoolVisitOrderFormPage: React.FC = () => {
                 />
               </div>
 
-              {/* Order Summary Summary Card */}
+              {/* Order Summary Card */}
               <div className="p-4 bg-muted/30 border border-border rounded-xl space-y-2">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Total Units:</span>
@@ -855,7 +813,7 @@ export const AdminSchoolVisitOrderFormPage: React.FC = () => {
                   className="w-full py-2.5 border border-primary text-primary hover:bg-primary/10 text-xs font-bold uppercase tracking-wider rounded-xl transition disabled:opacity-50 flex items-center justify-center gap-1.5"
                 >
                   <ArrowRight className="w-4 h-4" />
-                  <span>Save & Record Next Student</span>
+                  <span>Save &amp; Record Next Student</span>
                 </button>
               </div>
 

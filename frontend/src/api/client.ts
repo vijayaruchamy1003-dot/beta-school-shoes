@@ -14,7 +14,10 @@ import {
   School,
   SchoolSummary,
   Student,
-  StudentOrder
+  StudentOrder,
+  BulkImportRow,
+  BulkImportResponse,
+  AdminUser
 } from '../types';
 
 const RAILWAY_BACKEND_URL = 'https://beta-shoes-backend-production.up.railway.app';
@@ -151,7 +154,7 @@ export const bulkEnquiryApi = {
 
 export const adminApi = {
   getDashboardSummary: () => api.get<DashboardSummary>('/admin/dashboard/summary'),
-  getProducts: (params?: { category?: string; search?: string; page?: number; size?: number }) =>
+  getProducts: (params?: { catalogType?: string; category?: string; search?: string; page?: number; size?: number }) =>
     api.get<{ content: AdminProduct[]; totalPages: number; totalElements: number }>('/admin/products', { params }),
   getProductById: (id: string) => api.get<AdminProduct>(`/admin/products/${id}`),
   createProduct: (data: any) => api.post<AdminProduct>('/admin/products', data),
@@ -207,6 +210,13 @@ export const studentApi = {
 
 export const schoolOrderApi = {
   createOrder: (data: any) => api.post<StudentOrder>('/admin/school-orders', data),
+  bulkImportOrders: (data: {
+    schoolId: string;
+    status?: string;
+    stockPolicy?: string;
+    visitDate?: string;
+    rows: BulkImportRow[];
+  }) => api.post<BulkImportResponse>('/admin/school-orders/bulk-import', data),
   updateOrder: (id: string, data: any) => api.put<StudentOrder>(`/admin/school-orders/${id}`, data),
   updateOrderStatus: (id: string, data: { status: string; stockPolicy?: string; notes?: string }) =>
     api.patch<StudentOrder>(`/admin/school-orders/${id}/status`, data),
@@ -215,6 +225,35 @@ export const schoolOrderApi = {
     api.get<{ content: StudentOrder[]; totalPages: number; totalElements: number }>('/admin/school-orders', { params }),
   getSchoolOrders: (schoolId: string, params?: { search?: string; status?: string; page?: number; size?: number }) =>
     api.get<{ content: StudentOrder[]; totalPages: number; totalElements: number }>(`/admin/school-orders/school/${schoolId}`, { params }),
+};
+
+export const userManagementApi = {
+  getUsers: (params?: { search?: string; role?: string }) =>
+    api.get<AdminUser[]>('/admin/users', { params }),
+  getRoles: () =>
+    api.get<string[]>('/admin/users/roles'),
+  createUser: (data: {
+    email: string;
+    password: string;
+    firstName: string;
+    lastName?: string;
+    phone?: string;
+    roles: string[];
+    enabled?: boolean;
+  }) => api.post<AdminUser>('/admin/users', data),
+  updateUser: (id: string, data: {
+    email: string;
+    password?: string;
+    firstName: string;
+    lastName?: string;
+    phone?: string;
+    roles: string[];
+    enabled?: boolean;
+  }) => api.put<AdminUser>(`/admin/users/${id}`, data),
+  toggleUserStatus: (id: string, enabled: boolean) =>
+    api.patch<AdminUser>(`/admin/users/${id}/status`, null, { params: { enabled } }),
+  deleteUser: (id: string) =>
+    api.delete<void>(`/admin/users/${id}`),
 };
 
 export default api;

@@ -26,6 +26,7 @@ public class ProductDto {
         private String name;
         private String shortDescription;
         private String category;
+        private String catalogType;
         private BigDecimal basePrice;
         private BigDecimal mrp;
         private boolean isBestseller;
@@ -67,6 +68,7 @@ public class ProductDto {
         private String name;
         private String shortDescription;
         private String category;
+        private String catalogType;
         private BigDecimal basePrice;
         private BigDecimal mrp;
         private boolean isBestseller;
@@ -131,17 +133,17 @@ public class ProductDto {
     @AllArgsConstructor
     @Builder
     public static class ProductCreateUpdateRequest {
-        @NotBlank(message = "Product SKU is required")
         private String sku;
 
         @NotBlank(message = "Product name is required")
         private String name;
 
-        @NotBlank(message = "Short description is required")
         private String shortDescription;
 
         @NotBlank(message = "Category is required")
         private String category;
+
+        private String catalogType; // WEBSITE or SCHOOL_ORDER
 
         @NotNull(message = "Base price is required")
         @DecimalMin(value = "0.01", message = "Base price must be greater than 0")

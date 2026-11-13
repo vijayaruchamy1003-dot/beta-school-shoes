@@ -54,7 +54,7 @@ export const Navbar: React.FC = () => {
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-slate-200/80 shadow-xs">
       
-      {/* Walkaroo Signature Energetic Bright Red Announcement Ticker */}
+      {/* Bright Red Announcement Ticker */}
       <div className="bg-gradient-to-r from-[#ED2C23] via-[#E52D27] to-[#C91A12] text-white py-2 px-4 sm:px-6 text-[11px] font-medium flex flex-wrap justify-between items-center gap-2 shadow-xs">
         <div className="flex items-center gap-3">
           <span className="inline-flex items-center gap-1 bg-white/20 backdrop-blur-xs px-2 py-0.5 rounded-full text-white font-black tracking-wider text-[10px]">
@@ -62,7 +62,7 @@ export const Navbar: React.FC = () => {
             <span>SHOES NET</span>
           </span>
           <span className="hidden sm:inline text-white/60">•</span>
-          <span className="hidden sm:inline text-white font-semibold">Official Partner of <strong>Walkaroo</strong> Company</span>
+          <span className="hidden sm:inline text-white font-semibold">Premium Footwear for Boys, Girls, Men & Women</span>
           <span className="hidden md:inline text-white/60">•</span>
           <span className="hidden md:inline text-amber-200 font-bold">🚚 Free Express Delivery & COD across India</span>
         </div>
@@ -86,7 +86,7 @@ export const Navbar: React.FC = () => {
       {/* Main Navbar Header */}
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 md:h-20 bg-white">
         
-        {/* Brand Logo: Shoes Net + Walkaroo Partner */}
+        {/* Brand Logo: Shoes Net */}
         <Link to="/" className="flex items-center gap-3" aria-label="Shoes Net Home">
           <div className="flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-2xl bg-gradient-to-tr from-[#ED2C23] via-rose-600 to-amber-500 text-white font-black text-lg shadow-md">
             SN
@@ -95,12 +95,8 @@ export const Navbar: React.FC = () => {
             <span className="text-base sm:text-xl font-black uppercase tracking-tight text-slate-900 leading-none">
               Shoes Net
             </span>
-            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-[#ED2C23] flex items-center gap-1 mt-0.5">
-              <span>Official</span>
-              <span className="rounded bg-red-100 border border-red-200 px-1 py-0.2 text-[9px] font-black text-[#ED2C23]">
-                WALKAROO
-              </span>
-              <span>Partner</span>
+            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-500 mt-0.5">
+              Footwear Store
             </span>
           </div>
         </Link>

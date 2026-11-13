@@ -18,7 +18,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/admin/school-orders")
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'STAFF')")
 @RequiredArgsConstructor
 public class AdminSchoolOrderController {
 
@@ -36,6 +36,15 @@ public class AdminSchoolOrderController {
     ) {
         UUID adminId = userPrincipal != null ? userPrincipal.getId() : null;
         return ResponseEntity.ok(studentOrderService.createOrder(request, adminId));
+    }
+
+    @PostMapping("/bulk-import")
+    public ResponseEntity<StudentOrderDto.BulkImportOrdersResponse> bulkImportOrders(
+        @AuthenticationPrincipal UserDetailsImpl userPrincipal,
+        @Valid @RequestBody StudentOrderDto.BulkImportOrdersRequest request
+    ) {
+        UUID adminId = userPrincipal != null ? userPrincipal.getId() : null;
+        return ResponseEntity.ok(studentOrderService.bulkImportOrders(request, adminId));
     }
 
     @PutMapping("/{id}")

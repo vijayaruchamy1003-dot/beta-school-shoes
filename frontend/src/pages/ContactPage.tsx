@@ -56,7 +56,7 @@ export const ContactPage: React.FC = () => {
                   Message Dispatched
                 </h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  Thank you for contacting the Shoes Net institutional sales desk. A dedicated Walkaroo footwear coordinator will reach out to you shortly.
+                  Thank you for contacting the Shoes Net institutional sales desk. A dedicated footwear coordinator will reach out to you shortly.
                 </p>
                 <button
                   type="button"
@@ -150,12 +150,12 @@ export const ContactPage: React.FC = () => {
               <div className="aspect-[3/2] w-full overflow-hidden bg-secondary relative flex items-center justify-center">
                 <img
                   src="https://images.unsplash.com/photo-1549298916-b41d501d3772?q=80&w=1200&auto=format&fit=crop"
-                  alt="Walkaroo authorized distribution depot and shoe warehouse"
+                  alt="Shoes Net distribution depot and shoe warehouse"
                   loading="lazy"
                   className="h-full w-full object-cover"
                 />
                 <div className="absolute bottom-3 left-3 bg-primary text-primary-foreground px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em]">
-                  Official Partner Depot
+                  Shoes Net Distribution Depot
                 </div>
               </div>
             </div>
@@ -221,9 +221,9 @@ export const ContactPage: React.FC = () => {
             {/* Registry Badge */}
             <div className="mt-6 border border-foreground/15 p-4 bg-secondary/40 text-xs text-muted-foreground">
               <span className="font-bold text-foreground uppercase tracking-wider block mb-0.5">
-                Official Partnership Registry:
+                Distribution Registry:
               </span>
-              Code: <code className="font-mono text-foreground font-semibold">SN-WLK-DIST-2024/902</code> — Shoes Net officially partnered with Walkaroo Company.
+              Code: <code className="font-mono text-foreground font-semibold">SN-DIST-2024/902</code> — Shoes Net Institutional & Retail Footwear Supply.
             </div>
 
           </div>

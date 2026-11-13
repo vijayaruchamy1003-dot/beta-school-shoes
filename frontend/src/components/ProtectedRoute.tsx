@@ -29,7 +29,9 @@ export const ProtectedRoute: React.FC<Props> = ({ children, requireAdmin = false
   }
 
   const effectiveIsAuthenticated = Boolean(localUser && localToken);
-  const effectiveIsAdmin = Boolean(localUser?.roles?.includes('ROLE_ADMIN'));
+  const effectiveIsAdmin = Boolean(
+    localUser?.roles?.some((r: string) => ['ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF'].includes(r))
+  );
 
   if (isLoading && !effectiveIsAuthenticated) {
     return (

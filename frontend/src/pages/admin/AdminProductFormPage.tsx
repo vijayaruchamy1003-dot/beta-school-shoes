@@ -144,7 +144,7 @@ export const AdminProductFormPage: React.FC = () => {
             <input
               type="text"
               required
-              placeholder="e.g. Walkaroo Classic Oxford Lace-Up"
+              placeholder="e.g. Classic Oxford Lace-Up"
               value={formData.name}
               onChange={e => setFormData({ ...formData, name: e.target.value })}
               className="w-full px-3 py-2 rounded-lg border border-slate-300 text-slate-800 text-xs focus:outline-none focus:border-navy-950"

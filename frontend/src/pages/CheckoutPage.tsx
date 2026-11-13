@@ -31,7 +31,7 @@ export const CheckoutPage: React.FC = () => {
       <main className="flex-1 bg-background text-foreground py-20 px-6">
         <div className="max-w-md mx-auto paper-shadow border border-foreground/15 bg-card p-10 text-center space-y-4">
           <h2 className="font-display text-2xl font-black uppercase tracking-tight">Your cart is empty</h2>
-          <p className="text-sm text-muted-foreground">Add official Walkaroo footwear before checking out.</p>
+          <p className="text-sm text-muted-foreground">Add footwear to your bag before checking out.</p>
           <div className="pt-2">
             <Link
               to="/catalogue"
@@ -128,7 +128,7 @@ export const CheckoutPage: React.FC = () => {
         key: checkoutData.razorpayKeyId || 'rzp_test_TtHF4jwCRWFsGV',
         amount: checkoutData.razorpayAmountInPaise || Math.round(checkoutData.totalAmount * 100),
         currency: checkoutData.currency || 'INR',
-        name: 'Shoes Net - Walkaroo Footwear',
+        name: 'Shoes Net',
         description: `Order #${checkoutData.orderNumber}`,
         order_id: checkoutData.razorpayOrderId,
         handler: async function (response: any) {

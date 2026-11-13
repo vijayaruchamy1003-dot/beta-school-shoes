@@ -30,6 +30,7 @@ import { AdminSchoolsPage } from './pages/admin/AdminSchoolsPage';
 import { AdminSchoolDashboardPage } from './pages/admin/AdminSchoolDashboardPage';
 import { AdminSchoolVisitOrdersListPage } from './pages/admin/AdminSchoolVisitOrdersListPage';
 import { AdminSchoolVisitOrderFormPage } from './pages/admin/AdminSchoolVisitOrderFormPage';
+import { AdminUsersPage } from './pages/admin/AdminUsersPage';
 
 export const App: React.FC = () => {
   const location = useLocation();
@@ -185,6 +186,16 @@ export const App: React.FC = () => {
               <ProtectedRoute requireAdmin>
                 <AdminLayout>
                   <AdminSchoolVisitOrderFormPage />
+                </AdminLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/users"
+            element={
+              <ProtectedRoute requireAdmin>
+                <AdminLayout>
+                  <AdminUsersPage />
                 </AdminLayout>
               </ProtectedRoute>
             }

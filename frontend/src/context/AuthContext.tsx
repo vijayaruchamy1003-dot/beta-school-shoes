@@ -56,7 +56,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [token]);
 
-  const isAdmin = Boolean(user?.roles?.includes('ROLE_ADMIN'));
+  const isAdmin = Boolean(
+    user?.roles?.some(r => ['ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF'].includes(r))
+  );
   const isAuthenticated = Boolean(user && token);
 
   return (

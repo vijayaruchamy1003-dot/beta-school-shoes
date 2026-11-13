@@ -11,7 +11,8 @@ import {
   Store,
   ShieldCheck,
   Building2,
-  ClipboardList
+  ClipboardList,
+  Users
 } from 'lucide-react';
 
 export const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -26,6 +27,7 @@ export const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children 
     { label: 'Inventory & Stock', path: '/admin/inventory', icon: Layers },
     { label: 'Online Orders', path: '/admin/orders', icon: ShoppingBag },
     { label: 'Bulk Enquiries', path: '/admin/enquiries', icon: HelpCircle },
+    { label: 'User Management', path: '/admin/users', icon: Users },
   ];
 
   return (
@@ -44,7 +46,7 @@ export const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children 
                   Shoes Net Admin
                 </h2>
                 <span className="text-[10px] text-amber-300 flex items-center gap-1 font-bold uppercase tracking-wider">
-                  <ShieldCheck className="w-3 h-3" /> Walkaroo Partner
+                  <ShieldCheck className="w-3 h-3" /> Management Portal
                 </span>
               </div>
             </div>

@@ -138,4 +138,59 @@ public class StudentOrderDto {
         private SchoolOrderStockPolicy stockPolicy;
         private String notes;
     }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class BulkImportRowDto {
+        private String admissionNumber;
+        private String studentName;
+        private String gradeClass;
+        private String section;
+        private String parentName;
+        private String parentPhone;
+        private String gender;
+        private String category;
+        private String productName;
+        private String sizeLabel;
+        private Integer quantity;
+        private BigDecimal unitPrice;
+        private String notes;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class BulkImportOrdersRequest {
+        @NotNull(message = "School ID is required")
+        private UUID schoolId;
+
+        @Builder.Default
+        private SchoolOrderStatus status = SchoolOrderStatus.CONFIRMED;
+
+        @Builder.Default
+        private SchoolOrderStockPolicy stockPolicy = SchoolOrderStockPolicy.BOOKING_ONLY;
+
+        @Builder.Default
+        private LocalDate visitDate = LocalDate.now();
+
+        @NotEmpty(message = "At least one row is required for import")
+        @Builder.Default
+        private List<BulkImportRowDto> rows = new ArrayList<>();
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class BulkImportOrdersResponse {
+        private int studentsProcessed;
+        private int newStudentsCreated;
+        private int ordersCreated;
+        private int totalItemsImported;
+        @Builder.Default
+        private List<StudentOrderResponse> orders = new ArrayList<>();
+    }
 }

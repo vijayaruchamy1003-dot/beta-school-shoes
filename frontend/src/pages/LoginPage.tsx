@@ -28,7 +28,10 @@ export const LoginPage: React.FC = () => {
         roles: res.data.roles
       });
 
-      const targetUrl = res.data.roles.includes('ROLE_ADMIN') && (redirect === '/' || redirect.startsWith('/admin'))
+      const hasAdminAccess = res.data.roles?.some((r: string) =>
+        ['ROLE_ADMIN', 'ROLE_MANAGER', 'ROLE_STAFF'].includes(r)
+      );
+      const targetUrl = hasAdminAccess && (redirect === '/' || redirect.startsWith('/admin'))
         ? '/admin'
         : redirect;
       window.location.href = targetUrl;

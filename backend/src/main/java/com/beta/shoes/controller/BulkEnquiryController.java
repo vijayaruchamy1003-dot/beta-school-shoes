@@ -28,7 +28,7 @@ public class BulkEnquiryController {
 
     // Admin endpoints
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'STAFF')")
     public ResponseEntity<Page<BulkEnquiryDto.Response>> getEnquiries(
         @RequestParam(required = false) String status,
         @RequestParam(required = false) String search,
@@ -39,7 +39,7 @@ public class BulkEnquiryController {
     }
 
     @PatchMapping("/{id}/status")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'STAFF')")
     public ResponseEntity<BulkEnquiryDto.Response> updateStatus(
         @PathVariable UUID id,
         @Valid @RequestBody BulkEnquiryDto.StatusUpdateRequest request

@@ -17,7 +17,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/admin/products")
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'STAFF')")
 @RequiredArgsConstructor
 public class AdminProductController {
 
@@ -25,12 +25,13 @@ public class AdminProductController {
 
     @GetMapping
     public ResponseEntity<Page<ProductDto.AdminProductResponse>> getAdminProducts(
+        @RequestParam(required = false) String catalogType,
         @RequestParam(required = false) String category,
         @RequestParam(required = false) String search,
         @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "15") int size
+        @RequestParam(defaultValue = "50") int size
     ) {
-        return ResponseEntity.ok(productService.getAdminProducts(category, search, PageRequest.of(page, size)));
+        return ResponseEntity.ok(productService.getAdminProducts(catalogType, category, search, PageRequest.of(page, size)));
     }
 
     @GetMapping("/{id}")

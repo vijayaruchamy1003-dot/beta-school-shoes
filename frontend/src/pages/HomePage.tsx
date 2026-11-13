@@ -32,18 +32,18 @@ export const HomePage: React.FC = () => {
   return (
     <main className="flex-1 bg-[#F8FAFC] text-slate-900 min-h-screen">
       
-      {/* 1. Walkaroo-Style Top Category Rail */}
+      {/* 1. Top Category Rail */}
       <CategoryRail />
 
-      {/* 2. Walkaroo Bright Signature Hero Banner Carousel */}
+      {/* 2. Hero Banner Carousel */}
       <div className="w-full">
         <FlipkartBannerCarousel />
       </div>
 
-      {/* 3. Walkaroo Trust & Benefits Bar */}
+      {/* 3. Trust & Benefits Bar */}
       <FlipkartTrustBar />
 
-      {/* 4. Walkaroo Super Deals / Best Offers Section */}
+      {/* 4. Super Deals / Best Offers Section */}
       <section className="mx-auto max-w-7xl px-3 sm:px-6 py-6 md:py-8">
         <div className="bg-white rounded-3xl border border-slate-200/90 shadow-xs overflow-hidden">
           
@@ -56,14 +56,14 @@ export const HomePage: React.FC = () => {
               <div>
                 <div className="flex items-center gap-2">
                   <h2 className="text-lg sm:text-2xl font-black text-slate-900 tracking-tight">
-                    Walkaroo Super Deals & Offers
+                    Shoes Net Super Deals & Offers
                   </h2>
                   <span className="hidden sm:inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-[#ED2C23] text-white shadow-2xs">
                     LIMITED TIME
                   </span>
                 </div>
                 <p className="text-xs sm:text-sm text-slate-500 font-medium mt-0.5">
-                  Direct manufacturer discounts on verified Walkaroo uniform and sports pairs
+                  Direct discounts on verified school shoes, sports sneakers, and daily footwear
                 </p>
               </div>
             </div>
@@ -82,7 +82,7 @@ export const HomePage: React.FC = () => {
             {loading && products.length === 0 ? (
               <div className="py-12 text-center">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#ED2C23] mx-auto"></div>
-                <p className="mt-3 text-xs uppercase tracking-wider text-slate-500 font-bold">Loading Walkaroo deals...</p>
+                <p className="mt-3 text-xs uppercase tracking-wider text-slate-500 font-bold">Loading deals...</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
@@ -103,13 +103,13 @@ export const HomePage: React.FC = () => {
           <div className="mb-6 flex flex-wrap items-end justify-between gap-4 border-b border-slate-100 pb-5">
             <div>
               <p className="text-xs font-black uppercase tracking-[0.2em] text-[#ED2C23]">
-                Official Walkaroo Footwear Catalogue
+                Shoes Net Footwear Catalogue
               </p>
               <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight mt-1">
-                Explore the Uniform Collection
+                Explore Our Footwear Collection
               </h2>
               <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-xl font-medium">
-                Certified uniform compliance, heavy-duty vulcanized soles, and anti-slip tread patterns for daily campus wear.
+                Certified uniform compliance, heavy-duty vulcanized soles, and anti-slip tread patterns for daily wear.
               </p>
             </div>
 
@@ -122,7 +122,7 @@ export const HomePage: React.FC = () => {
             </Link>
           </div>
 
-          {/* Category Filter Pills (Walkaroo Vibrant Style) */}
+          {/* Category Filter Pills */}
           <div className="mb-8 flex flex-wrap gap-2">
             {[
               { id: 'ALL', label: 'All Products' },
@@ -217,7 +217,7 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* 7. Bright Walkaroo Institutional Partnership & Quality Guarantee (Bright & Luminous) */}
+      {/* 7. Institutional Supply & Quality Guarantee */}
       <section className="mx-auto max-w-7xl px-3 sm:px-6 py-6 md:py-8">
         <div className="bg-gradient-to-br from-red-50/60 via-white to-amber-50/40 rounded-3xl border border-red-200/80 shadow-md p-6 sm:p-10 md:p-12">
           <div className="grid items-center gap-10 md:grid-cols-2 md:gap-14">
@@ -226,7 +226,7 @@ export const HomePage: React.FC = () => {
             <div className="overflow-hidden rounded-3xl border-2 border-white shadow-xl group">
               <img
                 src="https://images.unsplash.com/photo-1549298916-b41d501d3772?q=80&w=1200&auto=format&fit=crop"
-                alt="Quality assurance in Walkaroo shoe manufacturing and stitching"
+                alt="Quality assurance in shoe manufacturing and stitching"
                 loading="lazy"
                 className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
@@ -236,7 +236,7 @@ export const HomePage: React.FC = () => {
             <div className="space-y-6">
               <div className="inline-flex items-center gap-2 rounded-full bg-red-100 border border-red-200 px-3.5 py-1 text-xs font-black text-[#ED2C23]">
                 <ShieldCheck className="w-4 h-4 text-[#ED2C23]" />
-                <span>Shoes Net · Walkaroo Official Partner</span>
+                <span>Shoes Net · Direct Footwear Supply</span>
               </div>
               
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase leading-tight tracking-tight text-slate-950">
@@ -244,13 +244,13 @@ export const HomePage: React.FC = () => {
               </h2>
               
               <p className="text-xs sm:text-sm leading-relaxed text-slate-600 font-medium">
-                As the officially authorized institutional distributor partnering with Walkaroo Company, Shoes Net delivers verified, authentic uniform footwear directly to parents, schools, and institutional trusts.
+                Shoes Net delivers verified, durable uniform and everyday footwear directly to parents, schools, and institutional trusts across India.
               </p>
 
               <ul className="space-y-3 text-xs sm:text-sm text-slate-700 font-sans font-medium">
                 <li className="flex items-center gap-3">
                   <CheckCircle className="h-5 w-5 shrink-0 text-[#ED2C23]" />
-                  <span>Zero counterfeit guarantee with genuine Walkaroo batch certification</span>
+                  <span>100% quality guarantee with strict batch inspection</span>
                 </li>
                 <li className="flex items-center gap-3">
                   <CheckCircle className="h-5 w-5 shrink-0 text-[#ED2C23]" />
@@ -294,7 +294,7 @@ export const HomePage: React.FC = () => {
             “A school shoe should outlive the toughest term it was bought for.”
           </p>
           <footer className="mt-4 text-xs font-black uppercase tracking-[0.2em] text-[#ED2C23]">
-            Shoes Net · Walkaroo Official Institutional Footwear Partner · Single-Vendor Supply
+            Shoes Net · Institutional & Retail Footwear Supply
           </footer>
         </blockquote>
       </section>
@@ -305,7 +305,7 @@ export const HomePage: React.FC = () => {
           className="pointer-events-none absolute -right-6 top-1/2 -translate-y-1/2 select-none text-[8rem] sm:text-[12rem] md:text-[15rem] font-black uppercase leading-none text-red-600/5"
           aria-hidden="true"
         >
-          WALKAROO
+          SHOES NET
         </div>
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6">
           <div className="max-w-xl space-y-4">

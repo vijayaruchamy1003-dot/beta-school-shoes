@@ -21,7 +21,7 @@ export const Footer: React.FC = () => {
         {/* Main 4-Column Grid */}
         <div className="grid gap-10 pb-14 md:grid-cols-12 md:pb-16">
           
-          {/* Brand & Partner Column */}
+          {/* Brand Column */}
           <div className="md:col-span-4 space-y-4">
             <Link to="/" className="flex items-center gap-3" aria-label="Shoes Net Home">
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-tr from-[#ED2C23] via-rose-600 to-amber-500 text-white font-black text-lg shadow-sm">
@@ -32,19 +32,14 @@ export const Footer: React.FC = () => {
                   Shoes Net
                 </span>
                 <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 mt-1">
-                  Official Walkaroo Company Partner
+                  Premium Footwear & School Shoes
                 </span>
               </div>
             </Link>
 
             <p className="max-w-sm text-xs sm:text-sm leading-relaxed text-slate-400">
-              Shoes Net is the officially authorized institutional distributor partnering with Walkaroo Company. Delivering certified durable school shoes, PT sneakers, and uniform footwear directly to institutions, students, and parents.
+              Shoes Net delivers durable school shoes, sports sneakers, and everyday footwear directly to institutions, students, families, and individuals across India.
             </p>
-
-            <div className="flex items-center gap-2 rounded-lg bg-slate-800/80 p-2.5 text-xs text-slate-300 border border-slate-700/60 max-w-sm">
-              <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-              <span>Official Institutional Partner ID: <strong>SN-WLK-DIST-2024/902</strong></span>
-            </div>
           </div>
 
           {/* Shop Categories */}
@@ -128,7 +123,7 @@ export const Footer: React.FC = () => {
             {subscribed ? (
               <div className="flex items-center gap-2 rounded-xl bg-emerald-950/60 border border-emerald-700/60 p-3 text-xs text-emerald-300">
                 <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />
-                <span>Thank you! We will dispatch the Walkaroo catalog.</span>
+                <span>Thank you! We will dispatch the latest catalog.</span>
               </div>
             ) : (
               <form onSubmit={handleNewsletterSubmit} className="flex rounded-xl bg-slate-800 border border-slate-700 overflow-hidden p-1">
@@ -156,8 +151,6 @@ export const Footer: React.FC = () => {
         <div className="border-t border-slate-800 py-6 text-xs text-slate-400 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p>© {new Date().getFullYear()} <strong>Shoes Net</strong>. All rights reserved.</p>
           <div className="flex items-center gap-2 text-slate-400">
-            <span>Officially Partnered with <strong>Walkaroo Company</strong></span>
-            <span>•</span>
             <span>Razorpay Secure Payments</span>
           </div>
         </div>

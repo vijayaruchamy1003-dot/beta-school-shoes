@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { adminApi } from '../../api/client';
 import { AdminProduct } from '../../types';
 import { ShoeVector } from '../../components/ShoeVector';
-import { ProductEditModal, getShortId, cleanSize } from '../../components/admin/ProductEditModal';
-import { Search, Plus, Edit, ToggleLeft, ToggleRight, AlertCircle } from 'lucide-react';
+import { ProductEditModal, getShortId } from '../../components/admin/ProductEditModal';
+import { Search, Plus, Edit, Globe, GraduationCap } from 'lucide-react';
 
 export const AdminProductsPage: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<'WEBSITE' | 'SCHOOL_ORDER'>('WEBSITE');
   const [products, setProducts] = useState<AdminProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -16,7 +17,7 @@ export const AdminProductsPage: React.FC = () => {
 
   const loadProducts = () => {
     setLoading(true);
-    adminApi.getProducts({ search, category, size: 50 })
+    adminApi.getProducts({ catalogType: activeTab, search, category, size: 100 })
       .then(res => setProducts(res.data.content))
       .catch(() => {})
       .finally(() => setLoading(false));
@@ -24,7 +25,13 @@ export const AdminProductsPage: React.FC = () => {
 
   useEffect(() => {
     loadProducts();
-  }, [category]);
+  }, [activeTab, category]);
+
+  const handleTabChange = (tab: 'WEBSITE' | 'SCHOOL_ORDER') => {
+    setActiveTab(tab);
+    setCategory('');
+    setSearch('');
+  };
 
   const handleToggleActive = async (id: string, current: boolean) => {
     try {
@@ -40,13 +47,33 @@ export const AdminProductsPage: React.FC = () => {
     loadProducts();
   };
 
+  const categoryOptions = activeTab === 'WEBSITE'
+    ? [
+        { value: 'BOYS', label: 'Boys' },
+        { value: 'GIRLS', label: 'Girls' },
+        { value: 'MEN', label: 'Men' },
+        { value: 'WOMEN', label: 'Women' },
+        { value: 'SCHOOL_SHOES', label: 'School Shoes' },
+      ]
+    : [
+        { value: 'SHOES', label: 'Shoes' },
+        { value: 'SHIRTS', label: 'Shirts' },
+        { value: 'PANTS', label: 'Pants' },
+        { value: 'SHORTS', label: 'Shorts / Skirts' },
+        { value: 'TSHIRTS', label: 'T-Shirts' },
+        { value: 'SOCKS', label: 'Socks' },
+        { value: 'BAGS', label: 'School Bags' },
+      ];
+
   return (
     <div className="space-y-6">
       {/* Top bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black text-navy-950">Manage Products</h1>
-          <p className="text-xs text-slate-500">Configure Walkaroo school shoe catalogue items, prices, and status.</p>
+          <p className="text-xs text-slate-500">
+            Manage Website Storefront products and School Order catalogue products in separate tabs.
+          </p>
         </div>
 
         <button
@@ -54,12 +81,53 @@ export const AdminProductsPage: React.FC = () => {
             setSelectedProduct(null);
             setModalOpen(true);
           }}
-          className="px-4 py-2 rounded-lg bg-navy-950 text-white text-xs font-bold hover:bg-navy-850 transition flex items-center gap-1.5 self-start sm:self-auto shadow-sm"
+          className="px-4 py-2.5 rounded-xl bg-navy-950 text-white text-xs font-bold hover:bg-navy-850 transition flex items-center gap-1.5 self-start sm:self-auto shadow-sm"
         >
           <Plus className="w-4 h-4" />
-          <span>+ Add New Shoe Model</span>
+          <span>
+            {activeTab === 'WEBSITE' ? '+ Add Website Product' : '+ Add School Order Product'}
+          </span>
         </button>
       </div>
+
+      {/* Two Tabs: Website Products vs School Order Products */}
+      <div className="flex flex-wrap items-center gap-2 bg-white p-1.5 rounded-xl border border-slate-200 shadow-xs w-fit">
+        <button
+          type="button"
+          onClick={() => handleTabChange('WEBSITE')}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-extrabold transition ${
+            activeTab === 'WEBSITE'
+              ? 'bg-navy-950 text-white shadow-sm'
+              : 'text-slate-600 hover:text-navy-950 hover:bg-slate-50'
+          }`}
+        >
+          <Globe className="w-4 h-4" />
+          <span>Website Products</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => handleTabChange('SCHOOL_ORDER')}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-extrabold transition ${
+            activeTab === 'SCHOOL_ORDER'
+              ? 'bg-blue-700 text-white shadow-sm'
+              : 'text-slate-600 hover:text-navy-950 hover:bg-slate-50'
+          }`}
+        >
+          <GraduationCap className="w-4 h-4" />
+          <span>School Order Products</span>
+        </button>
+      </div>
+
+      {/* Info Banner for School Order Products */}
+      {activeTab === 'SCHOOL_ORDER' && (
+        <div className="bg-blue-50 border border-blue-200 rounded-xl p-3.5 text-xs text-blue-950 flex items-center justify-between gap-3">
+          <div>
+            <span className="font-black">School Order Catalogue:</span> Products added in this tab automatically appear in{' '}
+            <span className="font-bold underline">Student Order Placing</span> (School Orders &amp; Visit Orders) with their sizes and prices.
+          </div>
+        </div>
+      )}
 
       {/* Filter / Search Bar */}
       <form onSubmit={handleSearchSubmit} className="flex flex-col sm:flex-row gap-3">
@@ -67,7 +135,7 @@ export const AdminProductsPage: React.FC = () => {
           <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
-            placeholder="Search by product name, SKU, or ID..."
+            placeholder="Search by product name, category, or SKU..."
             value={search}
             onChange={e => setSearch(e.target.value)}
             className="w-full pl-9 pr-3 py-2 rounded-lg border border-slate-300 text-xs focus:outline-none focus:border-navy-950"
@@ -80,11 +148,9 @@ export const AdminProductsPage: React.FC = () => {
           className="px-3 py-2 rounded-lg border border-slate-300 text-xs text-slate-800 bg-white focus:outline-none focus:border-navy-950"
         >
           <option value="">All Categories</option>
-          <option value="BOYS">Boys</option>
-          <option value="GIRLS">Girls</option>
-          <option value="MEN">Men</option>
-          <option value="WOMEN">Women</option>
-          <option value="SCHOOL_SHOES">School Shoes</option>
+          {categoryOptions.map(opt => (
+            <option key={opt.value} value={opt.value}>{opt.label}</option>
+          ))}
         </select>
 
         <button
@@ -101,15 +167,32 @@ export const AdminProductsPage: React.FC = () => {
           <div className="py-12 text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-navy-950 mx-auto"></div>
           </div>
+        ) : products.length === 0 ? (
+          <div className="py-12 text-center space-y-3">
+            <p className="text-sm font-bold text-slate-700">
+              No {activeTab === 'WEBSITE' ? 'Website' : 'School Order'} products found.
+            </p>
+            <button
+              onClick={() => {
+                setSelectedProduct(null);
+                setModalOpen(true);
+              }}
+              className="px-4 py-2 rounded-lg bg-navy-950 text-white text-xs font-bold hover:bg-navy-850 transition inline-flex items-center gap-1.5"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Add First {activeTab === 'WEBSITE' ? 'Website' : 'School Order'} Product</span>
+            </button>
+          </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
               <thead>
                 <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider text-[10px]">
                   <th className="py-3 px-4">Product</th>
-                  <th className="py-3 px-4">Category</th>
-                  <th className="py-3 px-4">Base Price</th>
-                  <th className="py-3 px-4">Available Stock</th>
+                  <th className="py-3 px-4">Category / Type</th>
+                  <th className="py-3 px-4">Sizes</th>
+                  <th className="py-3 px-4">Price</th>
+                  <th className="py-3 px-4">Stock</th>
                   <th className="py-3 px-4">Status</th>
                   <th className="py-3 px-4 text-right">Actions</th>
                 </tr>
@@ -154,7 +237,23 @@ export const AdminProductsPage: React.FC = () => {
                     </td>
 
                     <td className="py-3 px-4 font-semibold text-slate-700">
-                      {product.category}
+                      <span className="px-2 py-0.5 rounded bg-slate-100 border border-slate-200 text-[11px] font-bold">
+                        {product.category}
+                      </span>
+                    </td>
+
+                    <td className="py-3 px-4">
+                      <div className="flex flex-wrap gap-1 max-w-xs">
+                        {product.sizes && product.sizes.length > 0 ? (
+                          product.sizes.map(s => (
+                            <span key={s.sizeId || s.ukSize} className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 font-mono text-[10px] font-bold">
+                              {s.ukSize}
+                            </span>
+                          ))
+                        ) : (
+                          <span className="text-slate-400 text-[10px]">—</span>
+                        )}
+                      </div>
                     </td>
 
                     <td className="py-3 px-4 font-mono">
@@ -165,7 +264,7 @@ export const AdminProductsPage: React.FC = () => {
                     </td>
 
                     <td className="py-3 px-4 font-mono">
-                      <span className="font-bold text-navy-950">{product.totalCombinedStock}</span> pairs
+                      <span className="font-bold text-navy-950">{product.totalCombinedStock}</span> units
                     </td>
 
                     <td className="py-3 px-4">
@@ -201,9 +300,10 @@ export const AdminProductsPage: React.FC = () => {
         )}
       </div>
 
-      {/* Edit / Add Shoe Model Popup Modal */}
+      {/* Edit / Add Product Popup Modal */}
       <ProductEditModal
         product={selectedProduct}
+        defaultCatalogType={activeTab}
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
         onSuccess={loadProducts}

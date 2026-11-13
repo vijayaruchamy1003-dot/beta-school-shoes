@@ -66,7 +66,7 @@ export const AdminDashboardPage: React.FC = () => {
         <div>
           <span className="text-xs font-bold uppercase tracking-wider text-gold-600">Executive Overview</span>
           <h1 className="text-2xl font-black text-navy-950">Shoes Net Admin Dashboard</h1>
-          <p className="text-xs text-slate-500">Official Walkaroo operational metrics, inventory levels, and order fulfillment status.</p>
+          <p className="text-xs text-slate-500">Operational metrics, inventory levels, and order fulfillment status.</p>
         </div>
 
         <div className="flex items-center gap-3">

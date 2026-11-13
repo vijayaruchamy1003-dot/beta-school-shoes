@@ -23,20 +23,20 @@ interface BannerSlide {
 const SLIDES: BannerSlide[] = [
   {
     id: 'back-to-school',
-    pill: 'WALKAROO OFFICIAL STORE • MEGA BACK TO SCHOOL FEST',
+    pill: 'SHOES NET STORE • MEGA BACK TO SCHOOL FEST',
     pillBg: 'bg-white text-[#ED2C23] font-black shadow-sm',
-    title: 'WALKAROO UNIFORM EXCELLENCE',
+    title: 'UNIFORM & FOOTWEAR EXCELLENCE',
     highlight: 'UP TO 40% OFF + FREE SHIPPING',
-    description: 'Official uniform-compliant Oxford, Derby and Mary Jane buckle shoes. Direct injection PU soles built for 365 days of active campus endurance.',
+    description: 'Uniform-compliant Oxford, Derby and Mary Jane buckle shoes. Direct injection PU soles built for 365 days of active campus endurance.',
     ctaText: 'Shop School Shoes',
     ctaLink: '/catalogue?category=SCHOOL_SHOES',
     secondaryText: 'Boys Collection',
     secondaryLink: '/catalogue?category=BOYS',
     bgGradient: 'bg-gradient-to-r from-[#ED2C23] via-[#E52D27] to-[#FA8C16]',
     badgeText: 'MIN. 30% - 40% OFF',
-    tags: ['🚚 Free Express Delivery', '★ 4.9/5 Certified Rating', '100% Genuine Walkaroo'],
+    tags: ['🚚 Free Express Delivery', '★ 4.9/5 Customer Rating', '100% Genuine Quality'],
     imageSrc: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?q=80&w=900&auto=format&fit=crop',
-    imageAlt: 'Walkaroo durable formal school footwear',
+    imageAlt: 'Durable formal school footwear',
   },
   {
     id: 'sports-pt-special',
@@ -50,10 +50,10 @@ const SLIDES: BannerSlide[] = [
     secondaryText: 'Girls Collection',
     secondaryLink: '/catalogue?category=GIRLS',
     bgGradient: 'bg-gradient-to-r from-[#0284C7] via-[#2563EB] to-[#4F46E5]',
-    badgeText: 'SPECIAL PT PRICING',
+    badgeText: 'SPECIAL PRICING',
     tags: ['⚡ Non-Marking White Soles', '🛡️ Shock-Absorbing EVA', 'Air-Mesh Breathable'],
     imageSrc: 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?q=80&w=900&auto=format&fit=crop',
-    imageAlt: 'Walkaroo sports and PT school sneakers',
+    imageAlt: 'Sports and PT school sneakers',
   },
   {
     id: 'institutional-bulk',
@@ -129,7 +129,7 @@ export const FlipkartBannerCarousel: React.FC = () => {
       onTouchEnd={handleTouchEnd}
       aria-label="Promotional Banners Carousel"
     >
-      {/* Slide Container with Bright Walkaroo Gradient */}
+      {/* Slide Container */}
       <div className={`relative min-h-[380px] sm:min-h-[420px] md:min-h-[460px] text-white flex items-center transition-colors duration-700 ${slide.bgGradient}`}>
         
         {/* Decorative Grid Texture */}
@@ -221,7 +221,7 @@ export const FlipkartBannerCarousel: React.FC = () => {
               <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-[11px] font-bold text-white">
                 <span className="flex items-center gap-1.5 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/20">
                   <ShieldCheck className="w-3.5 h-3.5 text-amber-300" />
-                  <span>Shoes Net • Walkaroo Official</span>
+                  <span>Shoes Net • Verified Quality</span>
                 </span>
               </div>
             </div>
@@ -247,7 +247,7 @@ export const FlipkartBannerCarousel: React.FC = () => {
         <ChevronRight className="w-6 h-6 text-slate-800" />
       </button>
 
-      {/* Indicator Dots (Walkaroo Style) */}
+      {/* Indicator Dots */}
       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 z-20">
         {SLIDES.map((_, idx) => (
           <button

@@ -254,6 +254,205 @@ public class StudentOrderService {
             .toList();
     }
 
+    @Transactional
+    public StudentOrderDto.BulkImportOrdersResponse bulkImportOrders(StudentOrderDto.BulkImportOrdersRequest request, UUID adminUserId) {
+        School school = schoolRepository.findById(request.getSchoolId())
+            .orElseThrow(() -> new ResourceNotFoundException("School not found: " + request.getSchoolId()));
+
+        User adminUser = null;
+        if (adminUserId != null) {
+            adminUser = userRepository.findById(adminUserId).orElse(null);
+        }
+
+        // Preload school products for price/product lookup by name
+        List<Product> allProducts = productRepository.findAll();
+
+        // Group rows by student key (admissionNumber if present, else studentName + class + section)
+        Map<String, List<StudentOrderDto.BulkImportRowDto>> studentGroups = new LinkedHashMap<>();
+        int rowIndex = 0;
+        for (StudentOrderDto.BulkImportRowDto row : request.getRows()) {
+            rowIndex++;
+            String adm = row.getAdmissionNumber() != null ? row.getAdmissionNumber().trim() : "";
+            String name = row.getStudentName() != null ? row.getStudentName().trim() : "";
+            String cls = row.getGradeClass() != null ? row.getGradeClass().trim() : "";
+            String sec = row.getSection() != null ? row.getSection().trim() : "";
+            String prodName = row.getProductName() != null ? row.getProductName().trim() : "";
+
+            if (name.isEmpty() && adm.isEmpty()) {
+                continue; // skip blank rows
+            }
+            if (prodName.isEmpty()) {
+                continue;
+            }
+
+            String key = !adm.isEmpty()
+                ? "ADM:" + adm.toUpperCase()
+                : "NAME:" + name.toLowerCase() + "|" + cls.toLowerCase() + "|" + sec.toLowerCase() + "|" + rowIndex;
+            // Note: if admissionNumber is empty, group same student name + class + section together!
+            if (adm.isEmpty()) {
+                key = "NAME:" + name.toLowerCase() + "|" + cls.toLowerCase() + "|" + sec.toLowerCase();
+            }
+            studentGroups.computeIfAbsent(key, k -> new ArrayList<>()).add(row);
+        }
+
+        if (studentGroups.isEmpty()) {
+            throw new BadRequestException("No valid student order rows found in the imported data.");
+        }
+
+        int studentsProcessed = 0;
+        int newStudentsCreated = 0;
+        int ordersCreated = 0;
+        int totalItemsImported = 0;
+        List<StudentOrderDto.StudentOrderResponse> createdOrders = new ArrayList<>();
+
+        SchoolOrderStatus status = request.getStatus() != null ? request.getStatus() : SchoolOrderStatus.CONFIRMED;
+        SchoolOrderStockPolicy stockPolicy = request.getStockPolicy() != null ? request.getStockPolicy() : SchoolOrderStockPolicy.BOOKING_ONLY;
+        LocalDate visitDate = request.getVisitDate() != null ? request.getVisitDate() : LocalDate.now();
+
+        long currentCount = studentRepository.countBySchoolId(school.getId());
+
+        for (Map.Entry<String, List<StudentOrderDto.BulkImportRowDto>> entry : studentGroups.entrySet()) {
+            List<StudentOrderDto.BulkImportRowDto> rows = entry.getValue();
+            StudentOrderDto.BulkImportRowDto first = rows.get(0);
+
+            String adm = first.getAdmissionNumber() != null ? first.getAdmissionNumber().trim().toUpperCase() : "";
+            String fullName = first.getStudentName() != null ? first.getStudentName().trim() : "Student";
+            String gradeClass = first.getGradeClass() != null && !first.getGradeClass().trim().isEmpty()
+                ? first.getGradeClass().trim() : "1";
+            String section = first.getSection() != null && !first.getSection().trim().isEmpty()
+                ? first.getSection().trim().toUpperCase() : "A";
+            String parentPhone = first.getParentPhone() != null ? first.getParentPhone().trim() : null;
+            String parentName = first.getParentName() != null ? first.getParentName().trim() : null;
+            String gender = first.getGender() != null ? first.getGender().trim() : null;
+
+            Student student = null;
+            if (!adm.isEmpty()) {
+                student = studentRepository.findBySchoolIdAndAdmissionNumber(school.getId(), adm).orElse(null);
+            }
+
+            if (student == null) {
+                if (adm.isEmpty()) {
+                    currentCount++;
+                    adm = "ADM-" + (1000 + currentCount) + "-" + UUID.randomUUID().toString().substring(0, 3).toUpperCase();
+                }
+                String[] parts = fullName.split("\\s+", 2);
+                String firstName = parts[0];
+                String lastName = parts.length > 1 ? parts[1] : ".";
+
+                student = Student.builder()
+                    .school(school)
+                    .admissionNumber(adm)
+                    .firstName(firstName)
+                    .lastName(lastName)
+                    .gradeClass(gradeClass)
+                    .section(section)
+                    .parentName(parentName)
+                    .parentPhone(parentPhone)
+                    .gender(gender)
+                    .isActive(true)
+                    .build();
+                student = studentRepository.save(student);
+                newStudentsCreated++;
+            }
+            studentsProcessed++;
+
+            StudentOrder order = StudentOrder.builder()
+                .school(school)
+                .student(student)
+                .orderNumber(generateOrderNumber(school.getCode()))
+                .orderType("SCHOOL_VISIT")
+                .status(status)
+                .stockPolicy(stockPolicy)
+                .createdByAdmin(adminUser)
+                .notes(first.getNotes() != null && !first.getNotes().trim().isEmpty() ? first.getNotes().trim() : "Imported via Excel/CSV")
+                .visitDate(visitDate)
+                .build();
+
+            for (StudentOrderDto.BulkImportRowDto itemRow : rows) {
+                String pName = itemRow.getProductName() != null ? itemRow.getProductName().trim() : "School Product";
+                String sizeLabel = itemRow.getSizeLabel() != null && !itemRow.getSizeLabel().trim().isEmpty()
+                    ? itemRow.getSizeLabel().trim() : "Free";
+                int qty = itemRow.getQuantity() != null && itemRow.getQuantity() > 0 ? itemRow.getQuantity() : 1;
+
+                // Match product by name if available
+                Product matchedProduct = allProducts.stream()
+                    .filter(p -> p.getName() != null && p.getName().equalsIgnoreCase(pName))
+                    .findFirst()
+                    .orElse(null);
+
+                ProductSize matchedSize = null;
+                if (matchedProduct != null && matchedProduct.getSizes() != null) {
+                    matchedSize = matchedProduct.getSizes().stream()
+                        .filter(sz -> sz.getUkSize() != null && sz.getUkSize().equalsIgnoreCase(sizeLabel))
+                        .findFirst()
+                        .orElse(null);
+                }
+
+                SchoolProductCategory cat = parseSchoolCategory(
+                    itemRow.getCategory() != null && !itemRow.getCategory().trim().isEmpty()
+                        ? itemRow.getCategory()
+                        : (matchedProduct != null ? matchedProduct.getCategory() : "SHOES")
+                );
+
+                BigDecimal unitPrice = itemRow.getUnitPrice() != null ? itemRow.getUnitPrice() : BigDecimal.ZERO;
+                if (unitPrice.compareTo(BigDecimal.ZERO) <= 0 && matchedProduct != null && matchedProduct.getBasePrice() != null) {
+                    unitPrice = matchedProduct.getBasePrice();
+                }
+
+                BigDecimal subtotal = unitPrice.multiply(BigDecimal.valueOf(qty));
+
+                StudentOrderItem item = StudentOrderItem.builder()
+                    .product(matchedProduct)
+                    .productSize(matchedSize)
+                    .category(cat)
+                    .productName(pName)
+                    .sizeLabel(sizeLabel)
+                    .quantity(qty)
+                    .unitPrice(unitPrice)
+                    .subtotal(subtotal)
+                    .itemNotes(itemRow.getNotes())
+                    .stockReserved(false)
+                    .build();
+
+                order.addItem(item);
+                totalItemsImported++;
+            }
+
+            if (stockPolicy == SchoolOrderStockPolicy.RESERVE_STOCK && status == SchoolOrderStatus.CONFIRMED) {
+                reserveStockForOrder(order, adminUserId);
+            }
+
+            StudentOrder savedOrder = studentOrderRepository.save(order);
+            ordersCreated++;
+            createdOrders.add(mapToResponse(savedOrder));
+        }
+
+        log.info("Bulk imported school orders for school {}: students={}, newStudents={}, orders={}, items={}",
+            school.getCode(), studentsProcessed, newStudentsCreated, ordersCreated, totalItemsImported);
+
+        return StudentOrderDto.BulkImportOrdersResponse.builder()
+            .studentsProcessed(studentsProcessed)
+            .newStudentsCreated(newStudentsCreated)
+            .ordersCreated(ordersCreated)
+            .totalItemsImported(totalItemsImported)
+            .orders(createdOrders)
+            .build();
+    }
+
+    private SchoolProductCategory parseSchoolCategory(String raw) {
+        if (raw == null || raw.trim().isEmpty()) {
+            return SchoolProductCategory.SHOES;
+        }
+        String u = raw.trim().toUpperCase().replace("-", "").replace("_", "").replace(" ", "");
+        if (u.contains("TSHIRT") || u.contains("TEE")) return SchoolProductCategory.TSHIRTS;
+        if (u.contains("SHIRT")) return SchoolProductCategory.SHIRTS;
+        if (u.contains("PANT") || u.contains("TROUSER")) return SchoolProductCategory.PANTS;
+        if (u.contains("SHORT") || u.contains("SKIRT")) return SchoolProductCategory.SHORTS;
+        if (u.contains("SOCK")) return SchoolProductCategory.SOCKS;
+        if (u.contains("BAG") || u.contains("BACKPACK")) return SchoolProductCategory.BAGS;
+        return SchoolProductCategory.SHOES;
+    }
+
     /**
      * Generates CSV report of school orders and student product requirements
      */

@@ -39,7 +39,7 @@ export const ProductCard: React.FC<Props> = ({ product, index = 0 }) => {
     JUNIOR_VELCRO: 'School Shoes',
   };
   const normalizedCat = product.category ? product.category.trim().toUpperCase() : '';
-  const categoryLabel = categoryLabels[normalizedCat] || product.category?.replace(/_/g, ' ') || 'Official Walkaroo Footwear';
+  const categoryLabel = categoryLabels[normalizedCat] || product.category?.replace(/_/g, ' ') || 'Shoes Net Footwear';
 
   // Realistic MRP calculation (Uses admin configured MRP or falls back)
   const mrp = product.mrp && product.mrp > product.basePrice ? product.mrp : Math.round(product.basePrice * 1.38);
@@ -107,7 +107,7 @@ export const ProductCard: React.FC<Props> = ({ product, index = 0 }) => {
           {/* Card Media Stage (Asian Footwears style clean light studio background) */}
           <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-gradient-to-b from-slate-50 via-slate-100/40 to-slate-100/70 p-4 flex items-center justify-center">
             
-            {/* Walkaroo Promotional Badge */}
+            {/* Promotional Badge */}
             <div className="absolute top-2.5 left-2.5 z-10">
               {badgeType === 'BESTSELLER' ? (
                 <span className="inline-flex items-center gap-1 rounded-md bg-gradient-to-r from-amber-500 to-[#ED2C23] px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-white shadow-xs">

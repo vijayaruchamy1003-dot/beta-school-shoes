@@ -34,7 +34,11 @@ public class Product {
     private String shortDescription;
 
     @Column(nullable = false, length = 64)
-    private String category; // BOYS_FORMAL, GIRLS_FORMAL, SPORTS_PT, JUNIOR_VELCRO
+    private String category; // BOYS, GIRLS, MEN, WOMEN, SCHOOL_SHOES (or SHOES, SHIRTS, PANTS, etc.)
+
+    @Column(name = "catalog_type", nullable = false, length = 32)
+    @Builder.Default
+    private String catalogType = "WEBSITE"; // WEBSITE or SCHOOL_ORDER
 
     @Column(name = "base_price", nullable = false, precision = 10, scale = 2)
     private BigDecimal basePrice;

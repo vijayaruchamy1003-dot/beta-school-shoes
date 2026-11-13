@@ -6,8 +6,8 @@ export const FlipkartTrustBar: React.FC = () => {
     {
       icon: <ShieldCheck className="w-5 h-5 text-[#ED2C23]" />,
       bg: 'bg-red-50 border-red-200/80',
-      title: '100% Genuine Walkaroo',
-      subtitle: 'Official batch warranty',
+      title: '100% Genuine Quality',
+      subtitle: 'Verified batch warranty',
     },
     {
       icon: <Truck className="w-5 h-5 text-emerald-600" />,

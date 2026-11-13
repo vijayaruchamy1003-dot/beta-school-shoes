@@ -48,7 +48,7 @@ export const OrderSuccessPage: React.FC = () => {
           </h1>
           <p className="text-sm text-muted-foreground leading-relaxed">
             {isPaid
-              ? 'Your payment was successfully verified via Razorpay modal HMAC-SHA256 signature. Your Walkaroo uniform footwear has been confirmed for dispatch.'
+              ? 'Your payment was successfully verified via Razorpay modal HMAC-SHA256 signature. Your footwear order has been confirmed for dispatch.'
               : 'Your order has been recorded and inventory stock reserved.'}
           </p>
         </div>
@@ -105,7 +105,7 @@ export const OrderSuccessPage: React.FC = () => {
 
         <div className="border-t border-foreground/15 pt-4 text-center text-xs text-muted-foreground flex items-center justify-center gap-2">
           <ShieldCheck className="w-4 h-4 text-foreground" />
-          <span>Shoes Net & Walkaroo Official Guarantee</span>
+          <span>Shoes Net Quality Guarantee</span>
         </div>
 
       </div>

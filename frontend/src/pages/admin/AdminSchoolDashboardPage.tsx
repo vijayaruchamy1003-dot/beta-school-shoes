@@ -23,9 +23,12 @@ import {
   PackageCheck,
   ShoppingBag,
   Sparkles,
-  CheckCircle2
+  CheckCircle2,
+  FileSpreadsheet,
+  Upload
 } from 'lucide-react';
 import { SchoolOrderModal } from '../../components/admin/SchoolOrderModal';
+import { SchoolOrderExcelImportModal, downloadSimpleSchoolOrderTemplate } from '../../components/admin/SchoolOrderExcelImportModal';
 
 export const AdminSchoolDashboardPage: React.FC = () => {
   const { schoolId } = useParams<{ schoolId: string }>();
@@ -69,6 +72,7 @@ export const AdminSchoolDashboardPage: React.FC = () => {
   // Order Placement Modal State
   const [orderingStudent, setOrderingStudent] = useState<Student | null>(null);
   const [orderToast, setOrderToast] = useState<string | null>(null);
+  const [isExcelImportOpen, setIsExcelImportOpen] = useState(false);
 
   const handleOrderSuccess = async (createdOrder: StudentOrder) => {
     setOrderToast(`Order ${createdOrder.orderNumber} successfully recorded! Live category cards updated.`);
@@ -322,6 +326,25 @@ export const AdminSchoolDashboardPage: React.FC = () => {
 
         {/* Action Buttons */}
         <div className="flex flex-wrap items-center gap-2.5">
+          <button
+            type="button"
+            onClick={() => setIsExcelImportOpen(true)}
+            className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-3 font-display text-xs font-bold uppercase tracking-wider transition-all shadow-xs"
+          >
+            <Upload className="w-4 h-4" />
+            <span>Import Excel Orders</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => downloadSimpleSchoolOrderTemplate(school.code)}
+            className="inline-flex items-center gap-2 border border-emerald-600/40 bg-emerald-50/60 text-emerald-900 px-3.5 py-3 font-display text-xs font-bold uppercase tracking-wider hover:bg-emerald-100 transition-colors"
+            title="Download Simple Excel / CSV Template"
+          >
+            <FileSpreadsheet className="w-4 h-4 text-emerald-700" />
+            <span>Excel Template</span>
+          </button>
+
           <Link
             to={`/admin/school-visit-orders/new?schoolId=${school.id}`}
             className="inline-flex items-center gap-2 bg-primary px-5 py-3 font-display text-xs font-bold uppercase tracking-[0.2em] text-primary-foreground hover:paper-shadow-sm transition-all"
@@ -359,7 +382,7 @@ export const AdminSchoolDashboardPage: React.FC = () => {
       {/* Printable Header (Visible only when printing) */}
       <div className="hidden print:block border-b border-black pb-4 mb-6">
         <h1 className="text-2xl font-black uppercase">{school.name} ({school.code})</h1>
-        <p className="text-xs text-gray-600">Institutional School Orders & Product Demand Report · Shoes Net (Walkaroo Partner)</p>
+        <p className="text-xs text-gray-600">Institutional School Orders &amp; Product Demand Report · Shoes Net</p>
         <p className="text-xs mt-1">Contact: {school.contactPerson} | Phone: {school.phone} | Address: {school.address}</p>
       </div>
 
@@ -861,6 +884,24 @@ export const AdminSchoolDashboardPage: React.FC = () => {
           isOpen={!!orderingStudent}
           onClose={() => setOrderingStudent(null)}
           onSuccess={handleOrderSuccess}
+        />
+      )}
+
+      {/* Bulk Excel / CSV Import Modal */}
+      {school && (
+        <SchoolOrderExcelImportModal
+          isOpen={isExcelImportOpen}
+          onClose={() => setIsExcelImportOpen(false)}
+          defaultSchoolId={school.id}
+          defaultSchoolName={school.code}
+          onSuccess={async (res) => {
+            setOrderToast(
+              `Imported ${res.ordersCreated} student orders (${res.totalItemsImported} items, ${res.newStudentsCreated} new students)!`
+            );
+            setTimeout(() => setOrderToast(null), 6000);
+            setStudentOrdersMap({});
+            await loadData();
+          }}
         />
       )}
     </div>

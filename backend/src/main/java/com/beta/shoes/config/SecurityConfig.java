@@ -66,8 +66,8 @@ public class SecurityConfig {
                 // Payment Webhooks and Verification (HMAC verified in controller)
                 .requestMatchers("/api/payments/**").permitAll()
 
-                // Admin endpoints strictly require ROLE_ADMIN
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                // Admin endpoints allow ADMIN, MANAGER, or STAFF roles
+                .requestMatchers("/api/admin/**").hasAnyRole("ADMIN", "MANAGER", "STAFF")
 
                 // Customer / Authenticated endpoints
                 .requestMatchers("/api/cart/**", "/api/orders/**", "/api/customer/**").authenticated()

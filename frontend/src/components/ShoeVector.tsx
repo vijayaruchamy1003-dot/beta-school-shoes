@@ -56,7 +56,7 @@ export const ShoeVector: React.FC<Props> = ({ sku = '', className = 'w-full h-au
         <path d="M 380 208 C 420 215, 450 224, 448 240 C 440 242, 400 242, 375 235 Z" fill="#ffffff" stroke="#cbd5e1" strokeWidth="1.5" />
         <path d="M 80 228 C 75 175, 90 135, 145 135 C 175 135, 195 155, 230 155 C 280 155, 345 180, 410 210 C 425 218, 420 224, 405 228 Z" fill="url(#sv-canvas)" stroke="#cbd5e1" strokeWidth="1.5" />
         <path d="M 115 138 C 135 128, 165 128, 185 148 C 165 152, 135 152, 115 138 Z" fill="#1e3a8a" />
-        <text x="135" y="145" fill="#ffffff" fontSize="6" fontWeight="bold">WALKAROO PT</text>
+        <text x="135" y="145" fill="#ffffff" fontSize="6" fontWeight="bold">SHOES NET PT</text>
         {[0, 1, 2, 3, 4].map(i => (
           <g key={i}>
             <circle cx={200 + i * 14} cy={158 + i * 8} r="3.5" fill="#f8fafc" stroke="#94a3b8" strokeWidth="1.5" />
@@ -66,7 +66,7 @@ export const ShoeVector: React.FC<Props> = ({ sku = '', className = 'w-full h-au
         ))}
         <path d="M 170 185 L 290 208 L 285 214 L 165 191 Z" fill="#1d4ed8" opacity="0.9" />
         <rect x="70" y="240" width="32" height="12" rx="2" fill="#1d4ed8" />
-        <text x="86" y="248" fill="#ffffff" fontSize="5" fontWeight="bold" textAnchor="middle">WALKAROO</text>
+        <text x="86" y="248" fill="#ffffff" fontSize="5" fontWeight="bold" textAnchor="middle">SHOES NET</text>
       </svg>
     );
   }
@@ -81,7 +81,7 @@ export const ShoeVector: React.FC<Props> = ({ sku = '', className = 'w-full h-au
         <path d="M 90 220 C 85 175, 95 140, 145 138 C 170 138, 180 160, 200 178 C 220 196, 270 198, 310 195 C 360 192, 400 200, 430 216 C 440 222, 435 224, 420 224 Z" fill="url(#sv-leather)" />
         <path d="M 125 145 C 160 145, 175 165, 205 185 C 245 195, 330 198, 410 214 C 390 205, 320 198, 250 190 C 200 185, 150 165, 125 145 Z" fill="url(#sv-highlight)" />
         <path d="M 140 145 C 170 148, 195 170, 220 185 C 240 192, 280 192, 305 190 C 270 180, 210 165, 175 150 Z" fill="#991b1b" />
-        <text x="210" y="178" fill="#fef08a" fontSize="6" fontWeight="bold">WALKAROO</text>
+        <text x="210" y="178" fill="#fef08a" fontSize="6" fontWeight="bold">SHOES NET</text>
         <path d="M 190 160 L 265 190 L 260 205 L 185 175 Z" fill="#09090b" stroke="#3b82f6" strokeWidth="0.5" />
         <g transform="translate(235, 180) rotate(22)">
           <rect x="0" y="0" width="16" height="22" rx="3" fill="url(#sv-buckle)" stroke="#78350f" strokeWidth="1" />
@@ -104,7 +104,7 @@ export const ShoeVector: React.FC<Props> = ({ sku = '', className = 'w-full h-au
         <g>
           <rect x="180" y="146" width="90" height="22" rx="4" fill="#18181b" stroke="#475569" strokeWidth="1.2" transform="rotate(8 180 146)" />
           <rect x="250" y="146" width="20" height="22" rx="3" fill="#27272a" stroke="#d4af37" strokeWidth="0.8" transform="rotate(8 180 146)" />
-          <text x="195" y="161" fill="#cbd5e1" fontSize="7" fontWeight="bold" transform="rotate(8 180 146)">WALKAROO VELCRO</text>
+          <text x="195" y="161" fill="#cbd5e1" fontSize="7" fontWeight="bold" transform="rotate(8 180 146)">SHOES NET</text>
         </g>
         <g>
           <rect x="210" y="174" width="90" height="22" rx="4" fill="#18181b" stroke="#475569" strokeWidth="1.2" transform="rotate(8 210 174)" />
@@ -124,7 +124,7 @@ export const ShoeVector: React.FC<Props> = ({ sku = '', className = 'w-full h-au
       <path d="M 85 222 C 80 180, 85 140, 140 135 C 165 135, 185 160, 220 155 C 265 148, 320 170, 395 190 C 435 200, 455 212, 445 222 Z" fill="url(#sv-leather)" />
       <path d="M 120 145 C 170 140, 240 158, 380 192 C 430 205, 440 216, 425 218 C 360 200, 270 175, 205 165 C 150 160, 125 155, 120 145 Z" fill="url(#sv-highlight)" />
       <path d="M 115 138 C 135 125, 175 125, 195 150 C 180 155, 140 155, 115 138 Z" fill="#18181b" stroke="#52525b" strokeWidth="2" />
-      <text x="145" y="144" fill="#fbbf24" fontSize="7" fontWeight="bold">WALKAROO</text>
+      <text x="145" y="144" fill="#fbbf24" fontSize="7" fontWeight="bold">SHOES NET</text>
       {[0, 1, 2, 3].map(i => (
         <g key={i}>
           <circle cx={205 + i * 11} cy={155 + i * 8} r="3" fill="#0f172a" stroke="#64748b" strokeWidth="1" />
@@ -133,7 +133,7 @@ export const ShoeVector: React.FC<Props> = ({ sku = '', className = 'w-full h-au
         </g>
       ))}
       <rect x="80" y="195" width="34" height="10" rx="2" fill="#1e293b" stroke="#334155" strokeWidth="0.5" />
-      <text x="97" y="202" fill="#94a3b8" fontSize="4.5" fontWeight="bold" textAnchor="middle">WALKAROO</text>
+      <text x="97" y="202" fill="#94a3b8" fontSize="4.5" fontWeight="bold" textAnchor="middle">SHOES NET</text>
     </svg>
   );
 };

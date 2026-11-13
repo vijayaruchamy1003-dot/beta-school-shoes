@@ -15,10 +15,13 @@ import {
   AlertTriangle,
   Info,
   Layers,
-  ArrowRight
+  ArrowRight,
+  Upload,
+  FileSpreadsheet
 } from 'lucide-react';
 import { schoolOrderApi, schoolApi } from '../../api/client';
 import { StudentOrder, School, SchoolOrderStatus } from '../../types';
+import { SchoolOrderExcelImportModal, downloadSimpleSchoolOrderTemplate } from '../../components/admin/SchoolOrderExcelImportModal';
 
 export const AdminSchoolVisitOrdersListPage: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -41,6 +44,7 @@ export const AdminSchoolVisitOrdersListPage: React.FC = () => {
   // Quick status update state
   const [updatingOrderId, setUpdatingOrderId] = useState<string | null>(null);
   const [statusMessage, setStatusMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [isExcelImportOpen, setIsExcelImportOpen] = useState(false);
 
   useEffect(() => {
     fetchSchools();
@@ -142,10 +146,28 @@ export const AdminSchoolVisitOrdersListPage: React.FC = () => {
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2.5">
+          <button
+            type="button"
+            onClick={() => downloadSimpleSchoolOrderTemplate()}
+            className="inline-flex items-center gap-2 px-3.5 py-2 border border-emerald-600/40 bg-emerald-50 hover:bg-emerald-100 text-emerald-900 text-xs font-bold rounded-lg transition"
+          >
+            <FileSpreadsheet className="w-4 h-4 text-emerald-700" />
+            <span>Download Excel Template</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setIsExcelImportOpen(true)}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg shadow-sm transition"
+          >
+            <Upload className="w-4 h-4" />
+            <span>Import Excel Orders</span>
+          </button>
+
           <Link
             to="/admin/school-visit-orders/new"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-semibold rounded-lg shadow-sm transition"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-bold rounded-lg shadow-sm transition"
           >
             <Plus className="w-4 h-4" />
             Record Visit Order
@@ -543,6 +565,21 @@ export const AdminSchoolVisitOrdersListPage: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Excel / CSV Bulk Import Modal */}
+      <SchoolOrderExcelImportModal
+        isOpen={isExcelImportOpen}
+        onClose={() => setIsExcelImportOpen(false)}
+        schools={schools}
+        defaultSchoolId={selectedSchoolId}
+        onSuccess={(res) => {
+          setStatusMessage({
+            type: 'success',
+            text: `Successfully imported ${res.ordersCreated} student orders (${res.totalItemsImported} items across ${res.studentsProcessed} students)!`,
+          });
+          fetchOrders();
+        }}
+      />
     </div>
   );
 };

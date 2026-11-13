@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   X, 
   Plus, 
@@ -6,67 +6,90 @@ import {
   CheckCircle2, 
   AlertCircle, 
   ShoppingBag, 
-  Layers, 
-  Calendar,
-  Sparkles,
-  ArrowRight,
-  ShieldCheck,
-  Tag
+  ShieldCheck
 } from 'lucide-react';
-import { schoolOrderApi } from '../../api/client';
-import { Student, SchoolProductCategory, SchoolOrderStatus, SchoolOrderStockPolicy, StudentOrder } from '../../types';
+import { adminApi, schoolOrderApi } from '../../api/client';
+import { Student, SchoolProductCategory, SchoolOrderStatus, SchoolOrderStockPolicy, StudentOrder, AdminProduct } from '../../types';
 
 export interface CatalogPreset {
   id: string;
+  productId?: string;
   category: SchoolProductCategory;
   name: string;
   defaultPrice: number;
   availableSizes: string[];
 }
 
+export const mapToSchoolCategory = (raw?: string): SchoolProductCategory => {
+  if (!raw) return 'SHOES';
+  const u = raw.trim().toUpperCase().replace(/[-_\s]/g, '');
+  if (u.includes('TSHIRT') || u.includes('TEE')) return 'TSHIRTS';
+  if (u.includes('SHIRT')) return 'SHIRTS';
+  if (u.includes('PANT') || u.includes('TROUSER')) return 'PANTS';
+  if (u.includes('SHORT') || u.includes('SKIRT')) return 'SHORTS';
+  if (u.includes('SOCK')) return 'SOCKS';
+  if (u.includes('BAG') || u.includes('BACKPACK')) return 'BAGS';
+  return 'SHOES';
+};
+
 export const CATALOG_PRESETS: CatalogPreset[] = [
   // Shoes
-  { id: 'sh-1', category: 'SHOES', name: 'Walkaroo Classic Oxford Lace-Up', defaultPrice: 749, availableSizes: ['UK 10C', 'UK 11C', 'UK 12C', 'UK 13C', 'UK 1', 'UK 2', 'UK 3', 'UK 4', 'UK 5', 'UK 6', 'UK 7', 'UK 8'] },
-  { id: 'sh-2', category: 'SHOES', name: 'Walkaroo Mary Jane Single-Strap', defaultPrice: 749, availableSizes: ['UK 10C', 'UK 11C', 'UK 12C', 'UK 13C', 'UK 1', 'UK 2', 'UK 3', 'UK 4', 'UK 5'] },
-  { id: 'sh-3', category: 'SHOES', name: 'Walkaroo PT-Pro White Canvas Trainer', defaultPrice: 599, availableSizes: ['UK 1', 'UK 2', 'UK 3', 'UK 4', 'UK 5', 'UK 6', 'UK 7', 'UK 8'] },
-  { id: 'sh-4', category: 'SHOES', name: 'Walkaroo Dual-Strap Junior Velcro', defaultPrice: 699, availableSizes: ['UK 8C', 'UK 9C', 'UK 10C', 'UK 11C', 'UK 12C', 'UK 13C'] },
-  { id: 'sh-5', category: 'SHOES', name: 'Walkaroo Executive Derby Lace-Up', defaultPrice: 899, availableSizes: ['UK 3', 'UK 4', 'UK 5', 'UK 6', 'UK 7', 'UK 8', 'UK 9'] },
-  { id: 'sh-6', category: 'SHOES', name: 'Walkaroo Elegance Ballerina Slip-On', defaultPrice: 729, availableSizes: ['UK 1', 'UK 2', 'UK 3', 'UK 4', 'UK 5', 'UK 6'] },
+  { id: 'sh-1', category: 'SHOES', name: 'Classic Oxford Lace-Up School Shoe', defaultPrice: 749, availableSizes: ['10C', '11C', '12C', '13C', '1', '2', '3', '4', '5', '6', '7', '8'] },
+  { id: 'sh-2', category: 'SHOES', name: 'Mary Jane Single-Strap Girls Shoe', defaultPrice: 749, availableSizes: ['10C', '11C', '12C', '13C', '1', '2', '3', '4', '5'] },
+  { id: 'sh-3', category: 'SHOES', name: 'PT-Pro White Canvas Trainer', defaultPrice: 599, availableSizes: ['1', '2', '3', '4', '5', '6', '7', '8'] },
+  { id: 'sh-4', category: 'SHOES', name: 'Dual-Strap Junior Velcro Shoe', defaultPrice: 699, availableSizes: ['8C', '9C', '10C', '11C', '12C', '13C', '1', '2', '3'] },
 
   // Shirts
-  { id: 'srt-1', category: 'SHIRTS', name: 'White Half Sleeve Uniform Shirt', defaultPrice: 450, availableSizes: ['Size 26', 'Size 28', 'Size 30', 'Size 32', 'Size 34', 'Size 36', 'Size 38', 'Size 40'] },
-  { id: 'srt-2', category: 'SHIRTS', name: 'White Full Sleeve Uniform Shirt', defaultPrice: 499, availableSizes: ['Size 26', 'Size 28', 'Size 30', 'Size 32', 'Size 34', 'Size 36', 'Size 38', 'Size 40'] },
-  { id: 'srt-3', category: 'SHIRTS', name: 'Light Blue Formal Uniform Shirt', defaultPrice: 460, availableSizes: ['Size 28', 'Size 30', 'Size 32', 'Size 34', 'Size 36', 'Size 38'] },
+  { id: 'srt-1', category: 'SHIRTS', name: 'White Half Sleeve Uniform Shirt', defaultPrice: 450, availableSizes: ['26', '28', '30', '32', '34', '36', '38', '40'] },
+  { id: 'srt-2', category: 'SHIRTS', name: 'White Full Sleeve Uniform Shirt', defaultPrice: 499, availableSizes: ['26', '28', '30', '32', '34', '36', '38', '40'] },
 
   // Pants
-  { id: 'pnt-1', category: 'PANTS', name: 'Navy Formal Uniform Trousers', defaultPrice: 650, availableSizes: ['Size 24', 'Size 26', 'Size 28', 'Size 30', 'Size 32', 'Size 34', 'Size 36'] },
-  { id: 'pnt-2', category: 'PANTS', name: 'Grey Pleated Uniform Trousers', defaultPrice: 650, availableSizes: ['Size 24', 'Size 26', 'Size 28', 'Size 30', 'Size 32', 'Size 34', 'Size 36'] },
-  { id: 'pnt-3', category: 'PANTS', name: 'Black Formal Uniform Trousers', defaultPrice: 650, availableSizes: ['Size 26', 'Size 28', 'Size 30', 'Size 32', 'Size 34', 'Size 36'] },
+  { id: 'pnt-1', category: 'PANTS', name: 'Navy Formal Uniform Trousers', defaultPrice: 650, availableSizes: ['24', '26', '28', '30', '32', '34', '36'] },
+  { id: 'pnt-2', category: 'PANTS', name: 'Grey Pleated Uniform Trousers', defaultPrice: 650, availableSizes: ['24', '26', '28', '30', '32', '34', '36'] },
 
   // Shorts
-  { id: 'shr-1', category: 'SHORTS', name: 'Navy Junior Elastic Shorts', defaultPrice: 399, availableSizes: ['Size 20', 'Size 22', 'Size 24', 'Size 26', 'Size 28', 'Size 30'] },
-  { id: 'shr-2', category: 'SHORTS', name: 'White PT Sports Shorts', defaultPrice: 450, availableSizes: ['Size 22', 'Size 24', 'Size 26', 'Size 28', 'Size 30'] },
-  { id: 'shr-3', category: 'SHORTS', name: 'Khaki Uniform Shorts', defaultPrice: 420, availableSizes: ['Size 22', 'Size 24', 'Size 26', 'Size 28', 'Size 30'] },
+  { id: 'shr-1', category: 'SHORTS', name: 'Navy Junior Uniform Shorts', defaultPrice: 399, availableSizes: ['20', '22', '24', '26', '28', '30'] },
+  { id: 'shr-2', category: 'SHORTS', name: 'White PT Sports Shorts', defaultPrice: 450, availableSizes: ['22', '24', '26', '28', '30'] },
 
   // T-Shirts
-  { id: 'tsh-1', category: 'TSHIRTS', name: 'House Sports Dry-Fit T-Shirt (Red House)', defaultPrice: 450, availableSizes: ['Size 26', 'Size 28', 'Size 30', 'Size 32', 'Size 34', 'Size 36', 'Size 38'] },
-  { id: 'tsh-2', category: 'TSHIRTS', name: 'House Sports Dry-Fit T-Shirt (Blue House)', defaultPrice: 450, availableSizes: ['Size 26', 'Size 28', 'Size 30', 'Size 32', 'Size 34', 'Size 36', 'Size 38'] },
-  { id: 'tsh-3', category: 'TSHIRTS', name: 'House Sports Dry-Fit T-Shirt (Green House)', defaultPrice: 450, availableSizes: ['Size 26', 'Size 28', 'Size 30', 'Size 32', 'Size 34', 'Size 36', 'Size 38'] },
-  { id: 'tsh-4', category: 'TSHIRTS', name: 'House Sports Dry-Fit T-Shirt (Yellow House)', defaultPrice: 450, availableSizes: ['Size 26', 'Size 28', 'Size 30', 'Size 32', 'Size 34', 'Size 36', 'Size 38'] },
-  { id: 'tsh-5', category: 'TSHIRTS', name: 'White Classic PT T-Shirt', defaultPrice: 399, availableSizes: ['Size 26', 'Size 28', 'Size 30', 'Size 32', 'Size 34', 'Size 36', 'Size 38'] },
+  { id: 'tsh-1', category: 'TSHIRTS', name: 'House Sports Dry-Fit T-Shirt', defaultPrice: 450, availableSizes: ['26', '28', '30', '32', '34', '36', '38'] },
+  { id: 'tsh-2', category: 'TSHIRTS', name: 'White Classic PT T-Shirt', defaultPrice: 399, availableSizes: ['26', '28', '30', '32', '34', '36', '38'] },
 
   // Socks
-  { id: 'sck-1', category: 'SOCKS', name: 'Navy Knee-Length Uniform Socks (2 Pairs)', defaultPrice: 199, availableSizes: ['Small', 'Medium', 'Large'] },
-  { id: 'sck-2', category: 'SOCKS', name: 'White Athletic PT Socks (2 Pairs)', defaultPrice: 199, availableSizes: ['Small', 'Medium', 'Large'] },
-  { id: 'sck-3', category: 'SOCKS', name: 'Black Ribbed School Socks (2 Pairs)', defaultPrice: 199, availableSizes: ['Small', 'Medium', 'Large'] },
+  { id: 'sck-1', category: 'SOCKS', name: 'School Uniform Socks (2 Pairs)', defaultPrice: 199, availableSizes: ['Small', 'Medium', 'Large'] },
 
   // Bags
   { id: 'bag-1', category: 'BAGS', name: 'Ergonomic Institutional Backpack', defaultPrice: 850, availableSizes: ['Junior 16L', 'Standard 24L', 'Senior 32L'] },
-  { id: 'bag-2', category: 'BAGS', name: 'Heavy-Duty Senior Campus Bag', defaultPrice: 999, availableSizes: ['Senior 32L'] },
 ];
+
+export const convertAdminProductsToPresets = (products: AdminProduct[]): CatalogPreset[] => {
+  const dynamicPresets: CatalogPreset[] = products
+    .filter(p => p.isActive !== false)
+    .map(p => ({
+      id: p.id,
+      productId: p.id,
+      category: mapToSchoolCategory(p.category),
+      name: p.name,
+      defaultPrice: p.basePrice || 0,
+      availableSizes: p.sizes && p.sizes.length > 0
+        ? p.sizes.map(s => s.ukSize)
+        : ['1', '2', '3', '4', '5'],
+    }));
+
+  // Merge dynamic products first, then fallback presets whose names aren't already present
+  const existingNames = new Set(dynamicPresets.map(d => d.name.toLowerCase()));
+  const merged = [...dynamicPresets];
+  for (const fallback of CATALOG_PRESETS) {
+    if (!existingNames.has(fallback.name.toLowerCase())) {
+      merged.push(fallback);
+    }
+  }
+  return merged;
+};
 
 export interface OrderItemDraft {
   id: string;
+  productId?: string;
   category: SchoolProductCategory;
   productName: string;
   sizeLabel: string;
@@ -92,30 +115,17 @@ export const SchoolOrderModal: React.FC<SchoolOrderModalProps> = ({
   onClose,
   onSuccess,
 }) => {
+  const [catalogItems, setCatalogItems] = useState<CatalogPreset[]>(CATALOG_PRESETS);
   const [selectedCategory, setSelectedCategory] = useState<SchoolProductCategory>('SHOES');
-  const [selectedPresetId, setSelectedPresetId] = useState<string>('sh-1');
-  const [selectedSize, setSelectedSize] = useState<string>('UK 3');
+  const [selectedPresetId, setSelectedPresetId] = useState<string>(CATALOG_PRESETS[0].id);
+  const [productNameInput, setProductNameInput] = useState<string>(CATALOG_PRESETS[0].name);
+  const [selectedSize, setSelectedSize] = useState<string>(CATALOG_PRESETS[0].availableSizes[0]);
   const [itemQuantity, setItemQuantity] = useState<number>(1);
-  const [itemPrice, setItemPrice] = useState<number>(749);
+  const [itemPrice, setItemPrice] = useState<number>(CATALOG_PRESETS[0].defaultPrice);
   const [itemNotes, setItemNotes] = useState<string>('');
 
-  // Custom Item Mode
-  const [isCustomProduct, setIsCustomProduct] = useState(false);
-  const [customName, setCustomName] = useState('');
-  const [customSize, setCustomSize] = useState('');
-
   // Basket of items
-  const [basket, setBasket] = useState<OrderItemDraft[]>([
-    {
-      id: 'default-1',
-      category: 'SHOES',
-      productName: 'Walkaroo Classic Oxford Lace-Up',
-      sizeLabel: 'UK 3',
-      quantity: 1,
-      unitPrice: 749,
-      itemNotes: '',
-    }
-  ]);
+  const [basket, setBasket] = useState<OrderItemDraft[]>([]);
 
   // Order Details
   const [status, setStatus] = useState<SchoolOrderStatus>('CONFIRMED');
@@ -126,47 +136,71 @@ export const SchoolOrderModal: React.FC<SchoolOrderModalProps> = ({
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
+  useEffect(() => {
+    if (!isOpen) return;
+    adminApi.getProducts({ catalogType: 'SCHOOL_ORDER', size: 200 })
+      .then(res => {
+        const merged = convertAdminProductsToPresets(res.data.content || []);
+        setCatalogItems(merged);
+        const shoes = merged.filter(p => p.category === 'SHOES');
+        const first = shoes[0] || merged[0];
+        if (first) {
+          setSelectedCategory(first.category);
+          setSelectedPresetId(first.id);
+          setProductNameInput(first.name);
+          setSelectedSize(first.availableSizes[0] || '3');
+          setItemPrice(first.defaultPrice);
+        }
+      })
+      .catch(() => {});
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
-  const currentPresets = CATALOG_PRESETS.filter(p => p.category === selectedCategory);
+  const currentPresets = catalogItems.filter(p => p.category === selectedCategory);
   const activePreset = currentPresets.find(p => p.id === selectedPresetId) || currentPresets[0];
 
   const handleCategoryTab = (cat: SchoolProductCategory) => {
     setSelectedCategory(cat);
-    const presetsForCat = CATALOG_PRESETS.filter(p => p.category === cat);
+    const presetsForCat = catalogItems.filter(p => p.category === cat);
     if (presetsForCat.length > 0) {
       setSelectedPresetId(presetsForCat[0].id);
+      setProductNameInput(presetsForCat[0].name);
       setSelectedSize(presetsForCat[0].availableSizes[0] || 'Standard');
       setItemPrice(presetsForCat[0].defaultPrice);
+    } else {
+      setSelectedPresetId('');
+      setProductNameInput('');
+      setSelectedSize('');
     }
-    setIsCustomProduct(false);
   };
 
   const handlePresetSelect = (preset: CatalogPreset) => {
     setSelectedPresetId(preset.id);
+    setProductNameInput(preset.name);
     setSelectedSize(preset.availableSizes[0] || 'Standard');
     setItemPrice(preset.defaultPrice);
-    setIsCustomProduct(false);
   };
 
   const handleAddItemToBasket = () => {
-    const productName = isCustomProduct ? customName.trim() : (activePreset?.name || 'Custom Product');
-    const sizeLabel = isCustomProduct ? customSize.trim() : selectedSize;
+    const finalName = productNameInput.trim() || activePreset?.name || '';
+    const finalSize = selectedSize.trim();
 
-    if (!productName) {
-      setErrorMsg('Please enter a product name');
+    if (!finalName) {
+      setErrorMsg('Please enter or select a product name');
       return;
     }
-    if (!sizeLabel) {
-      setErrorMsg('Please select or specify a size');
+    if (!finalSize) {
+      setErrorMsg('Please select or type a size');
       return;
     }
 
     const newItem: OrderItemDraft = {
       id: 'draft-' + Date.now() + '-' + Math.random().toString(36).substring(2, 6),
+      productId: activePreset?.name === finalName ? activePreset?.productId : undefined,
       category: selectedCategory,
-      productName,
-      sizeLabel,
+      productName: finalName,
+      sizeLabel: finalSize,
       quantity: itemQuantity,
       unitPrice: Number(itemPrice) || 0,
       itemNotes: itemNotes.trim(),
@@ -192,7 +226,7 @@ export const SchoolOrderModal: React.FC<SchoolOrderModalProps> = ({
 
   const handleSubmitOrder = async () => {
     if (basket.length === 0) {
-      setErrorMsg('Please add at least one product requirement to the order');
+      setErrorMsg('Please add at least one product item to the order');
       return;
     }
 
@@ -208,6 +242,7 @@ export const SchoolOrderModal: React.FC<SchoolOrderModalProps> = ({
         visitDate,
         notes: orderNotes.trim(),
         items: basket.map(i => ({
+          productId: i.productId,
           category: i.category,
           productName: i.productName,
           sizeLabel: i.sizeLabel,
@@ -327,16 +362,9 @@ export const SchoolOrderModal: React.FC<SchoolOrderModalProps> = ({
           <div className="border border-border rounded-2xl p-4 md:p-5 bg-card shadow-xs space-y-4">
             <div className="flex items-center justify-between pb-2 border-b border-border/60">
               <div>
-                <span className="text-[10px] font-bold uppercase tracking-widest text-primary">Catalog Quick-Picker</span>
-                <h3 className="text-sm font-bold text-foreground">Select Uniform & Shoe Products</h3>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-primary">School Order Products</span>
+                <h3 className="text-sm font-bold text-foreground">Select from School Products or Type Directly</h3>
               </div>
-              <button
-                type="button"
-                onClick={() => setIsCustomProduct(!isCustomProduct)}
-                className="text-xs font-semibold text-primary hover:underline"
-              >
-                {isCustomProduct ? '← Choose from Preset Catalog' : '+ Custom Product Item'}
-              </button>
             </div>
 
             {/* Category Tabs */}
@@ -360,140 +388,107 @@ export const SchoolOrderModal: React.FC<SchoolOrderModalProps> = ({
               })}
             </div>
 
-            {/* Product selection card */}
-            {!isCustomProduct ? (
-              <div className="space-y-3 pt-1">
-                {/* Product Models pills / dropdown */}
-                <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
-                    Select {selectedCategory} Model
-                  </label>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
-                    {currentPresets.map((preset) => {
-                      const isSelected = activePreset?.id === preset.id;
-                      return (
-                        <div
-                          key={preset.id}
-                          onClick={() => handlePresetSelect(preset)}
-                          className={`p-2.5 rounded-xl border text-left cursor-pointer transition ${
-                            isSelected
-                              ? 'border-primary bg-primary/5 ring-1 ring-primary'
-                              : 'border-border bg-background hover:border-foreground/30'
-                          }`}
-                        >
-                          <div className="text-xs font-bold text-foreground line-clamp-1">{preset.name}</div>
-                          <div className="text-[11px] font-mono font-semibold text-primary mt-1">₹{preset.defaultPrice}</div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Size Selector Pills */}
-                {activePreset && (
-                  <div>
-                    <label className="block text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
-                      Select Size for {activePreset.name} *
-                    </label>
-                    <div className="flex flex-wrap gap-1.5">
-                      {activePreset.availableSizes.map((size) => {
-                        const isSelected = selectedSize === size;
-                        return (
-                          <button
-                            key={size}
-                            type="button"
-                            onClick={() => setSelectedSize(size)}
-                            className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase transition ${
-                              isSelected
-                                ? 'bg-foreground text-background shadow-xs ring-2 ring-primary ring-offset-1'
-                                : 'bg-muted text-foreground hover:bg-muted/80 border border-border'
-                            }`}
-                          >
-                            {size}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-              </div>
-            ) : (
-              /* Custom Product Input */
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 bg-muted/30 border border-border rounded-xl">
-                <div>
-                  <label className="block text-[11px] font-bold uppercase text-muted-foreground mb-1">Product Description *</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Special Blazer with Gold Crest"
-                    value={customName}
-                    onChange={(e) => setCustomName(e.target.value)}
-                    className="w-full bg-background border border-input rounded-lg p-2 text-xs font-medium outline-none focus:ring-1 focus:ring-primary"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[11px] font-bold uppercase text-muted-foreground mb-1">Size Specification *</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Size 34 or UK 5"
-                    value={customSize}
-                    onChange={(e) => setCustomSize(e.target.value)}
-                    className="w-full bg-background border border-input rounded-lg p-2 text-xs font-bold uppercase outline-none focus:ring-1 focus:ring-primary"
-                  />
+            {/* Product selection cards */}
+            {currentPresets.length > 0 && (
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
+                  Available {selectedCategory} in School Catalogue (Click to select)
+                </label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
+                  {currentPresets.map((preset) => {
+                    const isSelected = activePreset?.id === preset.id && productNameInput === preset.name;
+                    return (
+                      <div
+                        key={preset.id}
+                        onClick={() => handlePresetSelect(preset)}
+                        className={`p-2.5 rounded-xl border text-left cursor-pointer transition ${
+                          isSelected
+                            ? 'border-primary bg-primary/5 ring-1 ring-primary'
+                            : 'border-border bg-background hover:border-foreground/30'
+                        }`}
+                      >
+                        <div className="text-xs font-bold text-foreground line-clamp-1">{preset.name}</div>
+                        <div className="text-[11px] font-mono font-semibold text-primary mt-1">₹{preset.defaultPrice}</div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             )}
 
-            {/* Stepper, Price, Notes & Add Button Bar */}
-            <div className="pt-3 border-t border-border/60 grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
-              {/* Quantity Stepper */}
-              <div className="sm:col-span-3">
-                <label className="block text-[10px] font-bold uppercase text-muted-foreground mb-1">Quantity</label>
-                <div className="flex items-center border border-input rounded-lg overflow-hidden bg-background">
-                  <button
-                    type="button"
-                    onClick={() => setItemQuantity(Math.max(1, itemQuantity - 1))}
-                    className="px-3 py-1.5 text-sm font-bold hover:bg-muted text-muted-foreground hover:text-foreground transition"
-                  >
-                    -
-                  </button>
-                  <input
-                    type="number"
-                    min={1}
-                    value={itemQuantity}
-                    onChange={(e) => setItemQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-                    className="w-full text-center text-xs font-bold bg-transparent outline-none py-1.5"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setItemQuantity(itemQuantity + 1)}
-                    className="px-3 py-1.5 text-sm font-bold hover:bg-muted text-muted-foreground hover:text-foreground transition"
-                  >
-                    +
-                  </button>
+            {/* Quick Size Selector Pills */}
+            {activePreset && activePreset.availableSizes.length > 0 && (
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
+                  Quick Select Size
+                </label>
+                <div className="flex flex-wrap gap-1.5">
+                  {activePreset.availableSizes.map((size) => {
+                    const isSelected = selectedSize === size;
+                    return (
+                      <button
+                        key={size}
+                        type="button"
+                        onClick={() => setSelectedSize(size)}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase transition ${
+                          isSelected
+                            ? 'bg-foreground text-background shadow-xs ring-2 ring-primary ring-offset-1'
+                            : 'bg-muted text-foreground hover:bg-muted/80 border border-border'
+                        }`}
+                      >
+                        {size}
+                      </button>
+                    );
+                  })}
                 </div>
+              </div>
+            )}
+
+            {/* Direct Input Fields for Product Name, Size, Quantity, Price, Notes */}
+            <div className="pt-3 border-t border-border/60 grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
+              <div className="sm:col-span-4">
+                <label className="block text-[10px] font-bold uppercase text-muted-foreground mb-1">Product Name *</label>
+                <input
+                  type="text"
+                  placeholder="Type or select product name"
+                  value={productNameInput}
+                  onChange={(e) => setProductNameInput(e.target.value)}
+                  className="w-full bg-background border border-input rounded-lg px-2.5 py-1.5 text-xs font-bold outline-none focus:ring-1 focus:ring-primary"
+                />
+              </div>
+
+              <div className="sm:col-span-2">
+                <label className="block text-[10px] font-bold uppercase text-muted-foreground mb-1">Size *</label>
+                <input
+                  type="text"
+                  placeholder="e.g. 5, 32"
+                  value={selectedSize}
+                  onChange={(e) => setSelectedSize(e.target.value)}
+                  className="w-full bg-background border border-input rounded-lg px-2.5 py-1.5 text-xs font-mono font-bold outline-none focus:ring-1 focus:ring-primary"
+                />
+              </div>
+
+              {/* Quantity Stepper */}
+              <div className="sm:col-span-2">
+                <label className="block text-[10px] font-bold uppercase text-muted-foreground mb-1">Quantity</label>
+                <input
+                  type="number"
+                  min={1}
+                  value={itemQuantity}
+                  onChange={(e) => setItemQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                  className="w-full bg-background border border-input rounded-lg px-2.5 py-1.5 text-xs font-mono font-bold outline-none focus:ring-1 focus:ring-primary"
+                />
               </div>
 
               {/* Unit Price */}
-              <div className="sm:col-span-3">
-                <label className="block text-[10px] font-bold uppercase text-muted-foreground mb-1">Unit Price (₹)</label>
+              <div className="sm:col-span-2">
+                <label className="block text-[10px] font-bold uppercase text-muted-foreground mb-1">Price (₹)</label>
                 <input
                   type="number"
                   min={0}
                   value={itemPrice}
                   onChange={(e) => setItemPrice(parseFloat(e.target.value) || 0)}
                   className="w-full bg-background border border-input rounded-lg px-2.5 py-1.5 text-xs font-mono font-bold outline-none focus:ring-1 focus:ring-primary"
-                />
-              </div>
-
-              {/* Item Notes */}
-              <div className="sm:col-span-4">
-                <label className="block text-[10px] font-bold uppercase text-muted-foreground mb-1">Optional Notes</label>
-                <input
-                  type="text"
-                  placeholder="e.g. Double stitch, House crest"
-                  value={itemNotes}
-                  onChange={(e) => setItemNotes(e.target.value)}
-                  className="w-full bg-background border border-input rounded-lg px-2.5 py-1.5 text-xs outline-none focus:ring-1 focus:ring-primary"
                 />
               </div>
 
@@ -517,7 +512,7 @@ export const SchoolOrderModal: React.FC<SchoolOrderModalProps> = ({
               <div className="flex items-center gap-2">
                 <ShoppingBag className="w-4 h-4 text-primary" />
                 <h3 className="text-sm font-bold text-foreground">
-                  Order Requirements Basket ({basket.length} {basket.length === 1 ? 'item' : 'items'}, {totalQuantity} units)
+                  Order Items ({basket.length} {basket.length === 1 ? 'item' : 'items'}, {totalQuantity} units)
                 </h3>
               </div>
               <span className="text-xs font-mono font-bold text-primary">
@@ -527,7 +522,7 @@ export const SchoolOrderModal: React.FC<SchoolOrderModalProps> = ({
 
             {basket.length === 0 ? (
               <div className="p-6 text-center border border-dashed border-border rounded-xl text-muted-foreground text-xs">
-                No items added yet. Pick a product category above and click "+ Add Item".
+                No items added yet. Select or type a product above and click "+ Add Item".
               </div>
             ) : (
               <div className="overflow-x-auto">
@@ -540,7 +535,6 @@ export const SchoolOrderModal: React.FC<SchoolOrderModalProps> = ({
                       <th className="py-2 px-3 text-center">Qty</th>
                       <th className="py-2 px-3 text-right">Unit Price</th>
                       <th className="py-2 px-3 text-right">Subtotal</th>
-                      <th className="py-2 px-3">Notes</th>
                       <th className="py-2 px-2 text-right"></th>
                     </tr>
                   </thead>
@@ -582,9 +576,6 @@ export const SchoolOrderModal: React.FC<SchoolOrderModalProps> = ({
                         </td>
                         <td className="py-2 px-3 text-right font-mono font-bold text-foreground">
                           ₹{(item.quantity * item.unitPrice).toFixed(2)}
-                        </td>
-                        <td className="py-2 px-3 text-muted-foreground italic text-[11px]">
-                          {item.itemNotes || '—'}
                         </td>
                         <td className="py-2 px-2 text-right">
                           <button

@@ -118,7 +118,7 @@ export const BulkEnquiryPage: React.FC = () => {
                   Enquiry Successfully Logged
                 </h2>
                 <p className="text-sm leading-relaxed text-muted-foreground">
-                  Your bulk institutional requirement has been registered. An institutional accounts manager from Shoes Net (Official Walkaroo Partner) will contact your school administration with a formal proposal and quotation.
+                  Your bulk institutional requirement has been registered. An institutional accounts manager from Shoes Net will contact your school administration with a formal proposal and quotation.
                 </p>
                 <div className="pt-4">
                   <button

@@ -16,8 +16,9 @@ import java.util.UUID;
 public interface ProductRepository extends JpaRepository<Product, UUID> {
     Optional<Product> findBySku(String sku);
 
-    // Public active products with search and category filtering
+    // Public active products with search and category filtering (Website products only)
     @Query("SELECT DISTINCT p FROM Product p LEFT JOIN p.sizes s WHERE p.isActive = true " +
+           "AND (p.catalogType IS NULL OR UPPER(p.catalogType) = 'WEBSITE') " +
            "AND (cast(:category as string) IS NULL OR UPPER(REPLACE(p.category, ' ', '_')) = UPPER(REPLACE(cast(:category as string), ' ', '_'))) " +
            "AND (cast(:search as string) IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', cast(:search as string), '%')) OR LOWER(p.shortDescription) LIKE LOWER(CONCAT('%', cast(:search as string), '%'))) " +
            "AND (cast(:ukSize as string) IS NULL OR (s.ukSize = :ukSize AND s.isAvailable = true))")
@@ -28,11 +29,13 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
         Pageable pageable
     );
 
-    // Admin catalogue (includes inactive)
+    // Admin catalogue (includes inactive, filtered by catalogType if provided)
     @Query("SELECT p FROM Product p WHERE " +
-           "(cast(:category as string) IS NULL OR UPPER(REPLACE(p.category, ' ', '_')) = UPPER(REPLACE(cast(:category as string), ' ', '_'))) " +
+           "(cast(:catalogType as string) IS NULL OR UPPER(COALESCE(p.catalogType, 'WEBSITE')) = UPPER(cast(:catalogType as string))) " +
+           "AND (cast(:category as string) IS NULL OR UPPER(REPLACE(p.category, ' ', '_')) = UPPER(REPLACE(cast(:category as string), ' ', '_'))) " +
            "AND (cast(:search as string) IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', cast(:search as string), '%')) OR LOWER(p.sku) LIKE LOWER(CONCAT('%', cast(:search as string), '%')))")
     Page<Product> findAdminProducts(
+        @Param("catalogType") String catalogType,
         @Param("category") String category,
         @Param("search") String search,
         Pageable pageable

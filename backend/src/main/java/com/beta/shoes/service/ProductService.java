@@ -127,6 +127,7 @@ public class ProductService {
             .name(product.getName())
             .shortDescription(product.getShortDescription())
             .category(product.getCategory())
+            .catalogType(StringUtils.hasText(product.getCatalogType()) ? product.getCatalogType() : "WEBSITE")
             .basePrice(product.getBasePrice())
             .mrp(product.getMrp())
             .isBestseller(product.isBestseller())
@@ -141,11 +142,12 @@ public class ProductService {
     // --- ADMIN ENDPOINTS (Exact inventory counts, low-stock threshold alerts, full CRUD) ---
 
     @Transactional(readOnly = true)
-    public Page<ProductDto.AdminProductResponse> getAdminProducts(String category, String search, Pageable pageable) {
+    public Page<ProductDto.AdminProductResponse> getAdminProducts(String catalogType, String category, String search, Pageable pageable) {
+        String cleanCatalogType = StringUtils.hasText(catalogType) && !"ALL".equalsIgnoreCase(catalogType) ? catalogType.trim().toUpperCase() : null;
         String cleanCategory = StringUtils.hasText(category) && !"ALL".equalsIgnoreCase(category) ? normalizeCategory(category) : null;
         String cleanSearch = StringUtils.hasText(search) ? search.trim() : null;
 
-        Page<Product> products = productRepository.findAdminProducts(cleanCategory, cleanSearch, pageable);
+        Page<Product> products = productRepository.findAdminProducts(cleanCatalogType, cleanCategory, cleanSearch, pageable);
         return products.map(this::mapToAdminResponse);
     }
 
@@ -158,15 +160,28 @@ public class ProductService {
 
     @Transactional
     public ProductDto.AdminProductResponse createProduct(ProductDto.ProductCreateUpdateRequest request) {
-        if (productRepository.findBySku(request.getSku().trim()).isPresent()) {
-            throw new BadRequestException("Product with SKU '" + request.getSku() + "' already exists.");
+        String sku = StringUtils.hasText(request.getSku())
+            ? request.getSku().trim().toUpperCase()
+            : "SN-" + UUID.randomUUID().toString().substring(0, 6).toUpperCase();
+
+        if (productRepository.findBySku(sku).isPresent()) {
+            sku = sku + "-" + UUID.randomUUID().toString().substring(0, 3).toUpperCase();
         }
 
+        String shortDesc = StringUtils.hasText(request.getShortDescription())
+            ? request.getShortDescription().trim()
+            : request.getName().trim();
+
+        String catalogType = StringUtils.hasText(request.getCatalogType())
+            ? request.getCatalogType().trim().toUpperCase()
+            : "WEBSITE";
+
         Product product = Product.builder()
-            .sku(request.getSku().trim())
+            .sku(sku)
             .name(request.getName().trim())
-            .shortDescription(request.getShortDescription().trim())
+            .shortDescription(shortDesc)
             .category(normalizeCategory(request.getCategory()))
+            .catalogType(catalogType)
             .basePrice(request.getBasePrice())
             .mrp(request.getMrp())
             .isBestseller(request.getIsBestseller() != null ? request.getIsBestseller() : false)
@@ -203,16 +218,19 @@ public class ProductService {
             .orElseThrow(() -> new ResourceNotFoundException("Product not found with ID: " + id));
 
         // Check SKU uniqueness if changed
-        if (!product.getSku().equalsIgnoreCase(request.getSku().trim())) {
+        if (StringUtils.hasText(request.getSku()) && !product.getSku().equalsIgnoreCase(request.getSku().trim())) {
             if (productRepository.findBySku(request.getSku().trim()).isPresent()) {
                 throw new BadRequestException("Product with SKU '" + request.getSku() + "' already exists.");
             }
-            product.setSku(request.getSku().trim());
+            product.setSku(request.getSku().trim().toUpperCase());
         }
 
         product.setName(request.getName().trim());
-        product.setShortDescription(request.getShortDescription().trim());
+        product.setShortDescription(StringUtils.hasText(request.getShortDescription()) ? request.getShortDescription().trim() : request.getName().trim());
         product.setCategory(normalizeCategory(request.getCategory()));
+        if (StringUtils.hasText(request.getCatalogType())) {
+            product.setCatalogType(request.getCatalogType().trim().toUpperCase());
+        }
         product.setBasePrice(request.getBasePrice());
         product.setMrp(request.getMrp());
         if (request.getIsBestseller() != null) {
@@ -442,6 +460,7 @@ public class ProductService {
             .name(product.getName())
             .shortDescription(product.getShortDescription())
             .category(product.getCategory())
+            .catalogType(StringUtils.hasText(product.getCatalogType()) ? product.getCatalogType() : "WEBSITE")
             .basePrice(product.getBasePrice())
             .mrp(product.getMrp())
             .isBestseller(product.isBestseller())
